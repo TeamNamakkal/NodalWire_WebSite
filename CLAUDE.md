@@ -5,6 +5,25 @@
 
 ---
 
+## Deployment
+
+- **Live site:** https://www.nodalwire.com (hosted on Hostinger)
+- **GitHub repo:** https://github.com/NodalWire/NodalWire_WebSite
+- **Auto-deploy:** Hostinger is connected to the GitHub repo via hPanel → Advanced → GIT. Every `git push` to `main` automatically updates the live site within seconds. No manual file uploading needed.
+- **Deploy path:** `public_html` (root of the domain)
+- **Server OS:** Linux (case-sensitive paths) — always use `Brand_Assets/` with exact capitalisation. Never write `brand_assets/`.
+- **Do NOT upload dev files to Hostinger:** `serve.mjs`, `screenshot.mjs`, `package.json`, `package-lock.json`, `node_modules/`, `Temp_Screenshots/`, `CLAUDE.md`, `README.md`, `GIT_COMMANDS.md` — these are local-only.
+
+### Deployment workflow
+```bash
+git add -A
+git commit -m "describe what changed"
+git push
+# Hostinger auto-deploys → site is live
+```
+
+---
+
 ## Project Direction
 
 NodalWire is a serious network engineering and AI-driven automation company.
