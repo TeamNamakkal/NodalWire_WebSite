@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Dev screenshots
+Temp_Screenshots/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Personal files
+*.vcf
+*.textClipping
+*.docx
+*.xlsx
+*.pdf
+
+# Node scripts (one-off migration scripts)
+fix_*.mjs
+add_*.mjs

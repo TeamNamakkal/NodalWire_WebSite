@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wi-Fi Network Design — NodalWire</title>
+  <!-- ── SEO ─────────────────────────────────────────────── -->
+  <meta name="description" content="Enterprise Wi-Fi engineered to perform under real load, not just on a floor plan. NodalWire designs Wi-Fi as core access infrastructure for business-critical applications, IoT, and high-density deployments.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.nodalwire.com/wifi.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://www.nodalwire.com/wifi.html">
+  <meta property="og:title"       content="Enterprise Wi-Fi Design — Real-Load Performance | NodalWire">
+  <meta property="og:description" content="Enterprise Wi-Fi engineered to perform under real load, not just on a floor plan. NodalWire designs Wi-Fi as core access infrastructure for business-critical applications, IoT, and high-density deployments.">
+  <meta property="og:image"       content="https://www.nodalwire.com/brand_assets/fulllogo.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name"   content="NodalWire">
+  <meta property="og:locale"      content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="Enterprise Wi-Fi Design — Real-Load Performance | NodalWire">
+  <meta name="twitter:description" content="Enterprise Wi-Fi engineered to perform under real load, not just on a floor plan. NodalWire designs Wi-Fi as core access infrastructure for business-critical applications, IoT, and high-density deployments.">
+  <meta name="twitter:image"       content="https://www.nodalwire.com/brand_assets/fulllogo.jpg">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": "https://www.nodalwire.com/wifi.html",
+  "name": "Enterprise Wi-Fi Design",
+  "description": "High-density enterprise Wi-Fi design for real-world load conditions, IoT, and business-critical applications.",
+  "provider": {
+    "@id": "https://www.nodalwire.com/#business"
+  },
+  "url": "https://www.nodalwire.com/wifi.html",
+  "serviceType": "Wi-Fi Network Design",
+  "areaServed": {
+    "@type": "Country",
+    "name": "United States"
+  }
+}
+  </script>
+
+  <!-- Author & Geo -->
+  <meta name="author"       content="Surendran Natarajan, NodalWire LLC">
+  <meta name="geo.region"   content="US-TX">
+  <meta name="geo.placename" content="Plano, Texas">
+  <meta name="geo.position" content="33.0198;-96.6989">
+  <meta name="ICBM"         content="33.0198, -96.6989">
+
+  <!-- BreadcrumbList -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "NodalWire",
+      "item": "https://www.nodalwire.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Solutions",
+      "item": "https://www.nodalwire.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Wi-Fi Design",
+      "item": "https://www.nodalwire.com/wifi.html"
+    }
+  ]
+}
+  </script>
+  <!-- /BreadcrumbList -->
+  <!-- ── /SEO ── -->
+  <link rel="icon" type="image/png" href="brand_assets/icononly_transparent_nobuffer.png">
+  <link rel="apple-touch-icon" href="brand_assets/icononly_transparent_nobuffer.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Inter:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand:      #1D78C4;
+      --brand-dark: #155a9a;
+      --brand-glow: rgba(29,120,196,0.22);
+      --navy:       #060e1a;
+      --navy-mid:   #0b1e38;
+      --muted:      #7a9bbf;
+      --bright:     #eef4ff;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--navy); color: #fff; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    body::after { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; }
+
+    /* NAV */
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; height: 90px; display: flex; align-items: center; justify-content: space-between; padding: 0 56px; background: rgba(6,14,26,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(29,120,196,0.16); }
+    .nav-logo img { height: 78px; width: auto; filter: brightness(0) invert(1); }
+    .nav-links { display: flex; gap: 44px; list-style: none; position: absolute; left: 50%; transform: translateX(-50%); }
+    .nav-links a { font-family: 'Lato', sans-serif; font-weight: 500; font-size: 17px; letter-spacing: 0.01em; color: #fff; text-decoration: none; position: relative; transition: color 0.2s ease; }
+    .nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px; background: var(--brand); transition: width 0.25s cubic-bezier(0.4,0,0.2,1); }
+    .nav-links a:hover::after { width: 100%; }
+    .has-dropdown { position: relative; }
+    .has-dropdown > a::after { content: ' ▾'; font-size: 10px; opacity: 0.6; letter-spacing: 0; }
+    .nav-dropdown { position: absolute; top: calc(100% + 16px); left: 50%; transform: translateX(-50%) translateY(-8px); min-width: 180px; background: rgba(7,16,31,0.97); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(29,120,196,0.18); border-radius: 10px; padding: 8px 0; list-style: none; box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3); opacity: 0; pointer-events: none; transition: opacity 0.2s ease, transform 0.22s cubic-bezier(0.34,1.56,0.64,1); z-index: 600; }
+    .has-dropdown:hover .nav-dropdown, .has-dropdown:focus-within .nav-dropdown { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+    .nav-dropdown li { padding: 0; }
+    .nav-dropdown a { display: block; font-family: 'Lato', sans-serif; font-size: 14px; font-weight: 500; color: rgba(238,244,255,0.82); text-decoration: none; padding: 10px 20px; transition: color 0.18s ease, background 0.18s ease; letter-spacing: 0.01em; }
+    .nav-dropdown a:hover { color: #fff; background: rgba(29,120,196,0.12); }
+    .nav-dropdown a::after { display: none; }
+    .nav-dropdown::before { content: ''; position: absolute; top: -16px; left: 0; right: 0; height: 16px; }
+    .nav-cta { font-family: 'Lato', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: 0.03em; padding: 9px 20px; border: 1.5px solid rgba(255,255,255,0.65); border-radius: 6px; color: #fff; background: rgba(255,255,255,0.07); cursor: pointer; text-decoration: none; transition: background 0.2s ease, border-color 0.2s ease; }
+    .nav-cta:hover { background: var(--brand); border-color: var(--brand); }
+
+    /* HERO */
+    .hero { height: 70vh; min-height: 700px; position: relative; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 100% 70% at 70% 25%, rgba(29,120,196,0.13) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 0% 90%, rgba(29,120,196,0.07) 0%, transparent 60%), radial-gradient(ellipse 40% 40% at 50% 50%, rgba(29,120,196,0.04) 0%, transparent 70%), var(--navy); z-index: 0; }
+    .hero-grid-bg { position: absolute; inset: 0; background-image: radial-gradient(rgba(29,120,196,0.18) 1px, transparent 1px); background-size: 36px 36px; z-index: 1; mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.25) 20%, rgba(0,0,0,0.2) 65%, transparent 100%); }
+    .hero-layout { position: relative; z-index: 2; height: 100%; display: grid; grid-template-columns: 42fr 58fr; grid-template-rows: 1fr; padding-top: 90px; }
+    .hero-content { display: flex; flex-direction: column; justify-content: center; padding: 32px 48px 48px 88px; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-family: 'Lato', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); margin-bottom: 28px; }
+    .hero-eyebrow::before { content: ''; display: block; width: 22px; height: 1.5px; background: var(--brand); flex-shrink: 0; }
+    .hero-h1 { font-family: 'Lato', sans-serif; font-size: clamp(27px, 3.36vw, 46px); font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; color: var(--bright); margin-bottom: 24px; }
+    .hero-h1 em { font-style: normal; color: var(--brand); }
+    .hero-sub { font-size: 16px; line-height: 1.75; color: var(--muted); max-width: 520px; margin-bottom: 32px; }
+    .hero-cta { display: inline-flex; align-items: center; gap: 10px; font-family: 'Lato', sans-serif; font-weight: 600; font-size: 15px; padding: 14px 28px; background: var(--brand); color: #fff; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; align-self: flex-start; box-shadow: 0 0 0 1px rgba(29,120,196,0.5), 0 4px 20px rgba(29,120,196,0.35), 0 1px 4px rgba(0,0,0,0.5); transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease, background 0.2s ease; }
+    .hero-cta:hover { transform: translateY(-2px); background: #2a8adb; box-shadow: 0 0 0 1px rgba(29,120,196,0.7), 0 8px 28px rgba(29,120,196,0.45), 0 2px 6px rgba(0,0,0,0.4); }
+    .hero-cta:active { transform: translateY(0); }
+    .hero-cta .arrow { transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1); }
+    .hero-cta:hover .arrow { transform: translateX(4px); }
+
+    /* Hero Wi-Fi Panel */
+    .hero-wifi-panel { position: relative; display: flex; flex-direction: column; padding: 40px 52px 36px 36px; border-left: 1px solid rgba(29,120,196,0.12); }
+    .hop-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-shrink: 0; }
+    .hop-label { font-family: 'Lato', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(122,155,191,0.6); }
+    .hop-badges { display: flex; gap: 8px; }
+    .hop-badge { font-family: 'Lato', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--brand); padding: 3px 9px; border: 1px solid rgba(29,120,196,0.3); border-radius: 4px; background: rgba(29,120,196,0.07); }
+    .hop-diagram { flex: 1; display: flex; align-items: center; min-height: 0; }
+    .hop-diagram svg { width: 100%; height: 100%; }
+    .hop-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(29,120,196,0.1); border: 1px solid rgba(29,120,196,0.14); border-radius: 10px; overflow: hidden; flex-shrink: 0; margin-top: 12px; }
+    .hop-stat { padding: 12px 16px; background: rgba(6,14,26,0.75); display: flex; flex-direction: column; gap: 3px; }
+    .hop-stat-value { font-family: 'Lato', sans-serif; font-size: 17px; font-weight: 700; color: var(--bright); letter-spacing: -0.01em; }
+    .hop-stat-label { font-family: 'Inter', sans-serif; font-size: 10px; color: rgba(122,155,191,0.65); letter-spacing: 0.04em; }
+
+    /* SHARED */
+    .sec-wrap { max-width: 1280px; margin: 0 auto; padding: 0 64px; }
+    .sec-header { text-align: center; max-width: 840px; margin: 0 auto 60px; }
+    .sec-eyebrow { display: inline-flex; align-items: center; gap: 12px; font-family: 'Lato', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); margin-bottom: 18px; justify-content: center; }
+    .sec-eyebrow::before, .sec-eyebrow::after { content: ''; display: block; width: 20px; height: 1.5px; background: var(--brand); flex-shrink: 0; }
+    .sec-title { font-family: 'Lato', sans-serif; font-size: clamp(24px, 2.8vw, 40px); font-weight: 700; letter-spacing: -0.025em; line-height: 1.15; color: var(--bright); margin-bottom: 16px; }
+    .sec-sub { font-family: 'Inter', sans-serif; font-size: 17px; line-height: 1.75; color: var(--muted); }
+
+    /* INTRO */
+    .intro-section { background: #f4f5f1; padding: 88px 0; position: relative; }
+    .intro-section::before { content: ''; position: absolute; top: 0; left: 8%; right: 8%; height: 1px; background: linear-gradient(90deg, transparent, rgba(29,120,196,0.2), transparent); }
+    .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: start; }
+    .intro-problem-eyebrow { font-family: 'Lato', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); margin-bottom: 18px; }
+    .intro-problem-title { font-family: 'Lato', sans-serif; font-size: clamp(20px, 2vw, 28px); font-weight: 700; line-height: 1.25; letter-spacing: -0.02em; color: #0d1a2e; margin-bottom: 20px; }
+    .intro-body { font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.8; color: #486080; margin-bottom: 16px; }
+    .intro-right { border-left: 1px solid rgba(0,0,0,0.1); padding-left: 48px; }
+    .intro-approach-label { font-family: 'Lato', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); margin-bottom: 16px; }
+    .intro-approach-title { font-family: 'Lato', sans-serif; font-size: clamp(18px, 1.8vw, 24px); font-weight: 700; line-height: 1.3; color: #0d1a2e; margin-bottom: 16px; }
+
+    /* PAIN POINTS (5 — 3+2 flex) */
+    .pain-section { background: #f4f5f1; padding: 88px 0; position: relative; }
+    .pain-section::before { content: ''; position: absolute; top: 0; left: 8%; right: 8%; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,0,0,0.08), transparent); }
+    .pain-section .sec-title { color: #0d1a2e; }
+    .pain-section .sec-sub { color: #486080; }
+    .pain-grid { display: flex; flex-wrap: wrap; gap: 20px; }
+    .pain-grid .pain-card { flex: 0 0 calc(33.333% - 14px); }
+    .pain-grid .pain-card:nth-child(n+4) { flex: 0 0 calc(50% - 10px); }
+    .pain-card { background: #fff; border: 1px solid rgba(0,0,0,0.09); border-top: 3px solid var(--brand); border-radius: 12px; padding: 28px; transition: box-shadow 0.25s ease, transform 0.25s cubic-bezier(0.34,1.56,0.64,1); }
+    .pain-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06); transform: translateY(-3px); }
+    .pain-num { font-family: 'Lato', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--brand); margin-bottom: 12px; }
+    .pain-title { font-family: 'Lato', sans-serif; font-size: 16px; font-weight: 700; color: #0d1a2e; line-height: 1.3; margin-bottom: 10px; }
+    .pain-desc { font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.7; color: #486080; }
+
+    /* INDUSTRIES (6 — 3×2 grid) */
+    .industries-section { background: #f4f5f1; padding: 88px 0; position: relative; }
+    .industries-section::before { content: ''; position: absolute; top: 0; left: 8%; right: 8%; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,0,0,0.08), transparent); }
+    .industries-section .sec-title { color: #0d1a2e; }
+    .industries-section .sec-sub { color: #486080; }
+    .ind-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .ind-card { background: #fff; border: 1px solid rgba(0,0,0,0.09); border-radius: 14px; padding: 32px; transition: box-shadow 0.25s ease, transform 0.25s cubic-bezier(0.34,1.56,0.64,1); }
+    .ind-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06); transform: translateY(-3px); }
+    .ind-icon { width: 44px; height: 44px; border-radius: 10px; background: rgba(29,120,196,0.08); border: 1px solid rgba(29,120,196,0.18); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+    .ind-title { font-family: 'Lato', sans-serif; font-size: 17px; font-weight: 700; color: #0d1a2e; line-height: 1.3; margin-bottom: 10px; }
+    .ind-desc { font-family: 'Inter', sans-serif; font-size: 14.5px; line-height: 1.75; color: #486080; }
+
+    /* ADVANTAGE (5 — 3+2) */
+    .advantage-section { background: #f4f5f1; padding: 88px 0; position: relative; }
+    .advantage-section::before { content: ''; position: absolute; top: 0; left: 8%; right: 8%; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,0,0,0.08), transparent); }
+    .advantage-section .sec-title { color: #0d1a2e; }
+    .advantage-section .sec-sub { color: #486080; }
+    .adv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .adv-card { background: #fff; border: 1px solid rgba(0,0,0,0.09); border-radius: 14px; padding: 28px; transition: box-shadow 0.25s ease, transform 0.25s cubic-bezier(0.34,1.56,0.64,1); }
+    .adv-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06); transform: translateY(-3px); }
+    .adv-card--span2 { grid-column: span 2; }
+    .adv-num { font-family: 'Lato', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--brand); margin-bottom: 10px; }
+    .adv-title { font-family: 'Lato', sans-serif; font-size: 16px; font-weight: 700; color: #0d1a2e; line-height: 1.3; margin-bottom: 10px; }
+    .adv-desc { font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.7; color: #486080; }
+
+    /* DYK */
+    .dyks-section { position: relative; overflow: hidden; padding: 100px 0; background: radial-gradient(ellipse 80% 60% at 20% 50%, rgba(29,120,196,0.1) 0%, transparent 65%), radial-gradient(ellipse 60% 50% at 80% 30%, rgba(29,120,196,0.07) 0%, transparent 60%), linear-gradient(158deg, #07101f 0%, #0d2340 55%, #122e52 100%); }
+    .dyks-section::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(29,120,196,0.12) 1px, transparent 1px); background-size: 28px 28px; opacity: 0.35; pointer-events: none; }
+    .dyks-inner { position: relative; z-index: 2; }
+    .dyks-section .sec-title { color: var(--bright); }
+    .dyks-section .sec-sub { color: var(--muted); }
+    .dyks-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    /* ── Flip card system ── */
+    .dyk-card-outer { perspective: 900px; cursor: pointer; height: 290px; }
+    .dyk-card-outer.wide { grid-column: span 2; }
+    .dyk-card { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.62s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .dyk-card-outer.flipped .dyk-card { transform: rotateY(180deg); }
+    .dyk-front, .dyk-back { position: absolute; inset: 0; border-radius: 14px; padding: 28px; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; }
+    .dyk-front { background: rgba(255,255,255,0.05); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.09); justify-content: space-between; }
+    .dyk-card-outer:hover:not(.flipped) .dyk-front { border-color: rgba(29,120,196,0.35); box-shadow: 0 8px 32px rgba(29,120,196,0.12), 0 2px 8px rgba(0,0,0,0.3); }
+    .dyk-back { background: linear-gradient(145deg, rgba(29,120,196,0.22) 0%, rgba(18,46,82,0.96) 100%); border: 1px solid rgba(29,120,196,0.3); box-shadow: 0 8px 32px rgba(29,120,196,0.18); transform: rotateY(180deg); justify-content: space-between; }
+    .dyk-tag { font-family: 'Lato', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .dyk-tag::before { content: ''; display: block; width: 16px; height: 1.5px; background: var(--brand); }
+    .dyk-claim { font-family: 'Lato', sans-serif; font-size: 15px; font-weight: 700; line-height: 1.35; color: var(--bright); margin-bottom: 14px; flex: 1; }
+    .dyk-flip-hint { font-family: 'Inter', sans-serif; font-size: 11px; color: rgba(122,155,191,0.7); display: flex; align-items: center; gap: 6px; margin-top: auto; }
+    .dyk-flip-hint svg { opacity: 0.6; }
+    .dyk-insight-label { font-family: 'Lato', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(29,120,196,0.9); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .dyk-insight-label::before { content: ''; display: block; width: 16px; height: 1.5px; background: rgba(29,120,196,0.9); }
+    .dyk-insight { font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.7; color: rgba(238,244,255,0.82); flex: 1; }
+    .dyk-flip-back-hint { font-family: 'Inter', sans-serif; font-size: 11px; color: rgba(122,155,191,0.6); margin-top: auto; display: flex; align-items: center; gap: 6px; }
+
+    /* CTA */
+    .cta-assess { position: relative; overflow: hidden; background: radial-gradient(ellipse 80% 60% at 20% 50%, rgba(29,120,196,0.12) 0%, transparent 65%), radial-gradient(ellipse 60% 50% at 80% 30%, rgba(29,120,196,0.08) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 60% 80%, rgba(29,120,196,0.05) 0%, transparent 55%), linear-gradient(158deg, #07101f 0%, #0d2340 55%, #122e52 100%); padding: 100px 88px; border-top: 1px solid rgba(29,120,196,0.12); }
+    .cta-assess::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(29,120,196,0.12) 1px, transparent 1px); background-size: 28px 28px; opacity: 0.35; pointer-events: none; }
+    .cta-assess-inner { position: relative; z-index: 2; max-width: 1160px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+    .cta-eyebrow { font-family: 'Lato', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #1D78C4; margin-bottom: 20px; }
+    .cta-headline { font-family: 'Lato', sans-serif; font-size: clamp(26px, 2.6vw, 38px); font-weight: 700; line-height: 1.18; letter-spacing: -0.025em; color: #E5E7EB; margin-bottom: 22px; }
+    .cta-body { font-family: 'Inter', sans-serif; font-size: 15.5px; line-height: 1.75; color: rgba(229,231,235,0.65); margin-bottom: 32px; max-width: 460px; }
+    .cta-links { display: flex; flex-direction: column; gap: 12px; }
+    .cta-link { display: inline-flex; align-items: center; gap: 10px; font-family: 'Lato', sans-serif; font-size: 15px; font-weight: 600; color: var(--bright); text-decoration: none; transition: color 0.2s ease; }
+    .cta-link:hover { color: #fff; }
+    .cta-link-arrow { transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1); flex-shrink: 0; }
+    .cta-link:hover .cta-link-arrow { transform: translateX(4px); }
+    .cta-form-card { background: rgba(255,255,255,0.055); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.09); border-radius: 16px; padding: 40px 36px; box-shadow: 0 4px 24px rgba(0,0,0,0.28), 0 1px 4px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.07); }
+    .cta-form-title { font-family: 'Lato', sans-serif; font-size: 20px; font-weight: 700; color: #E5E7EB; margin-bottom: 8px; letter-spacing: -0.01em; }
+    .cta-form-desc { font-family: 'Inter', sans-serif; font-size: 13.5px; line-height: 1.65; color: rgba(229,231,235,0.55); margin-bottom: 28px; }
+    .cta-form { display: flex; flex-direction: column; gap: 14px; }
+    .cta-field { display: flex; flex-direction: column; gap: 6px; }
+    .cta-label { font-family: 'Inter', sans-serif; font-size: 11.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(229,231,235,0.45); }
+    .cta-input, .cta-select { font-family: 'Inter', sans-serif; font-size: 14px; color: #E5E7EB; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 11px 14px; outline: none; width: 100%; transition: border-color 0.22s ease, box-shadow 0.22s ease; -webkit-appearance: none; appearance: none; }
+    .cta-input::placeholder { color: #94A3B8; }
+    .cta-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%2394A3B8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='4 6 8 10 12 6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 36px; cursor: pointer; }
+    .cta-select option { background: #0d2340; color: #E5E7EB; }
+    .cta-input:focus, .cta-select:focus { border-color: #1D78C4; box-shadow: 0 0 0 3px rgba(29,120,196,0.14); }
+    .cta-btn { display: inline-flex; align-items: center; justify-content: center; font-family: 'Lato', sans-serif; font-size: 14.5px; font-weight: 700; letter-spacing: 0.02em; color: #fff; background: linear-gradient(135deg, #1D78C4 0%, #1562a8 100%); border: none; border-radius: 9px; padding: 13px 22px; cursor: pointer; width: 100%; margin-top: 4px; transition: background 0.22s ease, transform 0.18s ease, box-shadow 0.22s ease; box-shadow: 0 4px 16px rgba(29,120,196,0.28); }
+    .cta-btn:hover { background: linear-gradient(135deg, #2386d8 0%, #1D78C4 100%); transform: translateY(-2px); box-shadow: 0 6px 22px rgba(29,120,196,0.36); }
+    .cta-btn:active { transform: translateY(0); }
+    .cta-note { margin-top: 14px; font-family: 'Inter', sans-serif; font-size: 11.5px; line-height: 1.6; color: rgba(229,231,235,0.35); text-align: center; }
+
+    /* FAQ */
+    .faq-section { background: #f4f5f1; padding: 88px 0; position: relative; }
+    .faq-section::before { content: ''; position: absolute; top: 0; left: 8%; right: 8%; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,0,0,0.08), transparent); }
+    .faq-section .sec-title { color: #0d1a2e; }
+    .faq-section .sec-sub { color: #486080; }
+    .faq-list { max-width: 800px; margin: 0 auto; }
+    .faq-item { border-bottom: 1px solid rgba(0,0,0,0.09); }
+    .faq-item:first-child { border-top: 1px solid rgba(0,0,0,0.09); }
+    .faq-question { width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 22px 0; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .faq-q-text { font-family: 'Lato', sans-serif; font-size: 16px; font-weight: 700; color: #1a2e44; line-height: 1.4; text-align: left; transition: color 0.2s ease; }
+    .faq-item.open .faq-q-text { color: var(--brand); }
+    .faq-icon { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; transition: background 0.2s ease, border-color 0.2s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+    .faq-item.open .faq-icon { background: var(--brand); border-color: var(--brand); transform: rotate(45deg); }
+    .faq-icon svg { stroke: #486080; transition: stroke 0.2s ease; }
+    .faq-item.open .faq-icon svg { stroke: #fff; }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.38s cubic-bezier(0.25,0.46,0.45,0.94); }
+    .faq-item.open .faq-answer { max-height: 300px; }
+    .faq-answer-inner { font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.75; color: #486080; padding-bottom: 22px; }
+
+    /* FOOTER */
+    .footer-wrap { max-width: 1200px; margin: 0 auto; padding: 48px 40px 0; }
+    .footer-top { display: grid; grid-template-columns: 1.6fr 1.2fr 0.8fr 1.2fr; gap: 40px; padding-bottom: 36px; }
+    .footer-brand-logo { height: 72px; filter: brightness(0) invert(1); display: block; margin-bottom: 8px; }
+    .footer-tagline { font-family: 'Lato', sans-serif; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #fff; margin-bottom: 14px; }
+    .footer-desc { font-size: 13.5px; line-height: 1.65; color: rgba(255,255,255,0.7); margin-bottom: 20px; max-width: 260px; }
+    .footer-social { display: flex; gap: 14px; }
+    .footer-social a { display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3); color: #fff; text-decoration: none; transition: border-color 0.2s, background 0.2s; }
+    .footer-social a:hover { border-color: #1D78C4; background: rgba(29,120,196,0.15); }
+    .footer-col-title { font-family: 'Lato', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #eef4ff; margin-bottom: 16px; }
+    .footer-links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a { font-size: 13.5px; color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: #fff; }
+    .footer-contact-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+    .footer-contact-icon { flex-shrink: 0; width: 16px; height: 16px; margin-top: 1px; color: #1D78C4; }
+    .footer-contact-text { font-size: 13.5px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+    .footer-contact-text a { color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.2s; }
+    .footer-contact-text a:hover { color: #fff; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.06); padding: 18px 40px; max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .footer-copy { font-size: 12.5px; color: rgba(255,255,255,0.5); }
+    .footer-legal { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; }
+    .footer-legal a { font-size: 12.5px; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s; }
+    .footer-legal a:hover { color: rgba(255,255,255,0.8); }
+
+    @media (max-width: 1024px) {
+      .hero-layout { grid-template-columns: 1fr; }
+      .hero-wifi-panel { display: none; }
+      .hero-content { padding: 32px 48px 48px 48px; }
+      .intro-grid { grid-template-columns: 1fr; gap: 40px; }
+      .intro-right { border-left: none; padding-left: 0; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 32px; }
+    }
+    @media (max-width: 860px) {
+      .pain-grid .pain-card, .pain-grid .pain-card:nth-child(n+4) { flex: 0 0 100%; }
+      .ind-grid { grid-template-columns: 1fr; }
+      .adv-grid { grid-template-columns: 1fr; }
+      .adv-card--span2 { grid-column: 1; }
+      .dyks-grid { grid-template-columns: repeat(2, 1fr); }
+      .dyk-card-outer { height: 310px; }
+      .dyk-card-outer.wide { grid-column: span 1; }
+      .cta-assess { padding: 72px 24px; }
+      .cta-assess-inner { grid-template-columns: 1fr; gap: 44px; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+    }
+    @media (max-width: 560px) {
+      .sec-wrap { padding: 0 24px; }
+      .dyks-grid { grid-template-columns: 1fr; }
+      .hop-stats { grid-template-columns: repeat(2, 1fr); }
+      .footer-top { grid-template-columns: 1fr; gap: 28px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 10px; padding: 16px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="/" class="nav-logo" aria-label="NodalWire home">
+    <img src="Brand_Assets/fulllogo_transparent.png" alt="NodalWire">
+  </a>
+
+  <ul class="nav-links">
+    <li class="has-dropdown">
+      <a href="#">Solutions</a>
+      <ul class="nav-dropdown">
+        <li><a href="microwave.html">Microwave Networks</a></li>
+        <li><a href="optical.html">Optical Networks</a></li>
+        <li><a href="ftth.html">FTTH Networks</a></li>
+        <li><a href="wifi.html">WiFi Networks</a></li>
+        <li><a href="lab.html">Communication Labs</a></li>
+        <li><a href="hummingbird_hollow_case_study.html">Remote Property Connectivity</a></li>
+      </ul>
+    </li>
+    <li><a href="industries.html">Industries</a></li>
+    <li class="has-dropdown">
+      <a href="#">Insights</a>
+      <ul class="nav-dropdown">
+        <li><a href="https://www.nodalwireacademy.com" target="_blank" rel="noopener">Academy</a></li>
+      </ul>
+    </li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+
+  <a href="#assessment" class="nav-cta">Talk to an Engineer</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-bg"></div>
+  <div class="hero-layout">
+
+    <div class="hero-content">
+      <div class="hero-eyebrow">Enterprise Wi-Fi Design</div>
+      <h1 class="hero-h1">Wi-Fi That Performs Under <em>Real Load,</em> Not Just on a Floor Plan</h1>
+      <p class="hero-sub">Modern Wi-Fi is no longer a convenience layer. It is core access infrastructure for business-critical applications, real-time operations, IoT, and user experience at scale.</p>
+      <a href="#assessment" class="hero-cta">
+        Discuss Your Wi-Fi Plan
+        <svg class="arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Right: Staggered AP Topology -->
+    <div class="hero-wifi-panel">
+      <div class="hop-header">
+        <span class="hop-label">Enterprise WLAN — Staggered AP Deployment with Channel Reuse</span>
+        <div class="hop-badges">
+          <span class="hop-badge">Wi-Fi 6E</span>
+          <span class="hop-badge">802.11be</span>
+        </div>
+      </div>
+
+      <div class="hop-diagram">
+        <svg viewBox="0 0 820 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <filter id="wifi-glow-lg" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur stdDeviation="5" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="wifi-glow-sm" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur stdDeviation="2.5" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <!-- Animation paths: backbone + drops to each AP -->
+            <path id="bb"  d="M 72 110 L 780 110"/>
+            <path id="d1"  d="M 185 110 L 185 52"/>
+            <path id="d2"  d="M 305 110 L 305 168"/>
+            <path id="d3"  d="M 425 110 L 425 52"/>
+            <path id="d4"  d="M 545 110 L 545 168"/>
+            <path id="d5"  d="M 665 110 L 665 52"/>
+            <path id="d6"  d="M 775 110 L 775 168"/>
+          </defs>
+
+          <!-- Section labels -->
+          <text x="415" y="102" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="rgba(122,155,191,0.5)" letter-spacing="0.07em">STRUCTURED CABLING BACKBONE</text>
+          <text x="185" y="16" text-anchor="middle" font-family="Inter,sans-serif" font-size="7.5" fill="rgba(122,155,191,0.45)" letter-spacing="0.07em">5 GHz — CH 36</text>
+          <text x="305" y="204" text-anchor="middle" font-family="Inter,sans-serif" font-size="7.5" fill="rgba(122,155,191,0.45)" letter-spacing="0.07em">5 GHz — CH 40</text>
+          <text x="425" y="16" text-anchor="middle" font-family="Inter,sans-serif" font-size="7.5" fill="rgba(122,155,191,0.45)" letter-spacing="0.07em">6 GHz — CH 1</text>
+          <text x="545" y="204" text-anchor="middle" font-family="Inter,sans-serif" font-size="7.5" fill="rgba(122,155,191,0.45)" letter-spacing="0.07em">6 GHz — CH 5</text>
+          <text x="665" y="16" text-anchor="middle" font-family="Inter,sans-serif" font-size="7.5" fill="rgba(122,155,191,0.45)" letter-spacing="0.07em">5 GHz — CH 44</text>
+          <text x="775" y="204" text-anchor="middle" font-family="Inter,sans-serif" font-size="7.5" fill="rgba(122,155,191,0.45)" letter-spacing="0.07em">5 GHz — CH 48</text>
+
+          <!-- Backbone line halo + line -->
+          <line x1="72" y1="110" x2="780" y2="110" stroke="rgba(29,120,196,0.06)" stroke-width="14"/>
+          <line x1="72" y1="110" x2="780" y2="110" stroke="rgba(29,120,196,0.65)" stroke-width="1.5"/>
+
+          <!-- Distribution switch node -->
+          <rect x="10" y="96" width="60" height="28" rx="4" fill="rgba(6,14,26,0.95)" stroke="rgba(29,120,196,0.7)" stroke-width="1.5"/>
+          <text x="40" y="107" text-anchor="middle" font-family="Lato,sans-serif" font-size="8" font-weight="700" fill="rgba(255,255,255,0.9)" letter-spacing="0.06em">CORE</text>
+          <text x="40" y="118" text-anchor="middle" font-family="Inter,sans-serif" font-size="6.5" fill="rgba(29,120,196,0.85)" letter-spacing="0.04em">Switch</text>
+
+          <!-- Drop cables (backbone to each AP) -->
+          <line x1="185" y1="110" x2="185" y2="55" stroke="rgba(29,120,196,0.5)" stroke-width="1.5" stroke-dasharray="3,3"/>
+          <line x1="305" y1="110" x2="305" y2="165" stroke="rgba(29,120,196,0.5)" stroke-width="1.5" stroke-dasharray="3,3"/>
+          <line x1="425" y1="110" x2="425" y2="55" stroke="rgba(29,120,196,0.55)" stroke-width="1.5" stroke-dasharray="3,3"/>
+          <line x1="545" y1="110" x2="545" y2="165" stroke="rgba(29,120,196,0.5)" stroke-width="1.5" stroke-dasharray="3,3"/>
+          <line x1="665" y1="110" x2="665" y2="55" stroke="rgba(29,120,196,0.5)" stroke-width="1.5" stroke-dasharray="3,3"/>
+          <line x1="775" y1="110" x2="775" y2="165" stroke="rgba(29,120,196,0.5)" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+          <!-- AP coverage rings (faint) -->
+          <circle cx="185" cy="50" r="58" fill="none" stroke="rgba(29,120,196,0.08)" stroke-width="1"/>
+          <circle cx="305" cy="168" r="58" fill="none" stroke="rgba(29,120,196,0.08)" stroke-width="1"/>
+          <circle cx="425" cy="50" r="58" fill="rgba(29,120,196,0.03)" stroke="rgba(29,120,196,0.1)" stroke-width="1"/>
+          <circle cx="545" cy="168" r="58" fill="none" stroke="rgba(29,120,196,0.08)" stroke-width="1"/>
+          <circle cx="665" cy="50" r="58" fill="none" stroke="rgba(29,120,196,0.08)" stroke-width="1"/>
+          <circle cx="775" cy="168" r="58" fill="none" stroke="rgba(29,120,196,0.08)" stroke-width="1"/>
+
+          <!-- AP 1 (top, x=185) -->
+          <circle cx="185" cy="50" r="12" fill="rgba(6,14,26,0.95)" stroke="rgba(29,120,196,0.7)" stroke-width="1.5"/>
+          <path d="M 178 46 Q 185 38 192 46" fill="none" stroke="rgba(29,120,196,0.9)" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M 174 43 Q 185 31 196 43" fill="none" stroke="rgba(29,120,196,0.5)" stroke-width="1" stroke-linecap="round"/>
+          <circle cx="185" cy="50" r="2.5" fill="rgba(29,120,196,0.95)"/>
+
+          <!-- AP 2 (bottom, x=305) -->
+          <circle cx="305" cy="168" r="12" fill="rgba(6,14,26,0.95)" stroke="rgba(29,120,196,0.7)" stroke-width="1.5"/>
+          <path d="M 298 164 Q 305 156 312 164" fill="none" stroke="rgba(29,120,196,0.9)" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M 294 161 Q 305 149 316 161" fill="none" stroke="rgba(29,120,196,0.5)" stroke-width="1" stroke-linecap="round"/>
+          <circle cx="305" cy="168" r="2.5" fill="rgba(29,120,196,0.95)"/>
+
+          <!-- AP 3 (top, x=425) — active/highlighted -->
+          <circle cx="425" cy="50" r="13" fill="rgba(6,14,26,0.95)" stroke="rgba(29,120,196,0.9)" stroke-width="2"/>
+          <path d="M 418 46 Q 425 38 432 46" fill="none" stroke="rgba(29,120,196,1)" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M 414 43 Q 425 31 436 43" fill="none" stroke="rgba(29,120,196,0.65)" stroke-width="1.2" stroke-linecap="round"/>
+          <circle cx="425" cy="50" r="3" fill="rgba(29,120,196,1)"/>
+
+          <!-- AP 4 (bottom, x=545) -->
+          <circle cx="545" cy="168" r="12" fill="rgba(6,14,26,0.95)" stroke="rgba(29,120,196,0.7)" stroke-width="1.5"/>
+          <path d="M 538 164 Q 545 156 552 164" fill="none" stroke="rgba(29,120,196,0.9)" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M 534 161 Q 545 149 556 161" fill="none" stroke="rgba(29,120,196,0.5)" stroke-width="1" stroke-linecap="round"/>
+          <circle cx="545" cy="168" r="2.5" fill="rgba(29,120,196,0.95)"/>
+
+          <!-- AP 5 (top, x=665) -->
+          <circle cx="665" cy="50" r="12" fill="rgba(6,14,26,0.95)" stroke="rgba(29,120,196,0.7)" stroke-width="1.5"/>
+          <path d="M 658 46 Q 665 38 672 46" fill="none" stroke="rgba(29,120,196,0.9)" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M 654 43 Q 665 31 676 43" fill="none" stroke="rgba(29,120,196,0.5)" stroke-width="1" stroke-linecap="round"/>
+          <circle cx="665" cy="50" r="2.5" fill="rgba(29,120,196,0.95)"/>
+
+          <!-- AP 6 (bottom, x=775) -->
+          <circle cx="775" cy="168" r="12" fill="rgba(6,14,26,0.95)" stroke="rgba(29,120,196,0.7)" stroke-width="1.5"/>
+          <path d="M 768 164 Q 775 156 782 164" fill="none" stroke="rgba(29,120,196,0.9)" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M 764 161 Q 775 149 786 161" fill="none" stroke="rgba(29,120,196,0.5)" stroke-width="1" stroke-linecap="round"/>
+          <circle cx="775" cy="168" r="2.5" fill="rgba(29,120,196,0.95)"/>
+
+          <!-- Client devices (small dots near APs) -->
+          <circle cx="210" cy="38" r="3" fill="rgba(29,120,196,0.55)" stroke="rgba(29,120,196,0.7)" stroke-width="0.8"/>
+          <circle cx="163" cy="42" r="3" fill="rgba(29,120,196,0.45)" stroke="rgba(29,120,196,0.6)" stroke-width="0.8"/>
+          <circle cx="445" cy="35" r="3" fill="rgba(29,120,196,0.55)" stroke="rgba(29,120,196,0.7)" stroke-width="0.8"/>
+          <circle cx="405" cy="38" r="2.5" fill="rgba(29,120,196,0.4)" stroke="rgba(29,120,196,0.55)" stroke-width="0.8"/>
+          <circle cx="330" cy="175" r="3" fill="rgba(29,120,196,0.5)" stroke="rgba(29,120,196,0.65)" stroke-width="0.8"/>
+          <circle cx="645" cy="42" r="3" fill="rgba(29,120,196,0.5)" stroke="rgba(29,120,196,0.65)" stroke-width="0.8"/>
+
+          <!-- Client signal lines -->
+          <line x1="185" y1="50" x2="210" y2="38" stroke="rgba(29,120,196,0.3)" stroke-width="0.8" stroke-dasharray="3,2"/>
+          <line x1="185" y1="50" x2="163" y2="42" stroke="rgba(29,120,196,0.25)" stroke-width="0.8" stroke-dasharray="3,2"/>
+          <line x1="425" y1="50" x2="445" y2="35" stroke="rgba(29,120,196,0.3)" stroke-width="0.8" stroke-dasharray="3,2"/>
+          <line x1="425" y1="50" x2="405" y2="38" stroke="rgba(29,120,196,0.25)" stroke-width="0.8" stroke-dasharray="3,2"/>
+          <line x1="305" y1="168" x2="330" y2="175" stroke="rgba(29,120,196,0.3)" stroke-width="0.8" stroke-dasharray="3,2"/>
+          <line x1="665" y1="50" x2="645" y2="42" stroke="rgba(29,120,196,0.3)" stroke-width="0.8" stroke-dasharray="3,2"/>
+
+          <!-- Animated pulses — backbone flow -->
+          <circle r="4.5" fill="#1D78C4" filter="url(#wifi-glow-sm)">
+            <animateMotion dur="3s" repeatCount="indefinite" begin="0s"><mpath href="#bb"/></animateMotion>
+          </circle>
+          <circle r="3.5" fill="#3d99d8" filter="url(#wifi-glow-sm)">
+            <animateMotion dur="3s" repeatCount="indefinite" begin="1s"><mpath href="#bb"/></animateMotion>
+          </circle>
+          <circle r="3" fill="#1D78C4" filter="url(#wifi-glow-sm)">
+            <animateMotion dur="3s" repeatCount="indefinite" begin="2s"><mpath href="#bb"/></animateMotion>
+          </circle>
+
+          <!-- Animated pulses — drops to APs -->
+          <circle r="3" fill="#1D78C4" filter="url(#wifi-glow-sm)">
+            <animateMotion dur="1.5s" repeatCount="indefinite" begin="0.3s"><mpath href="#d1"/></animateMotion>
+          </circle>
+          <circle r="3" fill="#2a8adb" filter="url(#wifi-glow-sm)">
+            <animateMotion dur="1.5s" repeatCount="indefinite" begin="0.8s"><mpath href="#d2"/></animateMotion>
+          </circle>
+          <circle r="3.5" fill="#1D78C4" filter="url(#wifi-glow-lg)">
+            <animateMotion dur="1.5s" repeatCount="indefinite" begin="1.1s"><mpath href="#d3"/></animateMotion>
+          </circle>
+          <circle r="3" fill="#2a8adb" filter="url(#wifi-glow-sm)">
+            <animateMotion dur="1.5s" repeatCount="indefinite" begin="1.6s"><mpath href="#d4"/></animateMotion>
+          </circle>
+          <circle r="3" fill="#1D78C4" filter="url(#wifi-glow-sm)">
+            <animateMotion dur="1.5s" repeatCount="indefinite" begin="2.0s"><mpath href="#d5"/></animateMotion>
+          </circle>
+          <circle r="3" fill="#2a8adb" filter="url(#wifi-glow-sm)">
+            <animateMotion dur="1.5s" repeatCount="indefinite" begin="2.4s"><mpath href="#d6"/></animateMotion>
+          </circle>
+        </svg>
+      </div>
+
+      <div class="hop-stats">
+        <div class="hop-stat">
+          <span class="hop-stat-value">Wi-Fi 6E/7</span>
+          <span class="hop-stat-label">802.11be Ready</span>
+        </div>
+        <div class="hop-stat">
+          <span class="hop-stat-value">802.11k/v/r</span>
+          <span class="hop-stat-label">Seamless Roaming</span>
+        </div>
+        <div class="hop-stat">
+          <span class="hop-stat-value">WPA3</span>
+          <span class="hop-stat-label">Security Architecture</span>
+        </div>
+        <div class="hop-stat">
+          <span class="hop-stat-value">Capacity</span>
+          <span class="hop-stat-label">Airtime-First Design</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- INTRO -->
+<section class="intro-section">
+  <div class="sec-wrap">
+    <div class="intro-grid">
+      <div class="intro-left">
+        <p class="intro-problem-eyebrow">The Reality of Wi-Fi Deployment</p>
+        <h2 class="intro-problem-title">Wi-Fi networks are expected to behave like wired networks — but they operate in an RF environment that never stops changing.</h2>
+        <p class="intro-body">Client devices, neighboring networks, building materials, and interference sources shift continuously. This is why Wi-Fi performance degrades even when the hardware is new — the RF environment has changed in ways the original design never accounted for.</p>
+        <p class="intro-body">Many deployments are built around coverage assumptions instead of capacity, airtime efficiency, and security architecture. The result is congestion, unstable roaming, inconsistent user experience, and redesign costs that typically surface only after go-live.</p>
+      </div>
+      <div class="intro-right">
+        <p class="intro-approach-label">The NodalWire Approach</p>
+        <h3 class="intro-approach-title">We plan Wi-Fi as an engineered access system — RF, capacity, security, and operational readiness together.</h3>
+        <p class="intro-body" style="color:#486080;">We design for airtime efficiency and throughput, not just coverage footprint. RF design, capacity modeling, security policy, and roaming behavior are planned together — so the network remains reliable under real-world usage across its full operational life, not just on day one.</p>
+        <p class="intro-body" style="color:#486080;">We design networks that stay stable under real interference, real device density, and real roaming behavior — so performance remains predictable as your environment changes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN POINTS -->
+<section class="pain-section">
+  <div class="sec-wrap">
+    <div class="sec-header">
+      <div class="sec-eyebrow" style="color:var(--brand)">Real-World Failures</div>
+      <h2 class="sec-title">Where Wi-Fi Deployments Break Down</h2>
+      <p class="sec-sub">Most Wi-Fi problems are not caused by weak signal — they are caused by airtime contention, poor channel reuse, and unmanaged interference. These are design failures, not equipment failures.</p>
+    </div>
+    <div class="pain-grid">
+
+      <div class="pain-card">
+        <p class="pain-num">01</p>
+        <h3 class="pain-title">High-Density Environments Fail Without Capacity Modeling</h3>
+        <p class="pain-desc">Coverage planning without capacity and throughput modeling per cell produces congestion at scale. When every user in a meeting room appears connected but nothing actually works, the design assumed coverage — not concurrent airtime demand.</p>
+      </div>
+
+      <div class="pain-card">
+        <p class="pain-num">02</p>
+        <h3 class="pain-title">Roaming Breaks Due to RF Boundary Design</h3>
+        <p class="pain-desc">Roaming issues come from inconsistent RF boundaries, incorrect minimum data rates, and poorly tuned 802.11k/v/r behavior. "Sticky clients" that hold on to a distant AP are a design symptom — not a client bug.</p>
+      </div>
+
+      <div class="pain-card">
+        <p class="pain-num">03</p>
+        <h3 class="pain-title">Security Gaps From SSID Sprawl</h3>
+        <p class="pain-desc">Security gaps appear when SSID sprawl replaces proper segmentation — and when guest, IoT, and corporate traffic share the same trust boundary. A Wi-Fi deployment without a security architecture is an open surface waiting to be exploited.</p>
+      </div>
+
+      <div class="pain-card">
+        <p class="pain-num">04</p>
+        <h3 class="pain-title">Real Interference Sources Are Ignored at Design Time</h3>
+        <p class="pain-desc">Performance becomes unpredictable when RF planning ignores actual interference — neighboring APs, Bluetooth and IoT noise, microwaves, industrial equipment, forklifts, and reflective metal layouts in warehouses and manufacturing environments.</p>
+      </div>
+
+      <div class="pain-card">
+        <p class="pain-num">05</p>
+        <h3 class="pain-title">Redesign Is Expensive After Operations Begin</h3>
+        <p class="pain-desc">Wi-Fi failures tend to surface after operations begin — when the network must be fixed without downtime, with users depending on it in real time. Problems that cost hours to prevent at design stage cost days to fix in production.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section class="industries-section">
+  <div class="sec-wrap">
+    <div class="sec-header">
+      <div class="sec-eyebrow" style="color:var(--brand)">Environments We Serve</div>
+      <h2 class="sec-title">Industries &amp; Environments We Design For</h2>
+      <p class="sec-sub">We design enterprise Wi-Fi networks across environments where generic deployments consistently fail — each with its own density, roaming, security, and interference challenges.</p>
+    </div>
+    <div class="ind-grid">
+
+      <div class="ind-card">
+        <div class="ind-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D78C4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          </svg>
+        </div>
+        <h3 class="ind-title">Corporate &amp; Enterprise</h3>
+        <p class="ind-desc">Offices often look fine on day one, then performance collapses as meeting rooms, video calls, and hybrid work patterns increase load. We design Wi-Fi that holds stable across floors and conference density, with clean roaming and predictable user experience.</p>
+      </div>
+
+      <div class="ind-card">
+        <div class="ind-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D78C4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+        </div>
+        <h3 class="ind-title">Healthcare Facilities</h3>
+        <p class="ind-desc">Clinical networks must support critical devices, mobility, and RTLS without tolerance for outages or weak security. We design Wi-Fi that prioritizes reliability and segmentation so clinical operations remain stable even during peak usage and device saturation.</p>
+      </div>
+
+      <div class="ind-card">
+        <div class="ind-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D78C4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+          </svg>
+        </div>
+        <h3 class="ind-title">Education Institutions</h3>
+        <p class="ind-desc">Schools and campuses experience extreme concurrency spikes and fast roaming patterns that break generic designs. We engineer Wi-Fi for device density and airtime efficiency so learning platforms remain consistent across classrooms and common areas.</p>
+      </div>
+
+      <div class="ind-card">
+        <div class="ind-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D78C4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <h3 class="ind-title">Hospitality &amp; Tourism</h3>
+        <p class="ind-desc">Guest Wi-Fi is judged instantly and remembered for years. We design networks that deliver stable roaming and consistent performance across rooms and public spaces — while keeping guest traffic fully isolated from back-of-house operations.</p>
+      </div>
+
+      <div class="ind-card">
+        <div class="ind-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D78C4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <h3 class="ind-title">Manufacturing &amp; Warehousing</h3>
+        <p class="ind-desc">Industrial environments create RF reflections, interference, and mobility challenges that cause dropouts and latency spikes. We design Wi-Fi that remains dependable for scanners, tablets, AGVs, and IoT sensors across harsh and reflective layouts.</p>
+      </div>
+
+      <div class="ind-card">
+        <div class="ind-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D78C4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <h3 class="ind-title">Public Venues &amp; High-Density Spaces</h3>
+        <p class="ind-desc">Stadiums, convention centers, and event venues fail when Wi-Fi is designed for coverage instead of contention management. We design high-density Wi-Fi that controls airtime, channel reuse, and client behavior under peak concurrent load.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ADVANTAGE -->
+<section class="advantage-section">
+  <div class="sec-wrap">
+    <div class="sec-header">
+      <div class="sec-eyebrow" style="color:var(--brand)">Our Differentiators</div>
+      <h2 class="sec-title">The NodalWire Advantage</h2>
+      <p class="sec-sub">Engineering principles that guide every Wi-Fi design — from RF modeling to security architecture and long-term operational readiness.</p>
+    </div>
+    <div class="adv-grid">
+
+      <div class="adv-card">
+        <p class="adv-num">01</p>
+        <h3 class="adv-title">Capacity-First RF Design</h3>
+        <p class="adv-desc">We design for airtime and throughput, not just RSSI. Coverage is necessary — but capacity, channel reuse, and interference control are what make the network stable when the building fills up.</p>
+      </div>
+
+      <div class="adv-card">
+        <p class="adv-num">02</p>
+        <h3 class="adv-title">Roaming That Works Across Real Clients</h3>
+        <p class="adv-desc">Roaming performance is client-driven, not AP-driven. We design RF boundaries and minimum rate strategies that work across mixed client ecosystems — not just the ideal devices used during testing.</p>
+      </div>
+
+      <div class="adv-card">
+        <p class="adv-num">03</p>
+        <h3 class="adv-title">Security Architecture Built In</h3>
+        <p class="adv-desc">We design segmentation, SSID strategy, and 802.1X/WPA3 policies as part of the plan — not as an afterthought. This avoids SSID sprawl and reduces the operational and compliance risk from day one.</p>
+      </div>
+
+      <div class="adv-card">
+        <p class="adv-num">04</p>
+        <h3 class="adv-title">Predictive + Validation Discipline</h3>
+        <p class="adv-desc">Predictive design is only the starting point. We validate against real conditions and document what changed so the network remains maintainable, auditable, and upgrade-ready throughout its lifecycle.</p>
+      </div>
+
+      <div class="adv-card adv-card--span2">
+        <p class="adv-num">05</p>
+        <h3 class="adv-title">Vendor-Neutral by Principle</h3>
+        <p class="adv-desc">We design based on requirements, RF constraints, and operational goals — not vendor defaults or preferred platforms. This keeps technology decisions in your control, protects long-term flexibility, and ensures the design is driven by what the environment actually needs rather than what a vendor's reference architecture recommends.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- DID YOU KNOW -->
+<section class="dyks-section">
+  <div class="sec-wrap dyks-inner">
+    <div class="sec-header">
+      <div class="sec-eyebrow">Technical Insights</div>
+      <h2 class="sec-title">Did You Know?</h2>
+      <p class="sec-sub">Engineering facts that change how operators, architects, and IT teams think about what actually limits Wi-Fi performance.</p>
+    </div>
+    <div class="dyks-grid">
+
+      <div class="dyk-card-outer" onclick="flipCard(this)" role="button" aria-label="Flip card">
+        <div class="dyk-card">
+          <div class="dyk-front">
+            <div><p class="dyk-tag">Airtime Is the Limit</p><p class="dyk-claim">Wi-Fi performance is typically limited by airtime utilization, not signal strength.</p></div>
+            <p class="dyk-flip-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>Click to reveal insight</p>
+          </div>
+          <div class="dyk-back">
+            <div><p class="dyk-insight-label">Engineering Insight</p><p class="dyk-insight">A client can show strong signal and still perform poorly if the channel is busy. Wi-Fi is half-duplex — airtime is the real currency. High-density design is mostly about controlling contention, not maximizing signal levels.</p></div>
+            <p class="dyk-flip-back-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>Click to flip back</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="dyk-card-outer" onclick="flipCard(this)" role="button" aria-label="Flip card">
+        <div class="dyk-card">
+          <div class="dyk-front">
+            <div><p class="dyk-tag">Co-Channel Interference</p><p class="dyk-claim">Adding more APs can reduce performance if channel reuse is wrong.</p></div>
+            <p class="dyk-flip-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>Click to reveal insight</p>
+          </div>
+          <div class="dyk-back">
+            <div><p class="dyk-insight-label">Engineering Insight</p><p class="dyk-insight">Too many APs on the same channel increases contention, reduces effective throughput per cell, and makes latency unstable. Capacity design requires controlled channel reuse — not maximum AP density.</p></div>
+            <p class="dyk-flip-back-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>Click to flip back</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="dyk-card-outer" onclick="flipCard(this)" role="button" aria-label="Flip card">
+        <div class="dyk-card">
+          <div class="dyk-front">
+            <div><p class="dyk-tag">2.4 GHz Risk</p><p class="dyk-claim">2.4 GHz is frequently the hidden cause of sticky clients and poor roaming.</p></div>
+            <p class="dyk-flip-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>Click to reveal insight</p>
+          </div>
+          <div class="dyk-back">
+            <div><p class="dyk-insight-label">Engineering Insight</p><p class="dyk-insight">With only a few usable channels, 2.4 GHz gets congested quickly. Clients that stick to 2.4 GHz create low data rates and airtime drain that impacts the entire WLAN — not just themselves.</p></div>
+            <p class="dyk-flip-back-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>Click to flip back</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="dyk-card-outer" onclick="flipCard(this)" role="button" aria-label="Flip card">
+        <div class="dyk-card">
+          <div class="dyk-front">
+            <div><p class="dyk-tag">Basic Rate Strategy</p><p class="dyk-claim">Many roaming issues are caused by incorrect minimum basic rates — not AP placement.</p></div>
+            <p class="dyk-flip-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>Click to reveal insight</p>
+          </div>
+          <div class="dyk-back">
+            <div><p class="dyk-insight-label">Engineering Insight</p><p class="dyk-insight">If legacy rates are allowed, clients stay connected too long and roam too late. Tuning basic rates and RSSI thresholds often resolves "random drops" and "calls cutting out" complaints without moving a single AP.</p></div>
+            <p class="dyk-flip-back-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>Click to flip back</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="dyk-card-outer" onclick="flipCard(this)" role="button" aria-label="Flip card">
+        <div class="dyk-card">
+          <div class="dyk-front">
+            <div><p class="dyk-tag">6 GHz Reality</p><p class="dyk-claim">Wi-Fi 6E/7 upgrades fail when clients don't actually move to the 6 GHz band.</p></div>
+            <p class="dyk-flip-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>Click to reveal insight</p>
+          </div>
+          <div class="dyk-back">
+            <div><p class="dyk-insight-label">Engineering Insight</p><p class="dyk-insight">Without band steering, policy design, and validation of actual client support, networks end up overloaded on 5 GHz while 6 GHz sits underused. Design must account for the real client mix — not the ideal one.</p></div>
+            <p class="dyk-flip-back-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>Click to flip back</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="dyk-card-outer" onclick="flipCard(this)" role="button" aria-label="Flip card">
+        <div class="dyk-card">
+          <div class="dyk-front">
+            <div><p class="dyk-tag">DFS Instability</p><p class="dyk-claim">DFS channel events can look exactly like "random Wi-Fi drops" in some environments.</p></div>
+            <p class="dyk-flip-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>Click to reveal insight</p>
+          </div>
+          <div class="dyk-back">
+            <div><p class="dyk-insight-label">Engineering Insight</p><p class="dyk-insight">Radar detection forces channel changes. Near airports, weather radar, or military installations, DFS channels may cause repeated interruptions unless RF planning explicitly accounts for local radar activity.</p></div>
+            <p class="dyk-flip-back-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>Click to flip back</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="dyk-card-outer wide" onclick="flipCard(this)" role="button" aria-label="Flip card">
+        <div class="dyk-card">
+          <div class="dyk-front">
+            <div><p class="dyk-tag">Wired Infrastructure Limits</p><p class="dyk-claim">Many Wi-Fi complaints are actually PoE, uplink, or VLAN design issues — not RF problems.</p></div>
+            <p class="dyk-flip-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>Click to reveal insight</p>
+          </div>
+          <div class="dyk-back">
+            <div><p class="dyk-insight-label">Engineering Insight</p><p class="dyk-insight">Incorrect PoE budgets, oversubscribed uplinks, or poor QoS mapping can cap throughput and create jitter even when RF is perfect. Great Wi-Fi requires end-to-end planning — the wired infrastructure underneath determines the ceiling the wireless layer can never exceed.</p></div>
+            <p class="dyk-flip-back-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>Click to flip back</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="sec-wrap">
+    <div class="sec-header">
+      <div class="sec-eyebrow" style="color:var(--brand)">Common Questions</div>
+      <h2 class="sec-title">Wi-Fi Network Design — FAQ</h2>
+      <p class="sec-sub">Specific, risk-reducing answers to the questions we hear most often before Wi-Fi engagements begin.</p>
+    </div>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          <span class="faq-q-text">Do you only design, or do you also install?</span>
+          <span class="faq-icon" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><line x1="5" y1="1" x2="5" y2="9" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="5" x2="9" y2="5" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+        </button>
+        <div class="faq-answer">
+          <p class="faq-answer-inner">We focus on planning and design. We provide implementation-ready documentation and can coordinate with qualified installers if needed — ensuring design intent is preserved through deployment and commissioning.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          <span class="faq-q-text">Do you perform predictive surveys, active surveys, or both?</span>
+          <span class="faq-icon" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><line x1="5" y1="1" x2="5" y2="9" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="5" x2="9" y2="5" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+        </button>
+        <div class="faq-answer">
+          <p class="faq-answer-inner">Both. Predictive surveys are for planning and budgeting — they establish the design intent. Validation and active surveys confirm the network meets performance targets in real conditions after deployment. Both have a specific role and neither replaces the other.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          <span class="faq-q-text">Can you design for voice, video, and real-time applications?</span>
+          <span class="faq-icon" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><line x1="5" y1="1" x2="5" y2="9" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="5" x2="9" y2="5" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+        </button>
+        <div class="faq-answer">
+          <p class="faq-answer-inner">Yes. We incorporate QoS policy, airtime planning, and roaming tuning so real-time applications remain stable under load — including UC platforms, clinical RTLS, video conferencing, and time-sensitive industrial control systems.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          <span class="faq-q-text">Can you secure guest and IoT traffic without breaking operations?</span>
+          <span class="faq-icon" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><line x1="5" y1="1" x2="5" y2="9" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="5" x2="9" y2="5" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+        </button>
+        <div class="faq-answer">
+          <p class="faq-answer-inner">Yes. We design segmentation, SSID strategy, and access control (802.1X/NAC where appropriate) so guest and IoT traffic remain isolated without creating SSID sprawl or adding operational complexity that eventually gets bypassed.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          <span class="faq-q-text">Do you support cloud-managed and controller-based architectures?</span>
+          <span class="faq-icon" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><line x1="5" y1="1" x2="5" y2="9" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="5" x2="9" y2="5" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+        </button>
+        <div class="faq-answer">
+          <p class="faq-answer-inner">Yes. We design for cloud-managed, on-premises controller, and hybrid models depending on operational needs and site constraints. The management architecture is a design decision — not a default — and is evaluated against your operational model and long-term support capacity.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          <span class="faq-q-text">Why does Wi-Fi feel worse after adding more access points?</span>
+          <span class="faq-icon" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><line x1="5" y1="1" x2="5" y2="9" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="5" x2="9" y2="5" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+        </button>
+        <div class="faq-answer">
+          <p class="faq-answer-inner">Usually due to co-channel interference and poor channel reuse. More APs without proper reuse planning increases contention and reduces effective throughput per cell — the opposite of the intended effect. Adding APs to fix Wi-Fi problems often makes them worse if channel architecture is not redesigned at the same time.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<!-- CTA -->
+<section class="cta-assess" id="assessment">
+  <div class="cta-assess-inner">
+    <div class="cta-left">
+      <p class="cta-eyebrow">Validate Before You Deploy</p>
+      <h2 class="cta-headline">Validate Your Wi-Fi Design Before Users Do It for You</h2>
+      <p class="cta-body">Most Wi-Fi problems only appear after go-live, when the network must be fixed without downtime. If you are planning a new deployment, upgrading to Wi-Fi 6E/7, or troubleshooting instability, we can help you validate RF design, capacity assumptions, security segmentation, and roaming behavior before changes are locked in.</p>
+      <div class="cta-links">
+        <a href="#" class="cta-link">
+          <svg class="cta-link-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Start a technical discussion
+        </a>
+        <a href="#" class="cta-link">
+          <svg class="cta-link-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Request a design or survey review
+        </a>
+      </div>
+    </div>
+    <div class="cta-form-card">
+      <p class="cta-form-title">Request a Design Review</p>
+      <p class="cta-form-desc">Tell us about your Wi-Fi environment. An engineer will review your situation and respond within one business day.</p>
+      <form class="cta-form" id="assessmentForm" action="https://formsubmit.co/contact@nodalwire.com" method="POST">
+        <input type="hidden" name="_subject" value="New Assessment Request — NodalWire">
+        <input type="hidden" name="_captcha" value="true">
+        <div class="cta-field">
+          <label class="cta-label" for="cta-name">Full Name</label>
+          <input class="cta-input" id="cta-name" type="text" placeholder="Jane Smith" autocomplete="name" name="Full Name" required>
+        </div>
+        <div class="cta-field">
+          <label class="cta-label" for="cta-email">Work Email</label>
+          <input class="cta-input" id="cta-email" type="email" placeholder="jane@company.com" autocomplete="email" name="email" required>
+        </div>
+        <div class="cta-field">
+          <label class="cta-label" for="cta-org">Organization</label>
+          <input class="cta-input" id="cta-org" type="text" placeholder="Your company name" autocomplete="organization" name="Organization">
+        </div>
+        <div class="cta-field">
+          <label class="cta-label" for="cta-type">Focus Area</label>
+          <select class="cta-select" id="cta-type" name="Network Type">
+            <option value="" disabled selected>Select a focus area…</option>
+            <option>New Wi-Fi deployment design</option>
+            <option>Wi-Fi 6E / 7 upgrade planning</option>
+            <option>Existing network review &amp; troubleshooting</option>
+            <option>High-density or venue design</option>
+            <option>Security segmentation &amp; 802.1X</option>
+            <option>Predictive or validation survey</option>
+          </select>
+        </div>
+        <button type="submit" class="cta-btn">Start a Technical Discussion →</button>
+        <p class="cta-note">No sales calls. No unsolicited follow-up. Your information is used solely to prepare for your discussion.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer id="footer" style="
+  background: #060e1a;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  font-family: 'Lato', sans-serif;
+">
+  <style>
+    .footer-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 40px 0;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.6fr 1.2fr 0.8fr 1.2fr;
+      gap: 40px;
+      padding-bottom: 36px;
+    }
+    .footer-brand-logo {
+      height: 72px;
+      filter: brightness(0) invert(1);
+      display: block;
+      margin-bottom: 8px;
+    }
+    .footer-tagline {
+      font-family: 'Lato', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 14px;
+    }
+    .footer-desc {
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 20px;
+      max-width: 260px;
+    }
+    .footer-social {
+      display: flex;
+      gap: 14px;
+    }
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .footer-social a:hover {
+      border-color: #1D78C4;
+      color: #fff;
+      background: rgba(29,120,196,0.15);
+    }
+    .footer-col-title {
+      font-family: 'Lato', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #eef4ff;
+      margin-bottom: 16px;
+    }
+    .footer-links {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer-links a {
+      font-size: 13.5px;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: #fff; }
+    .footer-contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .footer-contact-icon {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      margin-top: 1px;
+      color: #1D78C4;
+    }
+    .footer-contact-text {
+      font-size: 13.5px;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.5;
+    }
+    .footer-contact-text a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-contact-text a:hover { color: #fff; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 18px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .footer-copy {
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.5);
+    }
+    .footer-legal {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .footer-legal a {
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-legal a:hover { color: rgba(255,255,255,0.8); }
+    .footer-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Lato', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: #fff;
+      padding: 11px 18px;
+      background: linear-gradient(135deg, rgba(29,120,196,0.55) 0%, rgba(14,60,120,0.7) 100%);
+      border: 1px solid rgba(29,120,196,0.45);
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 2px 14px rgba(29,120,196,0.22), inset 0 1px 0 rgba(255,255,255,0.14), inset 0 -1px 0 rgba(0,0,0,0.15);
+      text-decoration: none;
+      margin-bottom: 16px;
+      transition: background 0.22s ease, box-shadow 0.22s ease, transform 0.18s cubic-bezier(0.34,1.56,0.64,1);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .footer-cta-btn:hover {
+      background: linear-gradient(135deg, rgba(29,120,196,0.75) 0%, rgba(18,70,140,0.88) 100%);
+      box-shadow: 0 4px 22px rgba(29,120,196,0.38), inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -1px 0 rgba(0,0,0,0.18);
+      transform: translateY(-1px);
+    }
+    .footer-cta-btn:active { transform: translateY(0); }
+    .footer-cta-btn svg { opacity: 0.85; transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1); }
+    .footer-cta-btn:hover svg { transform: translateX(3px); }
+
+    @media (max-width: 900px) {
+      .footer-top {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+      .footer-wrap { padding: 36px 24px 0; }
+    }
+    @media (max-width: 560px) {
+      .footer-top { grid-template-columns: 1fr; gap: 28px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 10px; padding: 16px 24px; }
+    }
+  </style>
+
+  <div class="footer-wrap">
+    <div class="footer-top">
+
+      <!-- Brand block -->
+      <div>
+        <img src="Brand_Assets/fulllogo_transparent.png" alt="NodalWire" class="footer-brand-logo">
+        <p class="footer-tagline">Cognitive Network Solutions</p>
+        <p class="footer-desc">We turn unstable, reactive networks into predictable, self-healing systems.</p>
+        <div class="footer-social">
+          <!-- LinkedIn -->
+          <a href="https://www.linkedin.com/company/nodalwire/" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+          </a>
+          <!-- Twitter/X -->
+          <a href="#" aria-label="Twitter">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.735-8.835L1.254 2.25H8.08l4.261 5.632 5.903-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Solutions -->
+      <div>
+        <p class="footer-col-title">Solutions</p>
+        <ul class="footer-links">
+          <li><a href="microwave.html">Microwave Networks</a></li>
+          <li><a href="optical.html">Optical Networks</a></li>
+          <li><a href="ftth.html">FTTH Networks</a></li>
+          <li><a href="wifi.html">WiFi Networks</a></li>
+          <li><a href="lab.html">Communication Labs</a></li>
+          <li><a href="hummingbird_hollow_case_study.html">Remote Property Connectivity</a></li>
+        </ul>
+      </div>
+
+      <!-- Company -->
+      <div>
+        <p class="footer-col-title">Company</p>
+        <ul class="footer-links">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Insights</a></li>
+          <li><a href="#">Case Studies</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <p class="footer-col-title">Contact</p>
+        <a href="#assessment" class="footer-cta-btn">
+          Let's Talk About Your Network
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+        <div class="footer-contact-item">
+          <svg class="footer-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+          <p class="footer-contact-text"><a href="mailto:contact@nodalwire.com">contact@nodalwire.com</a></p>
+        </div>
+        <div class="footer-contact-item">
+          <svg class="footer-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          <p class="footer-contact-text">Plano, TX USA<br><span style="font-size:12.5px; color:rgba(255,255,255,0.55);">Serving clients remotely &amp; onsite</span></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2026 NodalWire LLC. All rights reserved.</p>
+    <ul class="footer-legal">
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Terms of Use</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  function flipCard(card) {
+    var isFlipped = card.classList.contains('flipped');
+    document.querySelectorAll('.dyk-card-outer').forEach(function(c) { c.classList.remove('flipped'); });
+    if (!isFlipped) { card.classList.add('flipped'); }
+  }
+
+  
+  document.querySelectorAll('.faq-question').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var item = this.closest('.faq-item');
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function(el) {
+        el.classList.remove('open');
+        el.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) { item.classList.add('open'); this.setAttribute('aria-expanded', 'true'); }
+    });
+  });
+</script>
+
+
+<!-- ══ SUCCESS MODAL ══ -->
+<style>
+  #successModal { display:none; position:fixed; inset:0; z-index:9000;
+    align-items:center; justify-content:center;
+    background:rgba(6,14,26,0.84); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    padding:24px; }
+  #successModal.open { display:flex; }
+  @keyframes nwModalIn {
+    from { opacity:0; transform:translateY(24px) scale(0.96); }
+    to   { opacity:1; transform:translateY(0)   scale(1); }
+  }
+  #successModalCard {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 48px 44px;
+    max-width: 460px; width: 100%;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+    text-align: center;
+    animation: nwModalIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  #successModalIcon {
+    width:64px; height:64px; border-radius:50%;
+    background:rgba(29,120,196,0.15); border:1.5px solid rgba(29,120,196,0.45);
+    display:flex; align-items:center; justify-content:center;
+    margin:0 auto 24px;
+  }
+  #successModalTitle {
+    font-family:'Lato',sans-serif; font-size:22px; font-weight:700;
+    color:#eef4ff; letter-spacing:-0.02em; margin-bottom:12px;
+  }
+  #successModalBody {
+    font-family:'Inter',sans-serif; font-size:15px; line-height:1.65;
+    color:rgba(238,244,255,0.72); margin-bottom:8px;
+  }
+  #successModalNote {
+    font-family:'Inter',sans-serif; font-size:13px;
+    color:rgba(238,244,255,0.38); margin-bottom:32px;
+  }
+  #successModalClose {
+    font-family:'Lato',sans-serif; font-weight:600; font-size:14px;
+    color:#fff; background:linear-gradient(135deg,#1D78C4 0%,#1562a8 100%);
+    border:none; border-radius:8px; padding:12px 32px; cursor:pointer;
+    box-shadow:0 4px 16px rgba(29,120,196,0.28);
+    transition:opacity 0.2s, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  #successModalClose:hover { opacity:0.88; transform:translateY(-1px); }
+  #successModalClose:active { transform:translateY(0); }
+</style>
+
+<div id="successModal" role="dialog" aria-modal="true" aria-labelledby="successModalTitle">
+  <div id="successModalCard">
+    <div id="successModalIcon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+           stroke="#1D78C4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+    <p id="successModalTitle">Request Received</p>
+    <p id="successModalBody">An engineer will review your situation and respond within one business day.</p>
+    <p id="successModalNote">A confirmation has been sent to your email address.</p>
+    <button id="successModalClose" onclick="document.getElementById('successModal').classList.remove('open')">
+      Close
+    </button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var form = document.getElementById('assessmentForm');
+  if (!form) return;
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var btn = form.querySelector('[type="submit"]');
+    var origText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    function val(selector) {
+      var el = form.querySelector(selector);
+      return el ? el.value.trim() : '';
+    }
+
+    var payload = {
+      'Full Name':        val('[name="Full Name"]'),
+      email:              val('[name="email"]'),
+      Organization:       val('[name="Organization"]'),
+      'Area of Interest': val('[name="Area of Interest"]') || val('[name="Network Type"]'),
+      _subject:    'New Assessment Request — NodalWire',
+      _replyto:    val('[name="email"]'),
+      _autoresponse: 'Thank you for contacting NodalWire. We have received your assessment request and an engineer will review your situation and respond within one business day.\n\nWarm regards,\nNodalWire Engineering Team'
+    };
+
+    try {
+      var res = await fetch('https://formsubmit.co/ajax/contact@nodalwire.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      var json = await res.json();
+      if (json.success === 'true' || json.success === true) {
+        form.reset();
+        document.getElementById('successModal').classList.add('open');
+      } else {
+        throw new Error('FormSubmit returned failure');
+      }
+    } catch (err) {
+      btn.textContent = 'Error — please email contact@nodalwire.com';
+      btn.style.opacity = '0.7';
+      setTimeout(function () {
+        btn.textContent = origText;
+        btn.style.opacity = '';
+        btn.disabled = false;
+      }, 5000);
+      return;
+    }
+
+    btn.textContent = origText;
+    btn.disabled = false;
+  });
+
+  // Close modal on backdrop click
+  document.getElementById('successModal').addEventListener('click', function (e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /node_modules/
+Disallow: /Temp_Screenshots/
+
+Sitemap: https://www.nodalwire.com/sitemap.xml

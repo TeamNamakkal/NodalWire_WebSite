@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Industries We Serve — Network Engineering Across Critical Sectors | NodalWire</title>
+  <!-- ── SEO ─────────────────────────────────────────────── -->
+  <meta name="description" content="NodalWire delivers carrier-grade network engineering across telecom, enterprise, healthcare, education, utilities, transportation, hospitality, real estate, and government sectors.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.nodalwire.com/industries.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://www.nodalwire.com/industries.html">
+  <meta property="og:title"       content="Industries We Serve — Network Engineering Across Critical Sectors | NodalWire">
+  <meta property="og:description" content="NodalWire delivers carrier-grade network engineering across telecom, enterprise, healthcare, education, utilities, transportation, hospitality, real estate, and government sectors.">
+  <meta property="og:image"       content="https://www.nodalwire.com/Brand_Assets/fulllogo.jpg">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name"   content="NodalWire">
+  <meta property="og:locale"      content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="Industries We Serve | NodalWire">
+  <meta name="twitter:description" content="Carrier-grade network engineering across every critical sector.">
+  <meta name="twitter:image"       content="https://www.nodalwire.com/Brand_Assets/fulllogo.jpg">
+
+  <!-- Author & Geo -->
+  <meta name="author"        content="Surendran Natarajan, NodalWire LLC">
+  <meta name="geo.region"    content="US-TX">
+  <meta name="geo.placename" content="Plano, Texas">
+  <meta name="geo.position"  content="33.0198;-96.6989">
+  <meta name="ICBM"          content="33.0198, -96.6989">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Industries We Serve",
+    "url": "https://www.nodalwire.com/industries.html",
+    "description": "NodalWire delivers carrier-grade network engineering across nine critical industry sectors.",
+    "isPartOf": { "@id": "https://www.nodalwire.com/#website" },
+    "about": { "@id": "https://www.nodalwire.com/#business" }
+  }
+  </script>
+  <!-- BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "NodalWire", "item": "https://www.nodalwire.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Industries", "item": "https://www.nodalwire.com/industries.html" }
+    ]
+  }
+  </script>
+  <!-- ── /SEO ── -->
+
+  <link rel="icon" type="image/png" href="brand_assets/icononly_transparent_nobuffer.png">
+  <link rel="apple-touch-icon" href="brand_assets/icononly_transparent_nobuffer.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Inter:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand:      #1D78C4;
+      --brand-dark: #155a9a;
+      --navy:       #060e1a;
+      --bright:     #eef4ff;
+      --muted:      #7a9bbf;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: #fff;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ═══ NAV ═══ */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      height: 90px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 56px;
+      background: rgba(6,14,26,0.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(29,120,196,0.16);
+    }
+    .nav-logo img { height: 78px; width: auto; filter: brightness(0) invert(1); }
+    .nav-links {
+      display: flex; gap: 44px; list-style: none;
+      position: absolute; left: 50%; transform: translateX(-50%);
+    }
+    .nav-links a {
+      font-family: 'Lato', sans-serif; font-weight: 500; font-size: 17px;
+      letter-spacing: 0.01em; color: #fff; text-decoration: none; position: relative;
+      transition: color 0.2s ease;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0;
+      width: 0; height: 1px; background: var(--brand);
+      transition: width 0.25s cubic-bezier(0.4,0,0.2,1);
+    }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active::after { width: 100%; }
+    .has-dropdown { position: relative; }
+    .has-dropdown > a::after { content: ' ▾'; font-size: 10px; opacity: 0.6; letter-spacing: 0; }
+    .nav-dropdown { position: absolute; top: calc(100% + 16px); left: 50%; transform: translateX(-50%) translateY(-8px); min-width: 180px; background: rgba(7,16,31,0.97); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(29,120,196,0.18); border-radius: 10px; padding: 8px 0; list-style: none; box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3); opacity: 0; pointer-events: none; transition: opacity 0.2s ease, transform 0.22s cubic-bezier(0.34,1.56,0.64,1); z-index: 600; }
+    .has-dropdown:hover .nav-dropdown, .has-dropdown:focus-within .nav-dropdown { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+    .nav-dropdown li { padding: 0; }
+    .nav-dropdown a { display: block; font-family: 'Lato', sans-serif; font-size: 14px; font-weight: 500; color: rgba(238,244,255,0.82); text-decoration: none; padding: 10px 20px; transition: color 0.18s ease, background 0.18s ease; letter-spacing: 0.01em; }
+    .nav-dropdown a:hover { color: #fff; background: rgba(29,120,196,0.12); }
+    .nav-dropdown a::after { display: none; }
+    .nav-dropdown::before { content: ''; position: absolute; top: -16px; left: 0; right: 0; height: 16px; }
+    .nav-cta {
+      font-family: 'Lato', sans-serif; font-weight: 600; font-size: 13px;
+      letter-spacing: 0.03em; padding: 9px 20px;
+      border: 1.5px solid rgba(255,255,255,0.65); border-radius: 6px;
+      color: #fff; background: rgba(255,255,255,0.07); cursor: pointer;
+      text-decoration: none; transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .nav-cta:hover { background: var(--brand); border-color: var(--brand); }
+
+    /* ═══ HERO ═══ */
+    .hero {
+      position: relative; overflow: hidden;
+      padding: 180px 88px 110px;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 50%, rgba(29,120,196,0.12) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 50% at 80% 30%, rgba(29,120,196,0.08) 0%, transparent 60%),
+        linear-gradient(158deg, #07101f 0%, #0d2340 55%, #122e52 100%);
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(29,120,196,0.14) 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative; z-index: 2;
+      max-width: 860px;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'Lato', sans-serif; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase; color: var(--brand);
+      margin-bottom: 28px;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: block; width: 22px; height: 1.5px;
+      background: var(--brand); flex-shrink: 0;
+    }
+    .hero-h1 {
+      font-family: 'Lato', sans-serif;
+      font-size: clamp(30px, 3.8vw, 52px);
+      font-weight: 700; line-height: 1.1;
+      letter-spacing: -0.03em; color: var(--bright);
+      margin-bottom: 24px;
+    }
+    .hero-h1 em { font-style: normal; color: var(--brand); }
+    .hero-sub {
+      font-family: 'Inter', sans-serif; font-size: 16.5px;
+      font-weight: 400; line-height: 1.7; color: var(--muted);
+      max-width: 640px; margin-bottom: 40px;
+    }
+    .hero-stats {
+      display: flex; gap: 48px; flex-wrap: wrap;
+    }
+    .hero-stat-num {
+      font-family: 'Lato', sans-serif; font-size: 32px; font-weight: 700;
+      color: var(--bright); letter-spacing: -0.03em; line-height: 1;
+    }
+    .hero-stat-num span { color: var(--brand); }
+    .hero-stat-label {
+      font-family: 'Inter', sans-serif; font-size: 13px;
+      color: var(--muted); margin-top: 4px; line-height: 1.4;
+    }
+
+    /* ═══ INDUSTRIES GRID ═══ */
+    .industries {
+      background: #f4f5f1;
+      --bright: #0d1a2e;
+      --muted:  #486080;
+      padding: 96px 88px;
+    }
+    .section-eyebrow {
+      font-family: 'Lato', sans-serif; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand);
+      margin-bottom: 14px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-eyebrow::before {
+      content: ''; display: block; width: 18px; height: 1.5px;
+      background: var(--brand); flex-shrink: 0;
+    }
+    .industries-header {
+      max-width: 640px; margin-bottom: 56px;
+    }
+    .industries-title {
+      font-family: 'Lato', sans-serif;
+      font-size: clamp(26px, 2.6vw, 36px); font-weight: 700;
+      letter-spacing: -0.025em; color: #0d1a2e;
+      line-height: 1.15; margin-bottom: 16px;
+    }
+    .industries-desc {
+      font-family: 'Inter', sans-serif; font-size: 15.5px;
+      line-height: 1.7; color: #486080;
+    }
+    .industries-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 1160px;
+    }
+    .industry-card {
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 14px;
+      padding: 32px 28px;
+      display: flex; flex-direction: column;
+      gap: 0;
+      transition: border-color 0.22s ease, box-shadow 0.22s ease, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+      cursor: default;
+      position: relative; overflow: hidden;
+    }
+    .industry-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, #1D78C4, #4aa3e8);
+      opacity: 0;
+      transition: opacity 0.22s ease;
+    }
+    .industry-card:hover {
+      border-color: rgba(29,120,196,0.2);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+      transform: translateY(-3px);
+    }
+    .industry-card:hover::before { opacity: 1; }
+    .industry-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: rgba(29,120,196,0.08);
+      border: 1px solid rgba(29,120,196,0.18);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px; flex-shrink: 0;
+      color: #1D78C4;
+    }
+    .industry-name {
+      font-family: 'Lato', sans-serif; font-size: 16px; font-weight: 700;
+      color: #0d1a2e; letter-spacing: -0.01em;
+      margin-bottom: 8px; line-height: 1.2;
+    }
+    .industry-desc {
+      font-family: 'Inter', sans-serif; font-size: 13.5px;
+      line-height: 1.6; color: #486080;
+      flex: 1; margin-bottom: 20px;
+    }
+    .industry-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 16px;
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+    .industry-badge {
+      font-family: 'Lato', sans-serif; font-size: 10px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(29,120,196,0.7);
+      background: rgba(29,120,196,0.07);
+      border: 1px solid rgba(29,120,196,0.15);
+      border-radius: 4px; padding: 3px 8px;
+    }
+    .industry-link {
+      font-family: 'Lato', sans-serif; font-size: 13px; font-weight: 600;
+      color: #1D78C4; text-decoration: none; letter-spacing: 0.01em;
+      opacity: 0; transform: translateX(-4px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .industry-card:hover .industry-link {
+      opacity: 1; transform: translateX(0);
+    }
+
+    /* ═══ APPROACH STRIP ═══ */
+    .approach {
+      background: #fff;
+      border-top: 1px solid rgba(0,0,0,0.07);
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+      padding: 64px 88px;
+    }
+    .approach-inner {
+      max-width: 1160px;
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 40px;
+    }
+    .approach-item-label {
+      font-family: 'Lato', sans-serif; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--brand); margin-bottom: 10px;
+    }
+    .approach-item-title {
+      font-family: 'Lato', sans-serif; font-size: 17px; font-weight: 700;
+      color: #0d1a2e; margin-bottom: 8px; letter-spacing: -0.01em;
+    }
+    .approach-item-desc {
+      font-family: 'Inter', sans-serif; font-size: 14px;
+      line-height: 1.65; color: #486080;
+    }
+
+    /* ═══ CTA SECTION ═══ */
+    .cta-assess {
+      position: relative; overflow: hidden;
+      padding: 100px 88px;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 50%, rgba(29,120,196,0.12) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 50% at 80% 30%, rgba(29,120,196,0.08) 0%, transparent 60%),
+        linear-gradient(158deg, #07101f 0%, #0d2340 55%, #122e52 100%);
+      border-top: 1px solid rgba(29,120,196,0.12);
+    }
+    .cta-assess::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(29,120,196,0.12) 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: 0.35; pointer-events: none;
+    }
+    .cta-inner {
+      position: relative; z-index: 2;
+      max-width: 1160px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 72px; align-items: center;
+    }
+    .cta-eyebrow {
+      font-family: 'Lato', sans-serif; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--brand); margin-bottom: 20px;
+    }
+    .cta-headline {
+      font-family: 'Lato', sans-serif;
+      font-size: clamp(22px, 2.4vw, 32px); font-weight: 700;
+      letter-spacing: -0.022em; color: #E5E7EB;
+      margin-bottom: 16px; line-height: 1.2;
+    }
+    .cta-desc {
+      font-family: 'Inter', sans-serif; font-size: 15.5px;
+      line-height: 1.75; color: rgba(229,231,235,0.65);
+      margin-bottom: 28px; max-width: 460px;
+    }
+    .cta-bullets { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 13px; }
+    .cta-bullets li {
+      display: flex; align-items: center; gap: 12px;
+      font-family: 'Inter', sans-serif; font-size: 14.5px;
+      color: rgba(229,231,235,0.78); line-height: 1.5;
+    }
+    .cta-bullets li::before {
+      content: ''; flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%;
+      background: rgba(29,120,196,0.15); border: 1px solid rgba(29,120,196,0.45);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%231D78C4' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='2 6 5 9 10 3'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: center; background-size: 10px 10px;
+    }
+    .cta-form-card {
+      background: rgba(255,255,255,0.055);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 16px; padding: 40px 36px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.28), 0 1px 4px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.07);
+    }
+    .cta-form-title { font-family: 'Lato', sans-serif; font-size: 20px; font-weight: 700; color: #E5E7EB; margin-bottom: 8px; letter-spacing: -0.01em; }
+    .cta-form-desc { font-family: 'Inter', sans-serif; font-size: 13.5px; line-height: 1.65; color: rgba(229,231,235,0.55); margin-bottom: 28px; }
+    .cta-form { display: flex; flex-direction: column; gap: 14px; }
+    .cta-field { display: flex; flex-direction: column; gap: 6px; }
+    .cta-label { font-family: 'Inter', sans-serif; font-size: 11.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(229,231,235,0.45); }
+    .cta-input, .cta-select {
+      font-family: 'Inter', sans-serif; font-size: 14px; color: #E5E7EB;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px; padding: 11px 14px; outline: none; width: 100%;
+      transition: border-color 0.22s ease, box-shadow 0.22s ease;
+      -webkit-appearance: none; appearance: none;
+    }
+    .cta-input::placeholder { color: #94A3B8; }
+    .cta-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%2394A3B8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='4 6 8 10 12 6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 36px; cursor: pointer;
+    }
+    .cta-select option { background: #0d2340; color: #E5E7EB; }
+    .cta-input:focus, .cta-select:focus { border-color: #1D78C4; box-shadow: 0 0 0 3px rgba(29,120,196,0.14); }
+    .cta-btn {
+      font-family: 'Lato', sans-serif; font-weight: 700; font-size: 14px;
+      letter-spacing: 0.02em; color: #fff;
+      background: linear-gradient(135deg, #1D78C4 0%, #1562a8 100%);
+      border: none; border-radius: 9px; padding: 14px 24px;
+      cursor: pointer; width: 100%; margin-top: 4px;
+      box-shadow: 0 4px 16px rgba(29,120,196,0.28);
+      transition: background 0.22s ease, box-shadow 0.22s ease, transform 0.18s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .cta-btn:hover { background: linear-gradient(135deg, #2386d8 0%, #1D78C4 100%); transform: translateY(-2px); box-shadow: 0 6px 22px rgba(29,120,196,0.36); }
+    .cta-btn:active { transform: translateY(0); }
+    .cta-note { margin-top: 14px; font-family: 'Inter', sans-serif; font-size: 11.5px; line-height: 1.6; color: rgba(229,231,235,0.35); text-align: center; }
+
+    @media (max-width: 960px) {
+      .nav { padding: 0 24px; }
+      .hero { padding: 140px 32px 80px; }
+      .industries { padding: 72px 32px; }
+      .industries-grid { grid-template-columns: repeat(2, 1fr); }
+      .approach { padding: 56px 32px; }
+      .approach-inner { grid-template-columns: 1fr; gap: 32px; }
+      .cta-assess { padding: 72px 32px; }
+      .cta-inner { grid-template-columns: 1fr; gap: 48px; }
+    }
+    @media (max-width: 600px) {
+      .industries-grid { grid-template-columns: 1fr; }
+      .hero-stats { gap: 28px; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo" aria-label="NodalWire home">
+    <img src="Brand_Assets/fulllogo_transparent.png" alt="NodalWire">
+  </a>
+  <ul class="nav-links">
+    <li class="has-dropdown">
+      <a href="#">Solutions</a>
+      <ul class="nav-dropdown">
+        <li><a href="microwave.html">Microwave Networks</a></li>
+        <li><a href="optical.html">Optical Networks</a></li>
+        <li><a href="ftth.html">FTTH Networks</a></li>
+        <li><a href="wifi.html">WiFi Networks</a></li>
+        <li><a href="lab.html">Communication Labs</a></li>
+        <li><a href="hummingbird_hollow_case_study.html">Remote Property Connectivity</a></li>
+      </ul>
+    </li>
+    <li><a href="industries.html" class="active">Industries</a></li>
+    <li class="has-dropdown">
+      <a href="#">Insights</a>
+      <ul class="nav-dropdown">
+        <li><a href="https://www.nodalwireacademy.com" target="_blank" rel="noopener">Academy</a></li>
+      </ul>
+    </li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+  <a href="#assessment" class="nav-cta">Talk to an Engineer</a>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Industries</div>
+    <h1 class="hero-h1">Engineering Networks Across<br>Every <em>Critical Sector</em></h1>
+    <p class="hero-sub">Connectivity requirements vary by sector — the engineering discipline behind them shouldn't. NodalWire brings carrier-grade thinking to every environment where networks are mission-critical.</p>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">9<span>+</span></div>
+        <div class="hero-stat-label">Industries served</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">24<span>yrs</span></div>
+        <div class="hero-stat-label">Cross-sector experience</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">4</div>
+        <div class="hero-stat-label">Continents of deployment</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── INDUSTRIES GRID ── -->
+<section class="industries">
+  <div class="industries-header">
+    <div class="section-eyebrow">Where We Work</div>
+    <h2 class="industries-title">Every sector has a network problem.<br>We engineer the solution.</h2>
+    <p class="industries-desc">Dedicated industry pages are in development. In the meantime, explore our engineering approach below — or reach out directly for a conversation about your sector's specific challenges.</p>
+  </div>
+
+  <div class="industries-grid">
+
+    <!-- Telecom & ISPs -->
+    <div class="industry-card">
+      <div class="industry-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1.5 8.5c5.8-5.8 14.2-5.8 20 0"/><path d="M5 12c3.8-3.8 11-3.8 14 0"/><path d="M8.5 15.5c1.9-1.9 5.1-1.9 7 0"/><circle cx="12" cy="19" r="1" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="industry-name">Telecom &amp; ISPs</div>
+      <div class="industry-desc">Backbone, access, and backhaul networks built for carrier-grade SLAs, traffic growth, and long-term capex discipline.</div>
+      <div class="industry-footer">
+        <span class="industry-badge">Coming Soon</span>
+        <a href="#assessment" class="industry-link">Talk to us <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+    <!-- Enterprise & Corporate -->
+    <div class="industry-card">
+      <div class="industry-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 21V8m8 13V8M2 12h20"/>
+        </svg>
+      </div>
+      <div class="industry-name">Enterprise &amp; Corporate</div>
+      <div class="industry-desc">Multi-site WAN, campus Wi-Fi, and resilient LAN designed around actual business workflows — not vendor defaults.</div>
+      <div class="industry-footer">
+        <span class="industry-badge">Coming Soon</span>
+        <a href="#assessment" class="industry-link">Talk to us <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+    <!-- Healthcare -->
+    <div class="industry-card">
+      <div class="industry-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 8v8m-4-4h8"/>
+        </svg>
+      </div>
+      <div class="industry-name">Healthcare &amp; Medical</div>
+      <div class="industry-desc">Zero-downtime clinical networks engineered for patient-critical systems, medical IoT, and real-time imaging workflows.</div>
+      <div class="industry-footer">
+        <span class="industry-badge">Coming Soon</span>
+        <a href="#assessment" class="industry-link">Talk to us <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+    <!-- Education -->
+    <div class="industry-card">
+      <div class="industry-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c3.3 2 8.7 2 12 0v-5"/>
+        </svg>
+      </div>
+      <div class="industry-name">Education &amp; Academic</div>
+      <div class="industry-desc">High-density campus Wi-Fi, fiber infrastructure, and industry-grade communication labs for modern institutions.</div>
+      <div class="industry-footer">
+        <span class="industry-badge">Coming Soon</span>
+        <a href="#assessment" class="industry-link">Talk to us <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+    <!-- Utilities & Energy -->
+    <div class="industry-card">
+      <div class="industry-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+      </div>
+      <div class="industry-name">Utilities &amp; Energy</div>
+      <div class="industry-desc">Hardened OT/IT networks for SCADA, AMI, and distributed grid operations where uptime is a public obligation.</div>
+      <div class="industry-footer">
+        <span class="industry-badge">Coming Soon</span>
+        <a href="#assessment" class="industry-link">Talk to us <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+    <!-- Transportation -->
+    <div class="industry-card">
+      <div class="industry-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+        </svg>
+      </div>
+      <div class="industry-name">Transportation &amp; Logistics</div>
+      <div class="industry-desc">Connected infrastructure for transit hubs, fleet operations, and smart traffic corridors requiring 24/7 uptime.</div>
+      <div class="industry-footer">
+        <span class="industry-badge">Coming Soon</span>
+        <a href="#assessment" class="industry-link">Talk to us <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+    <!-- Hospitality -->
+    <div class="industry-card">
+      <div class="industry-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 21h18M9 21V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v16"/><path d="M9 7H5a2 2 0 0 0-2 2v12m16-9h-4"/>
+        </svg>
+      </div>
+      <div class="industry-name">Hospitality &amp; Tourism</div>
+      <div class="industry-desc">High-density guest Wi-Fi, VoIP, IPTV, and full-property connectivity for hotels, resorts, and event venues.</div>
+      <div class="industry-footer">
+        <span class="industry-badge">Coming Soon</span>
+        <a href="#assessment" class="industry-link">Talk to us <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+    <!-- Real Estate -->
+    <div class="industry-card">
+      <div class="industry-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>
+        </svg>
+      </div>
+      <div class="industry-name">Real Estate &amp; Development</div>
+      <div class="industry-desc">MDU fiber, structured cabling, and smart-building connectivity for master-planned communities and commercial developments.</div>
+      <div class="industry-footer">
+        <span class="industry-badge">Coming Soon</span>
+        <a href="#assessment" class="industry-link">Talk to us <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+    <!-- Government -->
+    <div class="industry-card">
+      <div class="industry-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <div class="industry-name">Government &amp; Public Sector</div>
+      <div class="industry-desc">Secure, compliant network infrastructure for municipalities, public agencies, and critical government services.</div>
+      <div class="industry-footer">
+        <span class="industry-badge">Coming Soon</span>
+        <a href="#assessment" class="industry-link">Talk to us <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── APPROACH STRIP ── -->
+<section class="approach">
+  <div class="approach-inner">
+    <div>
+      <div class="approach-item-label">What stays constant</div>
+      <div class="approach-item-title">Engineering discipline never changes</div>
+      <div class="approach-item-desc">Whether it's a carrier backbone or a rural event venue — the same rigour applies. Link budgets, redundancy paths, scalability margins, and documentation standards.</div>
+    </div>
+    <div>
+      <div class="approach-item-label">What we adapt</div>
+      <div class="approach-item-title">Context-specific requirements</div>
+      <div class="approach-item-desc">Healthcare needs zero-downtime. Hospitality needs guest experience. Education needs density. We translate sector constraints into network design decisions.</div>
+    </div>
+    <div>
+      <div class="approach-item-label">Our commitment</div>
+      <div class="approach-item-title">Outcome accountability across every sector</div>
+      <div class="approach-item-desc">We don't hand over a design and disappear. We take ownership of the outcome — from planning through commissioning and beyond.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA / ASSESSMENT ── -->
+<section class="cta-assess" id="assessment">
+  <div class="cta-inner">
+    <div>
+      <div class="cta-eyebrow">Start the Conversation</div>
+      <h2 class="cta-headline">Tell us about your sector.<br>We'll engineer the right network.</h2>
+      <p class="cta-desc">Every industry conversation starts with understanding your environment — not pitching a product. Reach out and an engineer will respond within one business day.</p>
+      <ul class="cta-bullets">
+        <li>No sales calls or unsolicited follow-up</li>
+        <li>Engineering-first discussion from the first conversation</li>
+        <li>Applicable across any sector we serve</li>
+      </ul>
+    </div>
+    <div>
+      <div class="cta-form-card">
+        <p class="cta-form-title">Request a Free Assessment</p>
+        <p class="cta-form-desc">Tell us about your network challenge. An engineer will review your situation and respond within one business day.</p>
+        <form class="cta-form" id="assessmentForm" action="https://formsubmit.co/contact@nodalwire.com" method="POST">
+          <input type="hidden" name="_subject" value="New Assessment Request — NodalWire">
+          <input type="hidden" name="_captcha" value="true">
+          <div class="cta-field">
+            <label class="cta-label" for="cta-name">Full Name</label>
+            <input class="cta-input" id="cta-name" type="text" placeholder="Jane Smith" autocomplete="name" name="Full Name" required>
+          </div>
+          <div class="cta-field">
+            <label class="cta-label" for="cta-email">Work Email</label>
+            <input class="cta-input" id="cta-email" type="email" placeholder="jane@company.com" autocomplete="email" name="email" required>
+          </div>
+          <div class="cta-field">
+            <label class="cta-label" for="cta-org">Organization</label>
+            <input class="cta-input" id="cta-org" type="text" placeholder="Your company name" autocomplete="organization" name="Organization">
+          </div>
+          <div class="cta-field">
+            <label class="cta-label" for="cta-area">Industry</label>
+            <select class="cta-select" id="cta-area" name="Industry">
+              <option value="" disabled selected>Select your industry…</option>
+              <option>Telecom &amp; ISP</option>
+              <option>Enterprise &amp; Corporate</option>
+              <option>Healthcare &amp; Medical</option>
+              <option>Education &amp; Academic</option>
+              <option>Utilities &amp; Energy</option>
+              <option>Transportation &amp; Logistics</option>
+              <option>Hospitality &amp; Tourism</option>
+              <option>Real Estate &amp; Development</option>
+              <option>Government &amp; Public Sector</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <button type="submit" class="cta-btn">Talk to an Engineer →</button>
+          <p class="cta-note">No sales calls. No unsolicited follow-up. Your information is used solely to prepare for your discussion.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ FOOTER -->
+<footer id="footer" style="
+  background: #060e1a;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  font-family: 'Lato', sans-serif;
+">
+  <style>
+    .footer-wrap { max-width: 1200px; margin: 0 auto; padding: 48px 40px 0; }
+    .footer-top { display: grid; grid-template-columns: 1.6fr 1.2fr 0.8fr 1.2fr; gap: 40px; padding-bottom: 36px; }
+    .footer-brand-logo { height: 72px; filter: brightness(0) invert(1); display: block; margin-bottom: 8px; }
+    .footer-tagline { font-family: 'Lato', sans-serif; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #fff; margin-bottom: 14px; }
+    .footer-desc { font-size: 13.5px; line-height: 1.65; color: rgba(255,255,255,0.7); margin-bottom: 20px; max-width: 260px; }
+    .footer-social { display: flex; gap: 14px; }
+    .footer-social a { display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3); color: #fff; text-decoration: none; transition: border-color 0.2s, background 0.2s; }
+    .footer-social a:hover { border-color: #1D78C4; background: rgba(29,120,196,0.15); }
+    .footer-col-title { font-family: 'Lato', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #eef4ff; margin-bottom: 16px; }
+    .footer-links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a { font-size: 13.5px; color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: #fff; }
+    .footer-contact-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+    .footer-contact-icon { flex-shrink: 0; width: 16px; height: 16px; margin-top: 1px; color: #1D78C4; }
+    .footer-contact-text { font-size: 13.5px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+    .footer-contact-text a { color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.2s; }
+    .footer-contact-text a:hover { color: #fff; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.06); padding: 18px 40px; max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .footer-copy { font-size: 12.5px; color: rgba(255,255,255,0.5); }
+    .footer-legal { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; }
+    .footer-legal a { font-size: 12.5px; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s; }
+    .footer-legal a:hover { color: rgba(255,255,255,0.8); }
+    .footer-cta-btn { display: inline-flex; align-items: center; gap: 8px; font-family: 'Lato', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.03em; color: #fff; padding: 11px 18px; background: linear-gradient(135deg, rgba(29,120,196,0.55) 0%, rgba(14,60,120,0.7) 100%); border: 1px solid rgba(29,120,196,0.45); border-radius: 8px; backdrop-filter: blur(10px); box-shadow: 0 2px 14px rgba(29,120,196,0.22), inset 0 1px 0 rgba(255,255,255,0.14); text-decoration: none; margin-bottom: 16px; transition: background 0.22s ease, box-shadow 0.22s ease, transform 0.18s cubic-bezier(0.34,1.56,0.64,1); white-space: nowrap; }
+    .footer-cta-btn:hover { background: linear-gradient(135deg, rgba(29,120,196,0.75) 0%, rgba(18,70,140,0.88) 100%); box-shadow: 0 4px 22px rgba(29,120,196,0.38); transform: translateY(-1px); }
+    .footer-cta-btn:active { transform: translateY(0); }
+    .footer-cta-btn svg { opacity: 0.85; transition: transform 0.2s; }
+    .footer-cta-btn:hover svg { transform: translateX(3px); }
+    @media (max-width: 900px) { .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; } .footer-wrap { padding: 36px 24px 0; } }
+    @media (max-width: 560px) { .footer-top { grid-template-columns: 1fr; gap: 28px; } .footer-bottom { flex-direction: column; align-items: flex-start; gap: 10px; padding: 16px 24px; } }
+  </style>
+  <div class="footer-wrap">
+    <div class="footer-top">
+      <div>
+        <img src="Brand_Assets/fulllogo_transparent.png" alt="NodalWire" class="footer-brand-logo">
+        <p class="footer-tagline">Cognitive Network Solutions</p>
+        <p class="footer-desc">We turn unstable, reactive networks into predictable, self-healing systems.</p>
+        <div class="footer-social">
+          <a href="https://www.linkedin.com/company/nodalwire/" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="#" aria-label="Twitter">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.735-8.835L1.254 2.25H8.08l4.261 5.632 5.903-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <p class="footer-col-title">Solutions</p>
+        <ul class="footer-links">
+          <li><a href="microwave.html">Microwave Networks</a></li>
+          <li><a href="optical.html">Optical Networks</a></li>
+          <li><a href="ftth.html">FTTH Networks</a></li>
+          <li><a href="wifi.html">WiFi Networks</a></li>
+          <li><a href="lab.html">Communication Labs</a></li>
+          <li><a href="hummingbird_hollow_case_study.html">Remote Property Connectivity</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">Company</p>
+        <ul class="footer-links">
+          <li><a href="about.html">About</a></li>
+          <li><a href="industries.html">Industries</a></li>
+          <li><a href="#">Insights</a></li>
+          <li><a href="#">Case Studies</a></li>
+          <li><a href="#assessment">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">Contact</p>
+        <a href="#assessment" class="footer-cta-btn">
+          Let's Talk About Your Network
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+        <div class="footer-contact-item">
+          <svg class="footer-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          <p class="footer-contact-text"><a href="mailto:contact@nodalwire.com">contact@nodalwire.com</a></p>
+        </div>
+        <div class="footer-contact-item">
+          <svg class="footer-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <p class="footer-contact-text">Plano, TX USA<br><span style="font-size:12.5px; color:rgba(255,255,255,0.55);">Serving clients remotely &amp; onsite</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2026 NodalWire LLC. All rights reserved.</p>
+    <ul class="footer-legal">
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Terms of Use</a></li>
+    </ul>
+  </div>
+</footer>
+
+<!-- ══ SUCCESS MODAL ══ -->
+<style>
+  #successModal { display:none; position:fixed; inset:0; z-index:9000; align-items:center; justify-content:center; background:rgba(6,14,26,0.84); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); padding:24px; }
+  #successModal.open { display:flex; }
+  @keyframes nwModalIn { from { opacity:0; transform:translateY(24px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); } }
+  #successModalCard { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:20px; padding:48px 44px; max-width:460px; width:100%; box-shadow:0 24px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08); text-align:center; animation:nwModalIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
+  #successModalIcon { width:64px; height:64px; border-radius:50%; background:rgba(29,120,196,0.15); border:1.5px solid rgba(29,120,196,0.45); display:flex; align-items:center; justify-content:center; margin:0 auto 24px; }
+  #successModalTitle { font-family:'Lato',sans-serif; font-size:22px; font-weight:700; color:#eef4ff; letter-spacing:-0.02em; margin-bottom:12px; }
+  #successModalBody { font-family:'Inter',sans-serif; font-size:15px; line-height:1.65; color:rgba(238,244,255,0.72); margin-bottom:8px; }
+  #successModalNote { font-family:'Inter',sans-serif; font-size:13px; color:rgba(238,244,255,0.38); margin-bottom:32px; }
+  #successModalClose { font-family:'Lato',sans-serif; font-weight:600; font-size:14px; color:#fff; background:linear-gradient(135deg,#1D78C4 0%,#1562a8 100%); border:none; border-radius:8px; padding:12px 32px; cursor:pointer; box-shadow:0 4px 16px rgba(29,120,196,0.28); transition:opacity 0.2s, transform 0.2s cubic-bezier(0.34,1.56,0.64,1); }
+  #successModalClose:hover { opacity:0.88; transform:translateY(-1px); }
+</style>
+<div id="successModal" role="dialog" aria-modal="true" aria-labelledby="successModalTitle">
+  <div id="successModalCard">
+    <div id="successModalIcon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1D78C4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <p id="successModalTitle">Request Received</p>
+    <p id="successModalBody">An engineer will review your situation and respond within one business day.</p>
+    <p id="successModalNote">A confirmation has been sent to your email address.</p>
+    <button id="successModalClose" onclick="document.getElementById('successModal').classList.remove('open')">Close</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var form = document.getElementById('assessmentForm');
+  if (!form) return;
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var btn = form.querySelector('[type="submit"]');
+    var origText = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Sending…';
+    function val(sel) { var el = form.querySelector(sel); return el ? el.value.trim() : ''; }
+    var payload = {
+      'Full Name': val('[name="Full Name"]'), email: val('[name="email"]'),
+      Organization: val('[name="Organization"]'), Industry: val('[name="Industry"]'),
+      _subject: 'New Assessment Request — NodalWire', _replyto: val('[name="email"]'),
+      _autoresponse: 'Thank you for contacting NodalWire. We have received your assessment request and an engineer will review your situation and respond within one business day.\n\nWarm regards,\nNodalWire Engineering Team'
+    };
+    try {
+      var res = await fetch('https://formsubmit.co/ajax/contact@nodalwire.com', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      var json = await res.json();
+      if (json.success === 'true' || json.success === true) {
+        form.reset();
+        document.getElementById('successModal').classList.add('open');
+      } else { throw new Error(); }
+    } catch {
+      btn.textContent = 'Error — please email contact@nodalwire.com';
+      btn.style.opacity = '0.7';
+      setTimeout(function () { btn.textContent = origText; btn.style.opacity = ''; btn.disabled = false; }, 5000);
+      return;
+    }
+    btn.textContent = origText; btn.disabled = false;
+  });
+  document.getElementById('successModal').addEventListener('click', function (e) { if (e.target === this) this.classList.remove('open'); });
+})();
+</script>
+
+</body>
+</html>

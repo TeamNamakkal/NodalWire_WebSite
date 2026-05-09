@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Surendran Natarajan — NodalWire</title>
+  <link rel="icon" type="image/png" href="brand_assets/icononly_transparent_nobuffer.png">
+  <link rel="apple-touch-icon" href="brand_assets/icononly_transparent_nobuffer.png">
+  <meta name="description" content="Surendran Natarajan, Principal Consultant at NodalWire. Network engineering and AI-driven automation.">
+  <meta property="og:title" content="Surendran Natarajan — NodalWire">
+  <meta property="og:description" content="Principal Consultant · Network Engineering & AI Automation">
+  <meta name="theme-color" content="#060e1a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Inter:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand:  #1D78C4;
+      --navy:   #060e1a;
+      --bright: #eef4ff;
+      --muted:  #7a9bbf;
+    }
+
+    html, body {
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: var(--bright);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100dvh;
+      padding: 24px 16px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Background */
+    .bg-gradient {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 90% 60% at 50% 0%, rgba(29,120,196,0.14) 0%, transparent 65%),
+        radial-gradient(ellipse 70% 50% at 80% 100%, rgba(29,120,196,0.07) 0%, transparent 60%),
+        linear-gradient(175deg, #07101f 0%, #0d2340 55%, #060e1a 100%);
+      z-index: 0;
+    }
+    .bg-dots {
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(rgba(29,120,196,0.12) 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: 0.4;
+      z-index: 0;
+    }
+
+    /* Card */
+    .card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 400px;
+      background: rgba(13,28,55,0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(29,120,196,0.2);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(29,120,196,0.08),
+        0 24px 64px rgba(0,0,0,0.6),
+        0 4px 16px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.06);
+      animation: cardIn 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(32px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Card top accent bar */
+    .card-accent {
+      height: 3px;
+      background: linear-gradient(90deg, transparent 0%, var(--brand) 30%, #5ab3f7 65%, transparent 100%);
+    }
+
+    /* Card header */
+    .card-header {
+      padding: 32px 32px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      animation: fadeUp 0.6s 0.15s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+
+    .logo-wrap {
+      margin-bottom: 28px;
+    }
+    .logo-wrap img {
+      height: 56px;
+      width: auto;
+      filter: brightness(0) invert(1);
+    }
+
+    .divider-line {
+      width: 40px;
+      height: 1.5px;
+      background: linear-gradient(90deg, transparent, var(--brand), transparent);
+      margin: 0 auto 24px;
+    }
+
+    .card-name {
+      font-family: 'Lato', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--bright);
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin-bottom: 4px;
+    }
+
+    .card-company {
+      font-family: 'Lato', sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--muted);
+    }
+
+    /* Contact list */
+    .contact-list {
+      padding: 28px 28px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      animation: fadeUp 0.6s 0.25s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: inherit;
+      background: transparent;
+      transition: background 0.18s ease, transform 0.18s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .contact-item:hover, .contact-item:active {
+      background: rgba(29,120,196,0.1);
+      transform: translateX(2px);
+    }
+
+    .contact-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid rgba(29,120,196,0.25);
+      background: rgba(29,120,196,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--brand);
+    }
+    .contact-icon svg { width: 18px; height: 18px; }
+
+    .contact-info { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+    .contact-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(122,155,191,0.55);
+    }
+    .contact-value {
+      font-family: 'Lato', sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--bright);
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .contact-separator {
+      height: 1px;
+      background: rgba(29,120,196,0.1);
+      margin: 4px 14px;
+    }
+
+    /* CTA */
+    .card-cta {
+      padding: 20px 28px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      animation: fadeUp 0.6s 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+
+    .btn-add-contact {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 24px;
+      background: linear-gradient(135deg, #1D78C4 0%, #1562a8 100%);
+      color: #fff;
+      font-family: 'Lato', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      width: 100%;
+      box-shadow: 0 4px 20px rgba(29,120,196,0.4), 0 1px 4px rgba(0,0,0,0.4);
+      transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease, background 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-add-contact:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(29,120,196,0.5), 0 2px 6px rgba(0,0,0,0.35); background: linear-gradient(135deg, #2a8adb 0%, #1D78C4 100%); }
+    .btn-add-contact:active { transform: translateY(0); }
+    .btn-add-contact svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+    .btn-share {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 24px;
+      background: transparent;
+      color: var(--muted);
+      font-family: 'Lato', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      width: 100%;
+      transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-share:hover { background: rgba(255,255,255,0.05); color: var(--bright); border-color: rgba(255,255,255,0.2); }
+    .btn-share svg { width: 16px; height: 16px; }
+
+    /* Footer */
+    .card-footer {
+      padding: 16px 32px 24px;
+      text-align: center;
+      border-top: 1px solid rgba(29,120,196,0.1);
+      animation: fadeUp 0.6s 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    .card-footer a {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: rgba(122,155,191,0.5);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.18s ease;
+    }
+    .card-footer a:hover { color: var(--brand); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: rgba(29,120,196,0.95);
+      color: #fff;
+      font-family: 'Lato', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: 32px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease;
+      opacity: 0;
+      z-index: 100;
+      white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-dots"></div>
+
+<div class="card">
+  <div class="card-accent"></div>
+
+  <div class="card-header">
+    <div class="logo-wrap">
+      <img src="brand_assets/fulllogo_transparent.png" alt="NodalWire">
+    </div>
+    <div class="divider-line"></div>
+    <p class="card-name">Surendran Natarajan</p>
+    <p class="card-title">Principal Consultant</p>
+    <p class="card-company">NodalWire</p>
+  </div>
+
+  <div class="contact-list">
+    <a href="tel:+16176804300" class="contact-item">
+      <div class="contact-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 0.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 7.91a16 16 0 0 0 6.18 6.18l1.76-1.76a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.04z"/>
+        </svg>
+      </div>
+      <div class="contact-info">
+        <span class="contact-label">Mobile</span>
+        <span class="contact-value">+1 (617) 680-4300</span>
+      </div>
+    </a>
+
+    <div class="contact-separator"></div>
+
+    <a href="mailto:n.surendran@nodalwire.com" class="contact-item">
+      <div class="contact-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+        </svg>
+      </div>
+      <div class="contact-info">
+        <span class="contact-label">Email</span>
+        <span class="contact-value">n.surendran@nodalwire.com</span>
+      </div>
+    </a>
+
+    <div class="contact-separator"></div>
+
+    <a href="https://www.nodalwire.com" target="_blank" rel="noopener" class="contact-item">
+      <div class="contact-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+      </div>
+      <div class="contact-info">
+        <span class="contact-label">Website</span>
+        <span class="contact-value">www.nodalwire.com</span>
+      </div>
+    </a>
+
+    <div class="contact-separator"></div>
+
+    <div class="contact-item" style="cursor:default; pointer-events:none;">
+      <div class="contact-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+      </div>
+      <div class="contact-info">
+        <span class="contact-label">Location</span>
+        <span class="contact-value">Plano, TX 75025</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-cta">
+    <a href="surendran-natarajan.vcf" download="Surendran_Natarajan.vcf" class="btn-add-contact" id="addContactBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <line x1="19" y1="8" x2="19" y2="14"/>
+        <line x1="22" y1="11" x2="16" y2="11"/>
+      </svg>
+      Add to Contacts
+    </a>
+    <button class="btn-share" id="shareBtn" onclick="handleShare()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="18" cy="5" r="3"/>
+        <circle cx="6" cy="12" r="3"/>
+        <circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+      </svg>
+      Share Card
+    </button>
+  </div>
+
+  <div class="card-footer">
+    <a href="https://www.nodalwire.com" target="_blank" rel="noopener">Network Engineering &amp; AI-Driven Automation</a>
+  </div>
+</div>
+
+<div class="toast" id="toast">Link copied to clipboard</div>
+
+<script>
+  async function handleShare() {
+    const shareData = {
+      title: 'Surendran Natarajan — NodalWire',
+      text: 'Principal Consultant at NodalWire | Network Engineering & AI Automation',
+      url: window.location.href
+    };
+    if (navigator.share) {
+      try { await navigator.share(shareData); } catch(e) { if (e.name !== 'AbortError') copyLink(); }
+    } else {
+      copyLink();
+    }
+  }
+
+  function copyLink() {
+    const url = window.location.href;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(showToast);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast();
+    }
+  }
+
+  function showToast() {
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2800);
+  }
+
+  // Track add contact click for feedback
+  document.getElementById('addContactBtn').addEventListener('click', function() {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isAndroid = /Android/.test(navigator.userAgent);
+    if (!isIOS && !isAndroid) {
+      // Desktop: show brief instruction
+      const toast = document.getElementById('toast');
+      toast.textContent = 'Contact file downloaded — open to save';
+      showToast();
+      setTimeout(() => { toast.textContent = 'Link copied to clipboard'; }, 3000);
+    }
+  });
+</script>
+
+</body>
+</html>
