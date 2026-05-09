@@ -49,7 +49,7 @@ Avoid generic dark SaaS or flashy AI startup aesthetics.
 ---
 
 ## Brand Assets
-- Always check the `brand_assets/` folder before designing.
+- Always check the `Brand_Assets/` folder before designing. Always use `Brand_Assets/` (capital B and A) — the server is Linux and case-sensitive. Never write `brand_assets/`.
 - If a logo is present, use it. If a color palette is defined, use those exact values.
 - Do not use placeholders where real assets are available.
 
