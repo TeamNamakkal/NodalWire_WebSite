@@ -1,0 +1,5 @@
+Options -Indexes
+RewriteEngine On
+
+# nodalwire.com/card → card.html
+RewriteRule ^card$ card.html [L]
