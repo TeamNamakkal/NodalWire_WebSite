@@ -7,6 +7,8 @@
   <!-- ── SEO ─────────────────────────────────────────────── -->
   <meta name="description" content="Meet Surendran Natarajan — 24 years of carrier network engineering across four continents. NodalWire is an engineering-led consultancy where every recommendation is driven by one thing: what the network requires.">
   <meta name="robots" content="index, follow">
+  <!-- Google Search Console Verification: Replace with your actual verification code -->
+  <!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE_HERE"> -->
   <link rel="canonical" href="https://www.nodalwire.com/about.html">
 
   <!-- Open Graph -->
@@ -76,6 +78,11 @@
   <!-- ── /SEO ── -->
   <link rel="icon" type="image/png" href="assets/brand/icononly_transparent_nobuffer.png">
   <link rel="apple-touch-icon" href="assets/brand/icononly_transparent_nobuffer.png">
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script src="analytics.js"></script>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -880,7 +887,7 @@
     <div class="hero-facts-panel">
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
         <p class="facts-panel-label" style="margin-bottom: 0;">Company at a Glance</p>
-        <a href="verify-employee.html" style="font-family: 'Lato', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.03em; padding: 8px 16px; background: linear-gradient(135deg, #1D78C4 0%, #1562a8 100%); color: #fff; border: none; border-radius: 6px; text-decoration: none; cursor: pointer; box-shadow: 0 2px 8px rgba(29,120,196,0.24); transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease; white-space: nowrap;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 16px rgba(29,120,196,0.36)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(29,120,196,0.24)';">Verify Employment</a>
+        <a href="verify-employee.html" onclick="trackVerifyEmploymentClick('about_hero');" style="font-family: 'Lato', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.03em; padding: 8px 16px; background: linear-gradient(135deg, #1D78C4 0%, #1562a8 100%); color: #fff; border: none; border-radius: 6px; text-decoration: none; cursor: pointer; box-shadow: 0 2px 8px rgba(29,120,196,0.24); transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease; white-space: nowrap;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 16px rgba(29,120,196,0.36)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(29,120,196,0.24)';">Verify Employment</a>
       </div>
       <div class="facts-grid">
         <div class="fact-card">
