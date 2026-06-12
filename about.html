@@ -14,7 +14,7 @@
   <meta property="og:url"         content="https://www.nodalwire.com/about.html">
   <meta property="og:title"       content="About NodalWire — Engineering-Led. Outcome-Driven. | Network Consulting">
   <meta property="og:description" content="Meet Surendran Natarajan — 24 years of carrier network engineering across four continents. NodalWire is an engineering-led consultancy where every recommendation is driven by one thing: what the network requires.">
-  <meta property="og:image"       content="https://www.nodalwire.com/brand_assets/fulllogo.jpg">
+  <meta property="og:image"       content="https://www.nodalwire.com/assets/brand/fulllogo.jpg">
   <meta property="og:image:width"  content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:site_name"   content="NodalWire">
@@ -24,7 +24,7 @@
   <meta name="twitter:card"        content="summary_large_image">
   <meta name="twitter:title"       content="About NodalWire — Engineering-Led. Outcome-Driven. | Network Consulting">
   <meta name="twitter:description" content="Meet Surendran Natarajan — 24 years of carrier network engineering across four continents. NodalWire is an engineering-led consultancy where every recommendation is driven by one thing: what the network requires.">
-  <meta name="twitter:image"       content="https://www.nodalwire.com/brand_assets/fulllogo.jpg">
+  <meta name="twitter:image"       content="https://www.nodalwire.com/assets/brand/fulllogo.jpg">
 
   <!-- JSON-LD Structured Data -->
   <script type="application/ld+json">
@@ -74,8 +74,8 @@
   </script>
   <!-- /BreadcrumbList -->
   <!-- ── /SEO ── -->
-  <link rel="icon" type="image/png" href="Brand_Assets/icononly_transparent_nobuffer.png">
-  <link rel="apple-touch-icon" href="Brand_Assets/icononly_transparent_nobuffer.png">
+  <link rel="icon" type="image/png" href="assets/brand/icononly_transparent_nobuffer.png">
+  <link rel="apple-touch-icon" href="assets/brand/icononly_transparent_nobuffer.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -719,13 +719,117 @@
   body { padding-top: 68px !important; }
 }
 </style>
+
+<style id="mobile-content-css">
+@media (max-width: 768px) {
+
+  /* ─── Hero ─── */
+  .hero { height: auto; min-height: auto; }
+  .hero-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    padding-top: 68px;
+  }
+  .hero-content { padding: 36px 24px 28px; }
+  .hero-h1 { font-size: clamp(28px, 8vw, 38px); }
+  .hero-sub { font-size: 15px; max-width: 100%; }
+
+  /* Hero facts → flat stats strip, no card boxes */
+  .hero-facts-panel {
+    padding: 0 24px 36px;
+    gap: 0;
+    border-top: 1px solid rgba(29,120,196,0.2);
+    margin: 0;
+  }
+  .facts-panel-label {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: rgba(122,155,191,0.5);
+    margin: 20px 0 16px;
+  }
+  .facts-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+  .fact-card {
+    flex: 1 1 50%;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 12px 0 12px;
+    gap: 2px;
+    border-bottom: 1px solid rgba(29,120,196,0.1);
+  }
+  .fact-card:nth-child(odd)  { padding-right: 16px; border-right: 1px solid rgba(29,120,196,0.1); }
+  .fact-card:nth-child(even) { padding-left: 16px; }
+  .fact-card.wide { display: none; }
+  .fact-icon { display: none; }
+  .fact-value { font-size: 20px; }
+  .fact-label { font-size: 11px; }
+
+  /* ─── Shared layout ─── */
+  .sec-wrap { padding: 0 20px; }
+  .sec-header { margin-bottom: 40px; }
+  .sec-title { font-size: clamp(22px, 6vw, 32px); }
+
+  /* ─── Story — hide right column cards (body text already covers the same points) ─── */
+  .story-section { padding: 64px 0; }
+  .story-grid { grid-template-columns: 1fr; gap: 0; }
+  .story-right { display: none; }
+
+  /* ─── Vision & Mission ─── */
+  .vm-section { padding: 64px 0; }
+  .vm-grid { grid-template-columns: 1fr; }
+  .vm-card:first-child { border-right: none; border-bottom: 1px solid rgba(29,120,196,0.15); }
+  .vm-card { padding: 36px 24px; }
+
+  /* ─── Core Values ─── */
+  .values-section { padding: 64px 0; }
+  .values-grid { grid-template-columns: 1fr; gap: 16px; }
+  .value-card { padding: 28px 24px; }
+
+  /* ─── Company Facts ─── */
+  .facts-section { padding: 64px 0; }
+  .facts-layout { grid-template-columns: 1fr; gap: 40px; }
+  .facts-row { grid-template-columns: 1fr; gap: 2px; padding: 12px 0; }
+  .facts-key { font-size: 12px; color: #486080; }
+  .fh-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .facts-highlight { padding: 20px 22px; }
+
+  /* ─── Ethics ─── */
+  .ethics-section { padding: 64px 0; }
+  .ethics-inner { grid-template-columns: 1fr; gap: 36px; }
+  .ethics-right { gap: 12px; }
+  .ethics-pill { padding: 14px 18px; }
+
+  /* ─── Sustainability ─── */
+  .sustain-section { padding: 64px 0; }
+  .sustain-grid { grid-template-columns: 1fr; gap: 36px; }
+  .sustain-pillar { padding: 16px 18px; gap: 12px; }
+
+  /* ─── CTA ─── */
+  .cta-assess { padding: 64px 0; }
+  .cta-assess-inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 0 20px;
+  }
+  .cta-form-card { padding: 28px 24px; }
+  .cta-headline { font-size: clamp(20px, 5.5vw, 28px); }
+
+  /* ─── Footer inner ─── */
+  .footer-wrap { padding: 40px 20px 0; }
+  .footer-bottom { padding: 16px 20px; }
+}
+</style>
 </head>
 <body>
 
 <!-- ── NAV ── -->
 <nav class="nav">
   <a href="/" class="nav-logo" aria-label="NodalWire home">
-    <img src="Brand_Assets/fulllogo_transparent.png" alt="NodalWire">
+    <img src="assets/brand/fulllogo_transparent.png" alt="NodalWire">
   </a>
 
   <ul class="nav-links">
@@ -750,7 +854,7 @@
     <li><a href="about.html">About</a></li>
   </ul>
 
-  <a href="#assessment" class="nav-cta">Talk to an Engineer</a>
+  <a href="verify-employee.html" class="nav-cta">Verify Employment</a>
   <button class="nav-hamburger" aria-label="Toggle navigation" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
@@ -1337,7 +1441,7 @@
 
       <!-- Brand block -->
       <div>
-        <img src="Brand_Assets/fulllogo_transparent.png" alt="NodalWire" class="footer-brand-logo">
+        <img src="assets/brand/fulllogo_transparent.png" alt="NodalWire" class="footer-brand-logo">
         <p class="footer-tagline">Cognitive Network Solutions</p>
         <p class="footer-desc">We turn unstable, reactive networks into predictable, self-healing systems.</p>
         <div class="footer-social">
@@ -1373,7 +1477,8 @@
       <div>
         <p class="footer-col-title">Company</p>
         <ul class="footer-links">
-          <li><a href="#">About</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="verify-employee.html">Verify Employment</a></li>
           <li><a href="#">Insights</a></li>
           <li><a href="#">Case Studies</a></li>
           <li><a href="#">Contact</a></li>
