@@ -209,7 +209,7 @@
       font-family: 'Inter', sans-serif; font-size: 13px; color: var(--muted);
     }
     .result-body {
-      display: grid; grid-template-columns: auto 1fr; gap: 28px; margin-bottom: 28px;
+      display: grid; grid-template-columns: auto 1fr; gap: 28px; margin-bottom: 0;
     }
     .result-photo {
       width: 96px; height: 96px; border-radius: 12px;
@@ -227,29 +227,28 @@
     .result-info {}
     .result-name {
       font-family: 'Lato', sans-serif; font-size: 20px; font-weight: 700;
-      color: var(--bright); margin-bottom: 12px; letter-spacing: -0.01em;
+      color: var(--bright); margin-bottom: 16px; letter-spacing: -0.01em;
     }
     .result-meta {
-      display: flex; flex-direction: column; gap: 8px;
+      display: flex; flex-direction: column; gap: 10px;
     }
     .result-meta-item {
       font-family: 'Inter', sans-serif; font-size: 13px; color: var(--muted);
     }
     .result-meta-label { font-weight: 700; color: rgba(238,244,255,0.7); }
     .result-details {
-      padding: 24px 0 0; margin-bottom: 0;
-      border-top: 1px solid rgba(29,120,196,0.15);
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+      padding: 0; margin: 0; border: none;
+      display: contents;
     }
     .result-detail-row {
-      display: flex; flex-direction: column; gap: 8px;
+      display: flex; flex-direction: column; gap: 6px;
     }
     .result-detail-label {
       font-family: 'Lato', sans-serif; font-size: 11px; font-weight: 700;
       color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase;
     }
     .result-detail-value {
-      font-family: 'Inter', sans-serif; font-size: 14px; color: rgba(238,244,255,0.85);
+      font-family: 'Inter', sans-serif; font-size: 13px; color: rgba(238,244,255,0.85);
       line-height: 1.5;
     }
     .result-footer {
@@ -912,24 +911,10 @@ function displayResult(employee, searchName, searchId) {
                 <div class="result-meta-item"><span class="result-meta-label">Department:</span> ${employee.department}</div>
                 <div class="result-meta-item"><span class="result-meta-label">Company:</span> ${employee.company}</div>
                 ${employee.reportingManager ? `<div class="result-meta-item"><span class="result-meta-label">Reporting Manager:</span> ${employee.reportingManager}</div>` : ''}
+                <div class="result-meta-item" style="padding-top: 8px; border-top: 1px solid rgba(29,120,196,0.15);"><span class="result-meta-label">Joined Date:</span> ${employee.joinedDate}</div>
+                ${employee.scope ? `<div class="result-meta-item"><span class="result-meta-label">Scope of Work:</span> ${employee.scope}</div>` : ''}
+                <div class="result-meta-item"><span class="result-meta-label">Work Location:</span> ${employee.workLocation}</div>
               </div>
-            </div>
-          </div>
-
-          <div class="result-details">
-            <div class="result-detail-row">
-              <div class="result-detail-label">Joined Date</div>
-              <div class="result-detail-value">${employee.joinedDate}</div>
-            </div>
-            ${employee.scope ? `
-            <div class="result-detail-row">
-              <div class="result-detail-label">Scope of Work</div>
-              <div class="result-detail-value">${employee.scope}</div>
-            </div>
-            ` : ''}
-            <div class="result-detail-row">
-              <div class="result-detail-label">Work Location</div>
-              <div class="result-detail-value">${employee.workLocation}</div>
             </div>
           </div>
 
