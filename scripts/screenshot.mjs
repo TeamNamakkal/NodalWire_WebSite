@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 const { join } = path;
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const screenshotDir = path.join(__dirname, 'Temp_Screenshots');
 
 const url = process.argv[2] || 'http://localhost:3000';

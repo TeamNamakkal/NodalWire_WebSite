@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NodalWire — Predictable, Self-Healing Networks</title>
+  <title>NodalWire | Reliable Network Design & Deployment Solutions</title>
   <!-- ── SEO ─────────────────────────────────────────────── -->
-  <meta name="description" content="NodalWire designs predictable, self-healing networks for enterprises and carriers. Expert engineering across optical, microwave, FTTH, and Wi-Fi — backed by 24 years of carrier-grade experience. Based in Plano, TX.">
+  <meta name="description" content="NodalWire helps organizations turn reactive networks into predictable systems through engineering-led design, deployment, optimization, and automation.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://www.nodalwire.com/">
 
   <!-- Open Graph -->
   <meta property="og:type"        content="website">
   <meta property="og:url"         content="https://www.nodalwire.com/">
-  <meta property="og:title"       content="NodalWire — Predictable, Self-Healing Networks | Network Engineering Consultants">
-  <meta property="og:description" content="NodalWire designs predictable, self-healing networks for enterprises and carriers. Expert engineering across optical, microwave, FTTH, and Wi-Fi — backed by 24 years of carrier-grade experience. Based in Plano, TX.">
-  <meta property="og:image"       content="https://www.nodalwire.com/brand_assets/fulllogo.jpg">
+  <meta property="og:title"       content="NodalWire | Reliable Network Design & Deployment Solutions">
+  <meta property="og:description" content="NodalWire helps organizations turn reactive networks into predictable systems through engineering-led design, deployment, optimization, and automation.">
+  <meta property="og:image"       content="https://www.nodalwire.com/assets/brand/fulllogo.jpg">
   <meta property="og:image:width"  content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:site_name"   content="NodalWire">
@@ -22,9 +22,9 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card"        content="summary_large_image">
-  <meta name="twitter:title"       content="NodalWire — Predictable, Self-Healing Networks | Network Engineering Consultants">
-  <meta name="twitter:description" content="NodalWire designs predictable, self-healing networks for enterprises and carriers. Expert engineering across optical, microwave, FTTH, and Wi-Fi — backed by 24 years of carrier-grade experience. Based in Plano, TX.">
-  <meta name="twitter:image"       content="https://www.nodalwire.com/brand_assets/fulllogo.jpg">
+  <meta name="twitter:title"       content="NodalWire | Reliable Network Design & Deployment Solutions">
+  <meta name="twitter:description" content="NodalWire helps organizations turn reactive networks into predictable systems through engineering-led design, deployment, optimization, and automation.">
+  <meta name="twitter:image"       content="https://www.nodalwire.com/assets/brand/fulllogo.jpg">
 
   <!-- JSON-LD Structured Data -->
   <script type="application/ld+json">
@@ -40,8 +40,8 @@
       "name": "NodalWire LLC",
       "description": "Network engineering and AI-driven automation consultancy specialising in optical, microwave, FTTH, and Wi-Fi network design.",
       "url": "https://www.nodalwire.com",
-      "logo": "https://www.nodalwire.com/brand_assets/fulllogo_transparent.png",
-      "image": "https://www.nodalwire.com/brand_assets/fulllogo.jpg",
+      "logo": "https://www.nodalwire.com/assets/brand/fulllogo_transparent.png",
+      "image": "https://www.nodalwire.com/assets/brand/fulllogo.jpg",
       "telephone": "+16176804300",
       "email": "contact@nodalwire.com",
       "address": {
@@ -136,8 +136,8 @@
   <meta name="geo.position" content="33.0198;-96.6989">
   <meta name="ICBM"         content="33.0198, -96.6989">
   <!-- ── /SEO ── -->
-  <link rel="icon" type="image/png" href="Brand_Assets/icononly_transparent_nobuffer.png">
-  <link rel="apple-touch-icon" href="Brand_Assets/icononly_transparent_nobuffer.png">
+  <link rel="icon" type="image/png" href="assets/brand/icononly_transparent_nobuffer.png">
+  <link rel="apple-touch-icon" href="assets/brand/icononly_transparent_nobuffer.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -723,6 +723,21 @@
     flex-direction: column !important;
   }
 
+  /* Challenge (Problem) card — collapse to single column */
+  .problem-card {
+    grid-template-columns: 1fr !important;
+    padding: 32px 24px !important;
+    gap: 0 !important;
+    border-radius: 16px !important;
+  }
+  .prob-right { display: none !important; }
+  .prob-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .prob-h2 { font-size: clamp(22px, 6.5vw, 30px) !important; }
+  .prob-desc { font-size: 16px !important; margin-bottom: 24px !important; }
+
   /* Case study strip */
   .cs-strip,
   .cs-inner,
@@ -754,7 +769,7 @@
 <!-- ── NAVIGATION ── -->
 <nav class="nav">
   <a href="/" class="nav-logo" aria-label="NodalWire home">
-    <img src="Brand_Assets/fulllogo_transparent.png" alt="NodalWire">
+    <img src="assets/brand/fulllogo_transparent.png" alt="NodalWire">
   </a>
 
   <ul class="nav-links">
@@ -2647,51 +2662,62 @@
     transform: translateY(0);
   }
 
-  /* ── MOBILE: VERTICAL TIMELINE ── */
+  /* ── MOBILE: SIMPLE NUMBERED LIST ── */
   @media (max-width: 768px) {
-    .proc-inner { padding: 0 28px; }
+    .proc-inner { padding: 0 24px; }
+    .proc-header { margin-bottom: 48px; }
 
     .proc-steps-row {
       flex-direction: column;
       gap: 0;
-      padding-left: 22px;
+      padding-left: 0;
+      counter-reset: step-counter;
     }
 
-    /* Vertical connecting line */
-    .proc-step:not(:last-child)::after {
-      top: 44px;
-      left: -22px;           /* align with circle center */
-      width: 2px;
-      height: calc(100% - 8px);
-      background: linear-gradient(180deg,
-        rgba(29,120,196,0.5) 0%,
-        rgba(29,120,196,0.15) 100%
-      );
-      transition: height 0.65s cubic-bezier(0.4, 0, 0.2, 1) var(--line-delay, 0s);
-    }
+    /* Hide circles and connector lines entirely */
+    .proc-circle { display: none !important; }
+    .proc-step::after { display: none !important; }
 
-    .process.is-visible .proc-step:not(:last-child)::after {
-      height: calc(100% - 8px);
-    }
-
+    /* Each step: simple block with inline step number */
     .proc-step {
-      flex-direction: row;
-      align-items: flex-start;
-      gap: 20px;
-      padding-bottom: 40px;
+      display: block;
+      padding: 22px 0 22px 48px;
+      border-bottom: 1px solid rgba(29,120,196,0.12);
+      position: relative;
+      counter-increment: step-counter;
+      opacity: 1 !important;
+      transform: none !important;
     }
 
-    .proc-circle {
-      flex-shrink: 0;
-      margin-left: -44px; /* pull circle to left of the row padding */
+    /* Step number badge */
+    .proc-step::before {
+      content: counter(step-counter, decimal-leading-zero);
+      position: absolute;
+      left: 0;
+      top: 24px;
+      font-family: 'Lato', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--brand);
     }
 
-    .proc-step-body { text-align: left; }
+    .proc-step-name {
+      font-size: 16px;
+      text-align: left;
+      margin: 0 0 6px;
+      opacity: 1 !important;
+      transform: none !important;
+    }
 
-    .proc-step-name,
-    .proc-step-desc { text-align: left; margin: 0; }
-
-    .proc-step-name { margin-bottom: 6px; }
+    .proc-step-desc {
+      font-size: 14px;
+      text-align: left;
+      max-width: none;
+      margin: 0;
+      opacity: 1 !important;
+      transform: none !important;
+    }
   }
 </style>
 
@@ -3666,7 +3692,7 @@
 
       <!-- Brand block -->
       <div>
-        <img src="Brand_Assets/fulllogo_transparent.png" alt="NodalWire" class="footer-brand-logo">
+        <img src="assets/brand/fulllogo_transparent.png" alt="NodalWire" class="footer-brand-logo">
         <p class="footer-tagline">Cognitive Network Solutions</p>
         <p class="footer-desc">We turn unstable, reactive networks into predictable, self-healing systems.</p>
         <div class="footer-social">
