@@ -806,6 +806,7 @@ const employeeDatabase = [
     workLocation: 'Philadelphia, Pennsylvania, USA',
     status: 'Active',
     scope: null,
+    reportingManager: null,
     photo: '/assets/employees/surendran-natarajan.jpg'
   },
   {
@@ -818,6 +819,7 @@ const employeeDatabase = [
     workLocation: 'SRM University, Tiruchirappalli, TN, India',
     status: 'Active',
     scope: 'Full Stack Developer',
+    reportingManager: 'Surendran Natarajan',
     photo: '/assets/employees/sampritha-suresh-kumar.jpg'
   },
   {
@@ -830,6 +832,7 @@ const employeeDatabase = [
     workLocation: 'Karunya University, Karunya Nagar, Coimbatore, TN, India 641114',
     status: 'Active',
     scope: 'Full Stack Developer',
+    reportingManager: 'Surendran Natarajan',
     photo: '/assets/employees/theepan-selvam-saratha.jpg'
   },
   {
@@ -842,6 +845,7 @@ const employeeDatabase = [
     workLocation: 'Philadelphia, Pennsylvania, USA',
     status: 'Active',
     scope: null,
+    reportingManager: 'Surendran Natarajan',
     photo: '/assets/employees/ashish-balaji-rajkumar.jpg'
   }
 ];
@@ -908,6 +912,7 @@ function displayResult(employee, searchName, searchId) {
                 <div class="result-meta-item"><span class="result-meta-label">Title:</span> ${employee.title}</div>
                 <div class="result-meta-item"><span class="result-meta-label">Department:</span> ${employee.department}</div>
                 <div class="result-meta-item"><span class="result-meta-label">Company:</span> ${employee.company}</div>
+                ${employee.reportingManager ? `<div class="result-meta-item"><span class="result-meta-label">Reporting Manager:</span> ${employee.reportingManager}</div>` : ''}
               </div>
             </div>
           </div>
