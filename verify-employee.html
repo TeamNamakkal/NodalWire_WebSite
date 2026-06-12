@@ -240,14 +240,13 @@
       background: rgba(255,255,255,0.02); border: 1px solid rgba(29,120,196,0.1);
       border-radius: 12px; padding: 20px;
       margin-bottom: 20px;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
     }
     .result-detail-row {
-      display: grid; grid-template-columns: 140px 1fr; gap: 16px;
-      padding: 12px 0; border-bottom: 1px solid rgba(29,120,196,0.08);
+      display: flex; flex-direction: column; gap: 8px;
     }
-    .result-detail-row:last-child { border-bottom: none; }
     .result-detail-label {
-      font-family: 'Lato', sans-serif; font-size: 12px; font-weight: 700;
+      font-family: 'Lato', sans-serif; font-size: 11px; font-weight: 700;
       color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase;
     }
     .result-detail-value {
@@ -333,6 +332,7 @@
       .result-card { padding: 28px 24px; }
       .result-body { grid-template-columns: 1fr; gap: 16px; }
       .result-photo { width: 72px; height: 72px; }
+      .result-details { grid-template-columns: 1fr; gap: 16px; }
 
       .no-match-section { padding: 0 20px; }
       .no-match-card { padding: 28px 24px; }
@@ -449,7 +449,7 @@
     <li><a href="about.html">About</a></li>
   </ul>
 
-  <a href="verify-employee.html" class="nav-cta">Verify Employment</a>
+  <a href="about.html#assessment" class="nav-cta">Talk to an Engineer</a>
   <button class="nav-hamburger" aria-label="Toggle navigation" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
