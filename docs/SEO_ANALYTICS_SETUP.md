@@ -34,7 +34,13 @@ Add these lines to the `<head>` of every page, immediately after the opening `<h
 </script>
 ```
 
-**Copy this exact code** to every new and existing `.html` file in the root directory.
+**Automatic Injection (Recommended):**
+The GA4 code is automatically injected into any page that's missing it:
+
+- **During Development**: The dev server (`npm run dev`) automatically injects the GA4 tag into all HTML files served locally
+- **Before Deployment**: Run `npm run build` to scan all HTML files and inject the GA4 tag if missing
+
+This ensures no page can be deployed without analytics tracking, even if the developer forgets.
 
 ---
 

@@ -4,6 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "serve": "node scripts/serve.mjs",
+    "screenshot": "node scripts/screenshot.mjs",
+    "build": "node scripts/inject-ga4.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

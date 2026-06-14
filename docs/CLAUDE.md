@@ -416,11 +416,16 @@ document.querySelectorAll('[data-close-modal]').forEach(function(btn) {
 
 ### Git Workflow
 ```bash
+# Before pushing, ensure all HTML files have GA4 tag:
+npm run build
+
 git add -A
 git commit -m "describe what changed"
 git push
 # → Hostinger auto-deploys within seconds
 ```
+
+**Automatic GA4 Injection:** The `npm run build` script scans all `.html` files in the project and automatically injects the GA4 code if it's missing. This ensures no page is ever deployed without analytics tracking.
 
 ### .gitignore (Managed)
 Excludes: `node_modules/`, `Temp_Screenshots/`, `.DS_Store`, `.vscode/`, `*.log`, `*.tmp`, `*.bak`
@@ -428,6 +433,7 @@ Excludes: `node_modules/`, `Temp_Screenshots/`, `.DS_Store`, `.vscode/`, `*.log`
 Includes: all production pages, assets, configuration files
 
 ### Before You Push
+- Run `npm run build` to inject GA4 tag into any new/modified HTML files
 - All asset paths updated (Brand_Assets/ → assets/brand/)
 - No broken links or images
 - All pages have unique titles and descriptions
@@ -440,9 +446,12 @@ Includes: all production pages, assets, configuration files
 
 ### Start Dev Server
 ```bash
-node serve.mjs
+npm run dev
+# or: node scripts/serve.mjs
 # → localhost:3000
 ```
+
+**Note:** The dev server automatically injects the GA4 tag into any HTML file that doesn't already have it. This ensures all new pages have tracking enabled during development.
 
 ### Screenshot Workflow
 ```bash
