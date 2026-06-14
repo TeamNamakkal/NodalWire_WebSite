@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1781425435639yxpe6",
+    "userId": "sampritha",
+    "userName": "Sampritha Sureshkumar",
+    "date": "2026-06-14",
+    "taskName": "Network Lab Setup",
+    "startTime": "10:00",
+    "endTime": "11:00",
+    "totalHours": 1,
+    "notes": "",
+    "createdAt": "2026-06-14T08:23:55.639Z"
+  },
+  {
+    "id": "1781425615034s0wnw",
+    "userId": "sampritha",
+    "userName": "Sampritha Sureshkumar",
+    "date": "2026-06-14",
+    "taskName": "test",
+    "startTime": "02:00",
+    "endTime": "03:30",
+    "totalHours": 1.5,
+    "notes": "",
+    "createdAt": "2026-06-14T08:26:55.034Z"
+  }
+]
