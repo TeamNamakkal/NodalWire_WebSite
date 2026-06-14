@@ -221,6 +221,29 @@ Favicon (required on every page):
 - Headings follow proper hierarchy: H1 → H2 → H3.
 - No keyword stuffing. Write naturally; search engines reward authenticity.
 
+### Google Analytics (GA4) — Required on All Pages
+Every page **must** include this GA4 code immediately after the opening `<head>` tag:
+
+```html
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TCXCP971BF"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-TCXCP971BF');
+  </script>
+
+  <!-- Rest of head content -->
+  <meta charset="UTF-8">
+  ...
+</head>
+```
+
+**This is the ONLY GA4 tag needed per page.** All existing pages (index, about, optical, ftth, wifi, microwave, lab, industries, hummingbird_hollow_case_study, verify-employee) already have this configured.
+
 ### Homepage SEO (Fixed)
 **Title:** `NodalWire | Reliable Network Design & Deployment Solutions`
 

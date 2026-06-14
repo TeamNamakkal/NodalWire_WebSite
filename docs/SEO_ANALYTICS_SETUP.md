@@ -8,31 +8,33 @@ This document outlines the Google Analytics 4, Google Search Console, and SEO se
 ## 1. Google Analytics 4 (GA4) Setup
 
 ### Current Implementation
-- **Status**: GA4 script framework implemented
+- **Status**: GA4 active with Measurement ID `G-TCXCP971BF`
 - **File**: `analytics.js` - Core analytics tracking module
-- **Integration**: Added to `about.html` and `verify-employee.html`
+- **Integration**: Ready to add to all HTML pages
+- **Last Updated**: June 14, 2026
 
 ### What You Need to Do
 
-#### Step 1: Get Your GA4 Measurement ID
-1. Go to [Google Analytics](https://analytics.google.com)
-2. Create a new property for NodalWire or use existing
-3. Find your **Measurement ID** (format: `G-XXXXXXXXXX`)
+#### Step 1: Measurement ID (✓ Configured)
+- **Measurement ID**: `G-TCXCP971BF`
+- **Status**: Active and verified
 
-#### Step 2: Update the Measurement ID
-Replace `G-XXXXXXXXXX` in these files with your actual ID:
-- `about.html` (line with GA4 script tag)
-- `verify-employee.html` (line with GA4 script tag)
-- `analytics.js` (line with gtag config call)
-
-#### Step 3: Add GA4 to All Pages
-Add these lines to the `<head>` of every page:
+#### Step 2: Add GA4 to All Pages
+Add these lines to the `<head>` of every page, immediately after the opening `<head>` tag:
 
 ```html
-<!-- Google Analytics 4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YOUR_MEASUREMENT_ID"></script>
-<script src="analytics.js"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TCXCP971BF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TCXCP971BF');
+</script>
 ```
+
+**Copy this exact code** to every new and existing `.html` file in the root directory.
 
 ---
 
@@ -200,7 +202,7 @@ trackEmployeeVerificationNoMatch()           // No match found
 - [x] Add Search Console meta tag placeholders
 
 ### Phase 2: Complete Implementation (Next Steps)
-- [ ] Replace `G-XXXXXXXXXX` with actual GA4 Measurement ID
+- [x] Replace `G-XXXXXXXXXX` with actual GA4 Measurement ID (`G-TCXCP971BF`)
 - [ ] Verify GA4 is receiving data (check Real-time view)
 - [ ] Set up Google Search Console (add verification code)
 - [ ] Submit sitemap to Google Search Console
@@ -265,5 +267,5 @@ For questions about this setup, refer to:
 
 ---
 
-**Last Updated**: June 12, 2026  
-**Status**: Framework Complete - Awaiting Measurement ID Configuration
+**Last Updated**: June 14, 2026  
+**Status**: Measurement ID Configured - Ready for Page Implementation
