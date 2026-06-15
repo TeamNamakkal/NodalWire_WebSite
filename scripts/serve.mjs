@@ -4,7 +4,7 @@ import { extname, join } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = fileURLToPath(new URL('..', import.meta.url));
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const DB_PATH = join(__dirname, 'data/worklogs.json');
 
 const MIME = {

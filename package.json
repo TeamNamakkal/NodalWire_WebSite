@@ -2,8 +2,9 @@
   "name": "07.website_project",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "scripts/serve.mjs",
   "scripts": {
+    "start": "node scripts/serve.mjs",
     "dev": "node scripts/serve.mjs",
     "serve": "node scripts/serve.mjs",
     "screenshot": "node scripts/screenshot.mjs",
@@ -14,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "dependencies": {
+  "devDependencies": {
     "puppeteer": "^24.42.0"
   }
 }
