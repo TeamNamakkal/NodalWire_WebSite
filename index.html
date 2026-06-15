@@ -697,6 +697,13 @@
     border-bottom: none !important;
   }
 
+  /* Employee Login — shown inside the mobile menu */
+  .nav-links > li > a.wh-btn {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+  }
+
   /* General layout fixes */
   body { padding-top: 68px !important; }
 }
@@ -3940,6 +3947,22 @@
       if(!wasOpen) li.classList.add('mob-open');
     });
   });
+
+  // Move "Employee Login" (injected by worklogs.js) into the mobile menu
+  document.addEventListener('DOMContentLoaded', function(){
+    if(window.innerWidth > 768) return;
+    var whBtn = document.querySelector('.wh-btn');
+    if(!whBtn) return;
+    var li = document.createElement('li');
+    li.appendChild(whBtn);
+    menu.appendChild(li);
+    whBtn.addEventListener('click', function(){
+      menu.classList.remove('mob-open');
+      btn.classList.remove('active');
+      btn.setAttribute('aria-expanded','false');
+    });
+  });
+})();
 </script>
 <script src="js/worklogs.js" defer></script>
 </body>
