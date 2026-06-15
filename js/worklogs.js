@@ -1,38 +1,14 @@
 (function () {
   // --- CSS Injections ---
   const css = `
-    /* Floating Button */
+    /* Header Login Button */
     .wh-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 10000;
+      cursor: pointer;
+    }
+    .wh-nav-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 12px 20px;
-      background: linear-gradient(135deg, #1D78C4 0%, #1562a8 100%);
-      color: #fff;
-      font-family: 'Lato', sans-serif;
-      font-weight: 700;
-      font-size: 14px;
-      border: none;
-      border-radius: 50px;
-      box-shadow: 0 4px 20px rgba(29, 120, 196, 0.4);
-      cursor: pointer;
-      transform: translateY(0);
-      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
-    }
-    .wh-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(29, 120, 196, 0.6);
-    }
-    .wh-btn:active {
-      transform: translateY(-1px);
-    }
-    .wh-btn svg {
-      width: 18px;
-      height: 18px;
+      gap: 20px;
     }
 
     /* Modal Overlay */
@@ -343,17 +319,22 @@
   document.head.appendChild(styleEl);
 
   // --- HTML Elements Setup ---
-  // Create Floating Button
-  const btn = document.createElement('button');
-  btn.className = 'wh-btn';
-  btn.innerHTML = `
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10"></circle>
-      <polyline points="12 6 12 12 16 14"></polyline>
-    </svg>
-    <span>Work Hours</span>
-  `;
-  document.body.appendChild(btn);
+  // Create Header Login Button
+  const btn = document.createElement('a');
+  btn.href = '#';
+  btn.className = 'nav-cta wh-btn';
+  btn.textContent = 'Employee Login';
+
+  const navCta = document.querySelector('.nav-cta');
+  if (navCta && navCta.parentNode) {
+    const navActions = document.createElement('div');
+    navActions.className = 'wh-nav-actions';
+    navCta.parentNode.insertBefore(navActions, navCta);
+    navActions.appendChild(btn);
+    navActions.appendChild(navCta);
+  } else {
+    document.body.appendChild(btn);
+  }
 
   // Create Modal Overlay & Card
   const overlay = document.createElement('div');
@@ -378,7 +359,8 @@
   });
 
   // Open modal click handler
-  btn.addEventListener('click', () => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
     openModal();
   });
 
@@ -417,11 +399,11 @@
       <form id="whLoginForm">
         <div class="wh-form-group">
           <label class="wh-label" for="whUsername">Username</label>
-          <input class="wh-input" id="whUsername" type="text" required autocomplete="username">
+          <input class="wh-input" id="whUsername" type="text" required placeholder="Username" value="" autocomplete="off">
         </div>
         <div class="wh-form-group">
           <label class="wh-label" for="whPassword">Password</label>
-          <input class="wh-input" id="whPassword" type="password" required autocomplete="current-password">
+          <input class="wh-input" id="whPassword" type="password" required placeholder="Password" value="" autocomplete="off">
         </div>
         <div class="wh-footer">
           <button type="button" class="wh-btn-secondary" id="whLoginCloseBtn">Close</button>
