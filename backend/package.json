@@ -1,0 +1,18 @@
+{
+  "name": "nodalwire-backend",
+  "version": "1.0.0",
+  "description": "NodalWire employee login backend for Hostinger Node.js hosting",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
+  }
+}
