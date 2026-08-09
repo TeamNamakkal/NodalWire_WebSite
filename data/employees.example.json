@@ -1,0 +1,33 @@
+[
+  {
+    "id": "NW000",
+    "fullName": "Jane Admin",
+    "title": "Principal Consultant",
+    "department": "ICT",
+    "company": "NodalWire LLC",
+    "joinedDate": "January 1, 2026",
+    "workLocation": "Philadelphia, Pennsylvania, USA",
+    "status": "Active",
+    "scope": null,
+    "reportingManager": null,
+    "photo": "/assets/employees/jane-admin.jpg",
+    "username": "admin",
+    "password": "changeme",
+    "passwords": null,
+    "role": "admin",
+    "employmentType": "W2",
+    "state": "TX",
+    "payType": "salary",
+    "annualSalary": 0,
+    "hourlyRate": null,
+    "payFrequency": "biweekly",
+    "filingStatus": "single",
+    "w4Step2Checkbox": false,
+    "w4Dependents": 0,
+    "w4OtherIncome": 0,
+    "w4Deductions": 0,
+    "w4ExtraWithholding": 0,
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-01-01T00:00:00.000Z"
+  }
+]

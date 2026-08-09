@@ -805,63 +805,18 @@
 // Employee database (PUBLIC VERIFICATION DATA ONLY)
 // DOB is intentionally excluded from this object.
 // In production, DOB verification should be handled server-side.
-const employeeDatabase = [
-  {
-    id: 'NW000',
-    fullName: 'Surendran Natarajan',
-    title: 'Principal Consultant',
-    department: 'ICT',
-    company: 'NodalWire LLC',
-    joinedDate: 'January 19, 2026',
-    workLocation: 'Philadelphia, Pennsylvania, USA',
-    status: 'Active',
-    scope: null,
-    reportingManager: null,
-    photo: '/assets/employees/surendran-natarajan.jpg'
-  },
-  {
-    id: 'NW001',
-    fullName: 'Sampritha Suresh Kumar',
-    title: 'Intern - Engineering',
-    department: 'ICT',
-    company: 'NodalWire LLC',
-    joinedDate: 'January 19, 2026',
-    workLocation: 'SRM University, Tiruchirappalli, TN, India',
-    status: 'Active',
-    scope: 'Full Stack Developer',
-    reportingManager: 'Surendran Natarajan',
-    photo: '/assets/employees/sampritha-suresh-kumar.jpg'
-  },
-  {
-    id: 'NW002',
-    fullName: 'Theepan Selvam Saratha',
-    title: 'Intern - Engineering',
-    department: 'ICT',
-    company: 'NodalWire LLC',
-    joinedDate: 'January 19, 2026',
-    workLocation: 'Karunya University, Karunya Nagar, Coimbatore, TN, India 641114',
-    status: 'Active',
-    scope: 'Full Stack Developer',
-    reportingManager: 'Surendran Natarajan',
-    photo: '/assets/employees/theepan-selvam-saratha.jpg'
-  },
-  {
-    id: 'NW003',
-    fullName: 'Ashish Balaji Rajkumar',
-    title: 'Engineer - ICT',
-    department: 'ICT',
-    company: 'NodalWire LLC',
-    joinedDate: 'April 28, 2026',
-    workLocation: 'Philadelphia, Pennsylvania, USA',
-    status: 'Active',
-    scope: null,
-    reportingManager: 'Surendran Natarajan',
-    photo: '/assets/employees/ashish-balaji-rajkumar.jpg'
-  }
-];
+let employeeDatabaseCache = null;
+
+async function getEmployeeDatabase() {
+  if (employeeDatabaseCache) return employeeDatabaseCache;
+  const res = await fetch('/api/employees/public');
+  const data = await res.json();
+  employeeDatabaseCache = data.success ? data.employees : [];
+  return employeeDatabaseCache;
+}
 
 // Form submission handler
-document.getElementById('verifyForm').addEventListener('submit', function(e) {
+document.getElementById('verifyForm').addEventListener('submit', async function(e) {
   e.preventDefault();
 
   const fullName = document.getElementById('fullName').value.trim();
@@ -878,7 +833,7 @@ document.getElementById('verifyForm').addEventListener('submit', function(e) {
   trackEmployeeVerificationSearch();
 
   // Search logic
-  const result = searchEmployee(fullName, employeeId);
+  const result = await searchEmployee(fullName, employeeId);
 
   // Track result event (NO PII - only success/no-match, never employee details)
   if (result) {
@@ -891,7 +846,8 @@ document.getElementById('verifyForm').addEventListener('submit', function(e) {
   displayResult(result, fullName, employeeId);
 });
 
-function searchEmployee(fullName, employeeId) {
+async function searchEmployee(fullName, employeeId) {
+  const employeeDatabase = await getEmployeeDatabase();
   return employeeDatabase.find(emp => {
     const idMatch = employeeId && emp.id === employeeId;
     const nameMatch = fullName && emp.fullName.toLowerCase().includes(fullName.toLowerCase());

@@ -1,11 +1,56 @@
 import { createServer } from 'http';
 import { readFile, writeFile } from 'fs/promises';
+import { existsSync, readFileSync } from 'fs';
 import { extname, join } from 'path';
 import { fileURLToPath } from 'url';
+import { randomBytes } from 'crypto';
+import { calculatePayslip } from './lib/payroll-tax.mjs';
 
 const __dirname = fileURLToPath(new URL('..', import.meta.url));
+
+// Minimal .env loader (no external dependency, no CLI flag required).
+// Does not override variables already set in the real environment.
+function loadEnvFile() {
+  const envPath = join(__dirname, '.env');
+  if (!existsSync(envPath)) return;
+  const lines = readFileSync(envPath, 'utf8').split('\n');
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const eqIdx = trimmed.indexOf('=');
+    if (eqIdx === -1) continue;
+    const key = trimmed.slice(0, eqIdx).trim();
+    let value = trimmed.slice(eqIdx + 1).trim();
+    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+      value = value.slice(1, -1);
+    }
+    if (!(key in process.env)) process.env[key] = value;
+  }
+}
+loadEnvFile();
+
 const PORT = process.env.PORT || 3000;
 const DB_PATH = join(__dirname, 'data/worklogs.json');
+const EMPLOYEES_PATH = join(__dirname, 'data/employees.json');
+const TIMEBOOKINGS_PATH = join(__dirname, 'data/timebookings.json');
+const PAYSLIPS_PATH = join(__dirname, 'data/payslips.json');
+const TICKETS_PATH = join(__dirname, 'data/tickets.json');
+
+const RESET_TOKEN_TTL_MS = 60 * 60 * 1000; // 1 hour
+
+let cachedTransporter = null;
+async function getMailTransporter() {
+  if (cachedTransporter) return cachedTransporter;
+  if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) return null;
+  const { default: nodemailer } = await import('nodemailer');
+  cachedTransporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT) || 587,
+    secure: Number(process.env.SMTP_PORT) === 465,
+    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+  });
+  return cachedTransporter;
+}
 
 const MIME = {
   '.html': 'text/html',
@@ -23,11 +68,36 @@ const MIME = {
   '.woff2': 'font/woff2',
 };
 
-const USERS = {
-  surendran: { name: 'Surendran Natarajan', password: 'surendran', role: 'admin' },
-  theepan: { name: 'Theepan SS', passwords: ['theepan@1330', 'theepan'], role: 'user' },
-  sampritha: { name: 'Sampritha Sureshkumar', passwords: ['sam@1330', 'sampritha'], role: 'user' }
-};
+async function loadEmployees() {
+  return JSON.parse(await readFile(EMPLOYEES_PATH, 'utf8') || '[]');
+}
+
+async function saveEmployees(employees) {
+  await writeFile(EMPLOYEES_PATH, JSON.stringify(employees, null, 2), 'utf8');
+}
+
+async function findEmployeeByUsername(username) {
+  if (!username) return null;
+  const employees = await loadEmployees();
+  return employees.find(e => e.username === username) || null;
+}
+
+async function findEmployeeById(id) {
+  if (!id) return null;
+  const employees = await loadEmployees();
+  return employees.find(e => e.id === id) || null;
+}
+
+const PUBLIC_EMPLOYEE_FIELDS = [
+  'id', 'fullName', 'title', 'department', 'company',
+  'reportingManager', 'joinedDate', 'workLocation', 'status', 'photo'
+];
+
+function toPublicEmployee(emp) {
+  const out = {};
+  for (const field of PUBLIC_EMPLOYEE_FIELDS) out[field] = emp[field];
+  return out;
+}
 
 // Helper to parse bodies
 function getRequestBody(req) {
@@ -63,18 +133,66 @@ function injectGA4(html) {
   return html;
 }
 
+function fmtCurrency(n) {
+  return '$' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function renderPayslipHtml(p) {
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Payslip - ${p.employeeName} - ${p.payPeriodStart} to ${p.payPeriodEnd}</title>
+<style>
+  body { font-family: 'Inter', Arial, sans-serif; color: #1a1a1a; max-width: 720px; margin: 40px auto; padding: 0 20px; }
+  h1 { font-size: 20px; margin-bottom: 4px; }
+  .sub { color: #555; margin-bottom: 24px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #ddd; font-size: 14px; }
+  th { background: #f4f4f4; }
+  .total-row td { font-weight: 700; font-size: 15px; border-top: 2px solid #333; }
+  .print-btn { margin-bottom: 20px; padding: 8px 16px; cursor: pointer; }
+  @media print {
+    .print-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+  <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+  <h1>NodalWire LLC — Payslip</h1>
+  <div class="sub">${p.employeeName} (${p.employeeId}) &nbsp;|&nbsp; Pay Period: ${p.payPeriodStart} to ${p.payPeriodEnd} &nbsp;|&nbsp; State: ${p.state}</div>
+  <table>
+    <tr><th colspan="2">Earnings</th></tr>
+    <tr><td>Gross Pay</td><td>${fmtCurrency(p.grossPay)}</td></tr>
+    ${p.regularHours !== null && p.regularHours !== undefined ? `<tr><td>Hours Worked</td><td>${p.regularHours}</td></tr>` : ''}
+    ${p.hourlyRate ? `<tr><td>Hourly Rate</td><td>${fmtCurrency(p.hourlyRate)}</td></tr>` : ''}
+    ${p.annualSalary ? `<tr><td>Annual Salary</td><td>${fmtCurrency(p.annualSalary)}</td></tr>` : ''}
+  </table>
+  <table>
+    <tr><th colspan="2">Deductions</th></tr>
+    <tr><td>Federal Income Tax Withholding</td><td>${fmtCurrency(p.federalWithholding)}</td></tr>
+    <tr><td>Social Security (6.2%)</td><td>${fmtCurrency(p.socialSecurity)}</td></tr>
+    <tr><td>Medicare (1.45%)</td><td>${fmtCurrency(p.medicare)}</td></tr>
+    <tr><td>State Withholding (${p.state})</td><td>${fmtCurrency(p.stateWithholding)}</td></tr>
+    <tr class="total-row"><td>Net Pay</td><td>${fmtCurrency(p.netPay)}</td></tr>
+  </table>
+  <div class="sub">Generated ${new Date(p.generatedAt).toLocaleString('en-US')} by ${p.generatedBy}</div>
+</body>
+</html>`;
+}
+
 createServer(async (req, res) => {
   // --- 1. POST /api/login ---
   if (req.url === '/api/login' && req.method === 'POST') {
     try {
       const { username, password } = await getRequestBody(req);
-      const user = USERS[username];
+      const user = await findEmployeeByUsername(username);
       const isCorrectPassword = user && (user.password === password || (user.passwords && user.passwords.includes(password)));
       if (isCorrectPassword) {
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({
           success: true,
-          user: { id: username, name: user.name, role: user.role }
+          user: { id: username, name: user.fullName, role: user.role }
         }));
       } else {
         res.writeHead(401, { 'Content-Type': 'application/json' });
@@ -83,6 +201,243 @@ createServer(async (req, res) => {
     } catch (err) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: false, message: 'Malformed JSON payload' }));
+    }
+    return;
+  }
+
+  // --- 1a-i. POST /api/forgot-password (no auth) ---
+  if (req.url === '/api/forgot-password' && req.method === 'POST') {
+    try {
+      const { username } = await getRequestBody(req);
+      const genericResponse = { success: true, message: 'If that account exists and has an email on file, a reset link has been sent.' };
+
+      const employee = await findEmployeeByUsername(username);
+      if (!employee || !employee.email) {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(genericResponse));
+        return;
+      }
+
+      const transporter = await getMailTransporter();
+      if (!transporter) {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(genericResponse));
+        return;
+      }
+
+      const token = randomBytes(32).toString('hex');
+      const expiresAt = Date.now() + RESET_TOKEN_TTL_MS;
+
+      const employees = await loadEmployees();
+      const idx = employees.findIndex(e => e.username === username);
+      employees[idx] = { ...employees[idx], resetToken: token, resetTokenExpiry: expiresAt };
+      await saveEmployees(employees);
+
+      const baseUrl = process.env.SITE_BASE_URL || `http://localhost:${PORT}`;
+      const resetLink = `${baseUrl}/reset-password.html?token=${token}`;
+
+      await transporter.sendMail({
+        from: process.env.SMTP_FROM || process.env.SMTP_USER,
+        to: employee.email,
+        subject: 'NodalWire — Password Reset Request',
+        text: `Hi ${employee.fullName},\n\nA password reset was requested for your NodalWire account. This link expires in 1 hour:\n\n${resetLink}\n\nIf you didn't request this, you can ignore this email.`,
+        html: `<p>Hi ${employee.fullName},</p><p>A password reset was requested for your NodalWire account. This link expires in 1 hour:</p><p><a href="${resetLink}">${resetLink}</a></p><p>If you didn't request this, you can ignore this email.</p>`
+      });
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(genericResponse));
+    } catch (err) {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, message: 'If that account exists and has an email on file, a reset link has been sent.' }));
+    }
+    return;
+  }
+
+  // --- 1a-ii. POST /api/reset-password (no auth, token-based) ---
+  if (req.url === '/api/reset-password' && req.method === 'POST') {
+    try {
+      const { token, newPassword } = await getRequestBody(req);
+      if (!token || !newPassword || newPassword.length < 6) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'A valid token and a password of at least 6 characters are required.' }));
+        return;
+      }
+
+      const employees = await loadEmployees();
+      const idx = employees.findIndex(e => e.resetToken === token);
+      if (idx === -1 || !employees[idx].resetTokenExpiry || employees[idx].resetTokenExpiry < Date.now()) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'This reset link is invalid or has expired. Please request a new one.' }));
+        return;
+      }
+
+      employees[idx] = {
+        ...employees[idx],
+        password: newPassword,
+        passwords: null,
+        resetToken: null,
+        resetTokenExpiry: null,
+        updatedAt: new Date().toISOString()
+      };
+      await saveEmployees(employees);
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, message: 'Password updated successfully. You can now log in.' }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to reset password.' }));
+    }
+    return;
+  }
+
+  // --- 1b. GET /api/employees/public (no auth) ---
+  if (req.url.startsWith('/api/employees/public') && req.method === 'GET') {
+    try {
+      const employees = await loadEmployees();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, employees: employees.map(toPublicEmployee) }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to load employees' }));
+    }
+    return;
+  }
+
+  // --- 1c. GET /api/employees (admin only, full records) ---
+  if (req.url.startsWith('/api/employees') && req.method === 'GET') {
+    const urlObj = new URL(req.url, `http://localhost:${PORT}`);
+    const requesterId = urlObj.searchParams.get('requesterId');
+    try {
+      const requester = await findEmployeeByUsername(requesterId);
+      if (!requester || requester.role !== 'admin') {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
+        return;
+      }
+      const employees = await loadEmployees();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, employees }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to load employees' }));
+    }
+    return;
+  }
+
+  // --- 1d. POST /api/employees (admin only, create) ---
+  if (req.url === '/api/employees' && req.method === 'POST') {
+    try {
+      const body = await getRequestBody(req);
+      const requester = await findEmployeeByUsername(body.requesterId);
+      if (!requester || requester.role !== 'admin') {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
+        return;
+      }
+      if (!body.id || !body.fullName) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'id and fullName are required' }));
+        return;
+      }
+      const employees = await loadEmployees();
+      if (employees.some(e => e.id === body.id)) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'An employee with this id already exists' }));
+        return;
+      }
+      if (body.username && employees.some(e => e.username === body.username)) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'An employee with this username already exists' }));
+        return;
+      }
+      const now = new Date().toISOString();
+      const { requesterId, ...fields } = body;
+      const newEmployee = {
+        role: 'user',
+        status: 'Active',
+        passwords: null,
+        employmentType: 'W2',
+        state: 'TX',
+        payType: 'salary',
+        annualSalary: 0,
+        hourlyRate: null,
+        payFrequency: 'biweekly',
+        filingStatus: 'single',
+        w4Step2Checkbox: false,
+        w4Dependents: 0,
+        w4OtherIncome: 0,
+        w4Deductions: 0,
+        w4ExtraWithholding: 0,
+        ...fields,
+        createdAt: now,
+        updatedAt: now
+      };
+      employees.push(newEmployee);
+      await saveEmployees(employees);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, employee: newEmployee }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to create employee' }));
+    }
+    return;
+  }
+
+  // --- 1e. PUT /api/employees (admin only, update) ---
+  if (req.url === '/api/employees' && req.method === 'PUT') {
+    try {
+      const body = await getRequestBody(req);
+      const requester = await findEmployeeByUsername(body.requesterId);
+      if (!requester || requester.role !== 'admin') {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
+        return;
+      }
+      const employees = await loadEmployees();
+      const idx = employees.findIndex(e => e.id === body.id);
+      if (idx === -1) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Employee not found' }));
+        return;
+      }
+      const { requesterId, ...fields } = body;
+      employees[idx] = { ...employees[idx], ...fields, updatedAt: new Date().toISOString() };
+      await saveEmployees(employees);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, employee: employees[idx] }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to update employee' }));
+    }
+    return;
+  }
+
+  // --- 1f. DELETE /api/employees (admin only) ---
+  if (req.url.startsWith('/api/employees') && req.method === 'DELETE') {
+    const urlObj = new URL(req.url, `http://localhost:${PORT}`);
+    const id = urlObj.searchParams.get('id');
+    const requesterId = urlObj.searchParams.get('requesterId');
+    try {
+      const requester = await findEmployeeByUsername(requesterId);
+      if (!requester || requester.role !== 'admin') {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
+        return;
+      }
+      const employees = await loadEmployees();
+      const idx = employees.findIndex(e => e.id === id);
+      if (idx === -1) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Employee not found' }));
+        return;
+      }
+      employees.splice(idx, 1);
+      await saveEmployees(employees);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, message: 'Employee deleted' }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to delete employee' }));
     }
     return;
   }
@@ -97,7 +452,7 @@ createServer(async (req, res) => {
     try {
       const dbData = JSON.parse(await readFile(DB_PATH, 'utf8') || '[]');
       let logs = dbData;
-      const requester = USERS[requesterId];
+      const requester = await findEmployeeByUsername(requesterId);
 
       if (!requester) {
         res.writeHead(401, { 'Content-Type': 'application/json' });
@@ -129,7 +484,7 @@ createServer(async (req, res) => {
   if (req.url === '/api/worklogs' && req.method === 'POST') {
     try {
       const { requesterId, date, taskName, startTime, endTime, notes } = await getRequestBody(req);
-      const requester = USERS[requesterId];
+      const requester = await findEmployeeByUsername(requesterId);
       if (!requester) {
         res.writeHead(401, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
@@ -177,7 +532,7 @@ createServer(async (req, res) => {
       const newLog = {
         id: Date.now().toString() + Math.random().toString(36).substring(2, 7),
         userId: requesterId,
-        userName: requester.name,
+        userName: requester.fullName,
         date,
         taskName,
         startTime,
@@ -203,7 +558,7 @@ createServer(async (req, res) => {
   if (req.url === '/api/worklogs' && req.method === 'PUT') {
     try {
       const { requesterId, id, date, taskName, startTime, endTime, notes } = await getRequestBody(req);
-      const requester = USERS[requesterId];
+      const requester = await findEmployeeByUsername(requesterId);
       if (!requester) {
         res.writeHead(401, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
@@ -300,7 +655,7 @@ createServer(async (req, res) => {
     const requesterId = urlObj.searchParams.get('requesterId');
 
     try {
-      const requester = USERS[requesterId];
+      const requester = await findEmployeeByUsername(requesterId);
       if (!requester) {
         res.writeHead(401, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
@@ -350,6 +705,612 @@ createServer(async (req, res) => {
     return;
   }
 
+  // --- 5b. GET /api/timebookings ---
+  if (req.url.startsWith('/api/timebookings') && req.method === 'GET') {
+    const urlObj = new URL(req.url, `http://localhost:${PORT}`);
+    const employeeId = urlObj.searchParams.get('employeeId');
+    const requesterId = urlObj.searchParams.get('requesterId');
+    const dateStr = urlObj.searchParams.get('date');
+
+    try {
+      const requester = await findEmployeeByUsername(requesterId);
+      if (!requester) {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
+        return;
+      }
+
+      const dbData = JSON.parse(await readFile(TIMEBOOKINGS_PATH, 'utf8') || '[]');
+      let bookings = dbData;
+
+      if (requester.role !== 'admin') {
+        bookings = bookings.filter(b => b.employeeId === requesterId);
+      } else {
+        if (employeeId) {
+          bookings = bookings.filter(b => b.employeeId === employeeId);
+        }
+        if (dateStr) {
+          bookings = bookings.filter(b => b.bookingDate === dateStr);
+        }
+      }
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, bookings }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Database read failed' }));
+    }
+    return;
+  }
+
+  // --- 5c. POST /api/timebookings ---
+  if (req.url === '/api/timebookings' && req.method === 'POST') {
+    try {
+      const { requesterId, clientName, projectName, taskDescription, bookingDate, startTime, endTime, billable, notes } = await getRequestBody(req);
+      const requester = await findEmployeeByUsername(requesterId);
+      if (!requester) {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
+        return;
+      }
+
+      if (!bookingDate || !projectName || !startTime || !endTime) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Missing required fields' }));
+        return;
+      }
+
+      const toMinutes = (timeStr) => {
+        const [h, m] = timeStr.split(':').map(Number);
+        return h * 60 + m;
+      };
+
+      const startM = toMinutes(startTime);
+      const endM = toMinutes(endTime);
+
+      if (endM <= startM) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'End Time must be greater than Start Time' }));
+        return;
+      }
+
+      const dbData = JSON.parse(await readFile(TIMEBOOKINGS_PATH, 'utf8') || '[]');
+
+      const isOverlap = dbData.some(b => {
+        if (b.employeeId === requesterId && b.bookingDate === bookingDate) {
+          const bStart = toMinutes(b.startTime);
+          const bEnd = toMinutes(b.endTime);
+          return startM < bEnd && bStart < endM;
+        }
+        return false;
+      });
+
+      if (isOverlap) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'A booking already exists in this time range for this date.' }));
+        return;
+      }
+
+      const totalHours = parseFloat(((endM - startM) / 60).toFixed(2));
+      const newBooking = {
+        id: 'tb_' + Date.now().toString() + Math.random().toString(36).substring(2, 7),
+        employeeId: requesterId,
+        employeeName: requester.fullName,
+        clientName: clientName || '',
+        projectName,
+        taskDescription: taskDescription || '',
+        bookingDate,
+        startTime,
+        endTime,
+        totalHours,
+        billable: billable !== undefined ? !!billable : true,
+        status: 'booked',
+        notes: notes || '',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      dbData.push(newBooking);
+      await writeFile(TIMEBOOKINGS_PATH, JSON.stringify(dbData, null, 2), 'utf8');
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, booking: newBooking }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to save booking' }));
+    }
+    return;
+  }
+
+  // --- 5d. PUT /api/timebookings ---
+  if (req.url === '/api/timebookings' && req.method === 'PUT') {
+    try {
+      const { requesterId, id, clientName, projectName, taskDescription, bookingDate, startTime, endTime, billable, status, notes } = await getRequestBody(req);
+      const requester = await findEmployeeByUsername(requesterId);
+      if (!requester) {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
+        return;
+      }
+
+      const dbData = JSON.parse(await readFile(TIMEBOOKINGS_PATH, 'utf8') || '[]');
+      const idx = dbData.findIndex(b => b.id === id);
+
+      if (idx === -1) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Booking not found' }));
+        return;
+      }
+
+      const existing = dbData[idx];
+
+      if (requester.role !== 'admin') {
+        const getTodayString = () => {
+          const d = new Date();
+          const yyyy = d.getFullYear();
+          const mm = String(d.getMonth() + 1).padStart(2, '0');
+          const dd = String(d.getDate()).padStart(2, '0');
+          return `${yyyy}-${mm}-${dd}`;
+        };
+        if (existing.bookingDate !== getTodayString()) {
+          res.writeHead(403, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, message: 'Users can only edit today\'s bookings' }));
+          return;
+        }
+        if (existing.employeeId !== requesterId) {
+          res.writeHead(403, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, message: 'Unauthorized to edit this booking' }));
+          return;
+        }
+      }
+
+      const toMinutes = (timeStr) => {
+        const [h, m] = timeStr.split(':').map(Number);
+        return h * 60 + m;
+      };
+
+      const startM = toMinutes(startTime);
+      const endM = toMinutes(endTime);
+
+      if (endM <= startM) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'End Time must be greater than Start Time' }));
+        return;
+      }
+
+      const isOverlap = dbData.some(b => {
+        if (b.id !== id && b.employeeId === existing.employeeId && b.bookingDate === bookingDate) {
+          const bStart = toMinutes(b.startTime);
+          const bEnd = toMinutes(b.endTime);
+          return startM < bEnd && bStart < endM;
+        }
+        return false;
+      });
+
+      if (isOverlap) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'A booking already exists in this time range for this date.' }));
+        return;
+      }
+
+      const totalHours = parseFloat(((endM - startM) / 60).toFixed(2));
+
+      dbData[idx] = {
+        ...existing,
+        clientName: clientName !== undefined ? clientName : existing.clientName,
+        projectName,
+        taskDescription: taskDescription !== undefined ? taskDescription : existing.taskDescription,
+        bookingDate,
+        startTime,
+        endTime,
+        totalHours,
+        billable: billable !== undefined ? !!billable : existing.billable,
+        status: status || existing.status,
+        notes: notes !== undefined ? notes : existing.notes,
+        updatedAt: new Date().toISOString()
+      };
+
+      await writeFile(TIMEBOOKINGS_PATH, JSON.stringify(dbData, null, 2), 'utf8');
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, booking: dbData[idx] }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to update booking' }));
+    }
+    return;
+  }
+
+  // --- 5e. DELETE /api/timebookings ---
+  if (req.url.startsWith('/api/timebookings') && req.method === 'DELETE') {
+    const urlObj = new URL(req.url, `http://localhost:${PORT}`);
+    const id = urlObj.searchParams.get('id');
+    const requesterId = urlObj.searchParams.get('requesterId');
+
+    try {
+      const requester = await findEmployeeByUsername(requesterId);
+      if (!requester) {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
+        return;
+      }
+
+      const dbData = JSON.parse(await readFile(TIMEBOOKINGS_PATH, 'utf8') || '[]');
+      const idx = dbData.findIndex(b => b.id === id);
+
+      if (idx === -1) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Booking not found' }));
+        return;
+      }
+
+      const existing = dbData[idx];
+
+      if (requester.role !== 'admin') {
+        const getTodayString = () => {
+          const d = new Date();
+          const yyyy = d.getFullYear();
+          const mm = String(d.getMonth() + 1).padStart(2, '0');
+          const dd = String(d.getDate()).padStart(2, '0');
+          return `${yyyy}-${mm}-${dd}`;
+        };
+        if (existing.bookingDate !== getTodayString()) {
+          res.writeHead(403, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, message: 'Users can only delete today\'s bookings' }));
+          return;
+        }
+        if (existing.employeeId !== requesterId) {
+          res.writeHead(403, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, message: 'Unauthorized to delete this booking' }));
+          return;
+        }
+      }
+
+      dbData.splice(idx, 1);
+      await writeFile(TIMEBOOKINGS_PATH, JSON.stringify(dbData, null, 2), 'utf8');
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, message: 'Booking deleted' }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to delete booking' }));
+    }
+    return;
+  }
+
+  // --- 5f. Payroll helpers ---
+  async function buildPayslipPreview({ employeeId, payPeriodStart, payPeriodEnd, hoursWorked }) {
+    const employee = await findEmployeeById(employeeId);
+    if (!employee) return { error: 'Employee not found' };
+
+    const payFrequency = employee.payFrequency || 'biweekly';
+    const periodsPerYear = { weekly: 52, biweekly: 26, semimonthly: 24, monthly: 12 }[payFrequency];
+    if (!periodsPerYear) return { error: 'Invalid pay frequency for this employee' };
+
+    let grossPayPerPeriod;
+    let regularHours = null;
+    if (employee.payType === 'hourly') {
+      regularHours = hoursWorked || 0;
+      grossPayPerPeriod = (employee.hourlyRate || 0) * regularHours;
+    } else {
+      grossPayPerPeriod = (employee.annualSalary || 0) / periodsPerYear;
+    }
+
+    const payslips = JSON.parse(await readFile(PAYSLIPS_PATH, 'utf8') || '[]');
+    const periodYear = payPeriodStart.slice(0, 4);
+    const ytdGrossBeforeThisPeriod = payslips
+      .filter(p => p.employeeId === employeeId && p.payPeriodStart.slice(0, 4) === periodYear && p.payPeriodStart < payPeriodStart)
+      .reduce((sum, p) => sum + p.grossPay, 0);
+
+    const w4Snapshot = {
+      filingStatus: employee.filingStatus || 'single',
+      w4Step2Checkbox: !!employee.w4Step2Checkbox,
+      w4Dependents: employee.w4Dependents || 0,
+      w4OtherIncome: employee.w4OtherIncome || 0,
+      w4Deductions: employee.w4Deductions || 0,
+      w4ExtraWithholding: employee.w4ExtraWithholding || 0
+    };
+
+    const calc = calculatePayslip({
+      grossPayPerPeriod,
+      payFrequency,
+      state: employee.state || 'TX',
+      filingStatus: w4Snapshot.filingStatus,
+      w4Step2Checkbox: w4Snapshot.w4Step2Checkbox,
+      w4Deductions: w4Snapshot.w4Deductions,
+      w4OtherIncome: w4Snapshot.w4OtherIncome,
+      w4Dependents: w4Snapshot.w4Dependents,
+      w4ExtraWithholding: w4Snapshot.w4ExtraWithholding,
+      ytdGrossBeforeThisPeriod
+    });
+
+    return {
+      employeeId: employee.id,
+      employeeName: employee.fullName,
+      payPeriodStart,
+      payPeriodEnd,
+      payFrequency,
+      state: employee.state || 'TX',
+      regularHours,
+      hourlyRate: employee.payType === 'hourly' ? employee.hourlyRate : null,
+      annualSalary: employee.payType === 'salary' ? employee.annualSalary : null,
+      w4Snapshot,
+      ...calc
+    };
+  }
+
+  // --- 5g. POST /api/payroll/calculate (preview, admin only) ---
+  if (req.url === '/api/payroll/calculate' && req.method === 'POST') {
+    try {
+      const body = await getRequestBody(req);
+      const requester = await findEmployeeByUsername(body.requesterId);
+      if (!requester || requester.role !== 'admin') {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Only admins can run payroll' }));
+        return;
+      }
+      if (!body.employeeId || !body.payPeriodStart || !body.payPeriodEnd) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Missing required fields' }));
+        return;
+      }
+      const preview = await buildPayslipPreview(body);
+      if (preview.error) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: preview.error }));
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, preview }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to calculate payroll' }));
+    }
+    return;
+  }
+
+  // --- 5h. POST /api/payroll/generate (persist, admin only) ---
+  if (req.url === '/api/payroll/generate' && req.method === 'POST') {
+    try {
+      const body = await getRequestBody(req);
+      const requester = await findEmployeeByUsername(body.requesterId);
+      if (!requester || requester.role !== 'admin') {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Only admins can run payroll' }));
+        return;
+      }
+      if (!body.employeeId || !body.payPeriodStart || !body.payPeriodEnd) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Missing required fields' }));
+        return;
+      }
+
+      const payslips = JSON.parse(await readFile(PAYSLIPS_PATH, 'utf8') || '[]');
+      const newStart = body.payPeriodStart;
+      const newEnd = body.payPeriodEnd;
+      const overlaps = payslips.some(p => {
+        if (p.employeeId !== body.employeeId) return false;
+        return newStart <= p.payPeriodEnd && p.payPeriodStart <= newEnd;
+      });
+      if (overlaps) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'A payslip already exists for this employee covering an overlapping pay period.' }));
+        return;
+      }
+
+      const preview = await buildPayslipPreview(body);
+      if (preview.error) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: preview.error }));
+        return;
+      }
+
+      const newPayslip = {
+        id: 'ps_' + Date.now().toString() + Math.random().toString(36).substring(2, 7),
+        ...preview,
+        generatedAt: new Date().toISOString(),
+        generatedBy: body.requesterId
+      };
+
+      payslips.push(newPayslip);
+      await writeFile(PAYSLIPS_PATH, JSON.stringify(payslips, null, 2), 'utf8');
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, payslip: newPayslip }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to generate payslip' }));
+    }
+    return;
+  }
+
+  // --- 5i. GET /api/payslips/:id/print ---
+  if (req.url.match(/^\/api\/payslips\/[^/]+\/print(\?.*)?$/) && req.method === 'GET') {
+    const urlObj = new URL(req.url, `http://localhost:${PORT}`);
+    const requesterId = urlObj.searchParams.get('requesterId');
+    const id = decodeURIComponent(urlObj.pathname.split('/')[3]);
+
+    try {
+      const requester = await findEmployeeByUsername(requesterId);
+      if (!requester) {
+        res.writeHead(401, { 'Content-Type': 'text/plain' });
+        res.end('Unauthorized');
+        return;
+      }
+      const payslips = JSON.parse(await readFile(PAYSLIPS_PATH, 'utf8') || '[]');
+      const payslip = payslips.find(p => p.id === id);
+      if (!payslip) {
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('Payslip not found');
+        return;
+      }
+      if (requester.role !== 'admin' && payslip.employeeId !== requester.id) {
+        res.writeHead(403, { 'Content-Type': 'text/plain' });
+        res.end('Unauthorized to view this payslip');
+        return;
+      }
+
+      const html = renderPayslipHtml(payslip);
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.end(html);
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'text/plain' });
+      res.end('Failed to render payslip');
+    }
+    return;
+  }
+
+  // --- 5j. GET /api/payslips ---
+  if (req.url.startsWith('/api/payslips') && !req.url.includes('/print') && req.method === 'GET') {
+    const urlObj = new URL(req.url, `http://localhost:${PORT}`);
+    const requesterId = urlObj.searchParams.get('requesterId');
+    const employeeId = urlObj.searchParams.get('employeeId');
+
+    try {
+      const requester = await findEmployeeByUsername(requesterId);
+      if (!requester) {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
+        return;
+      }
+
+      const payslips = JSON.parse(await readFile(PAYSLIPS_PATH, 'utf8') || '[]');
+      let results = payslips;
+
+      if (requester.role !== 'admin') {
+        results = results.filter(p => p.employeeId === requester.id);
+      } else if (employeeId) {
+        results = results.filter(p => p.employeeId === employeeId);
+      }
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, payslips: results }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to load payslips' }));
+    }
+    return;
+  }
+
+  // --- 5k. GET /api/tickets ---
+  if (req.url.startsWith('/api/tickets') && req.method === 'GET') {
+    const urlObj = new URL(req.url, `http://localhost:${PORT}`);
+    const requesterId = urlObj.searchParams.get('requesterId');
+    const employeeId = urlObj.searchParams.get('employeeId');
+
+    try {
+      const requester = await findEmployeeByUsername(requesterId);
+      if (!requester) {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
+        return;
+      }
+
+      const tickets = JSON.parse(await readFile(TICKETS_PATH, 'utf8') || '[]');
+      let results = tickets;
+
+      if (requester.role !== 'admin') {
+        results = results.filter(t => t.employeeId === requester.id);
+      } else if (employeeId) {
+        results = results.filter(t => t.employeeId === employeeId);
+      }
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, tickets: results }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to load tickets' }));
+    }
+    return;
+  }
+
+  // --- 5l. POST /api/tickets (any authenticated employee) ---
+  if (req.url === '/api/tickets' && req.method === 'POST') {
+    try {
+      const { requesterId, message } = await getRequestBody(req);
+      const requester = await findEmployeeByUsername(requesterId);
+      if (!requester) {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
+        return;
+      }
+      if (!message || !message.trim()) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Message is required' }));
+        return;
+      }
+
+      const tickets = JSON.parse(await readFile(TICKETS_PATH, 'utf8') || '[]');
+      const now = new Date().toISOString();
+      const newTicket = {
+        id: 'tk_' + Date.now().toString() + Math.random().toString(36).substring(2, 7),
+        employeeId: requester.id,
+        employeeName: requester.fullName,
+        message: message.trim(),
+        status: 'pending',
+        adminNotes: '',
+        createdAt: now,
+        updatedAt: now,
+        resolvedBy: null
+      };
+
+      tickets.push(newTicket);
+      await writeFile(TICKETS_PATH, JSON.stringify(tickets, null, 2), 'utf8');
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, ticket: newTicket }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to submit ticket' }));
+    }
+    return;
+  }
+
+  // --- 5m. PUT /api/tickets (admin only, update status/notes) ---
+  if (req.url === '/api/tickets' && req.method === 'PUT') {
+    try {
+      const { requesterId, id, status, adminNotes } = await getRequestBody(req);
+      const requester = await findEmployeeByUsername(requesterId);
+      if (!requester || requester.role !== 'admin') {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Only admins can update tickets' }));
+        return;
+      }
+
+      const validStatuses = ['pending', 'in_review', 'resolved', 'rejected'];
+      if (status && !validStatuses.includes(status)) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Invalid status' }));
+        return;
+      }
+
+      const tickets = JSON.parse(await readFile(TICKETS_PATH, 'utf8') || '[]');
+      const idx = tickets.findIndex(t => t.id === id);
+      if (idx === -1) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Ticket not found' }));
+        return;
+      }
+
+      tickets[idx] = {
+        ...tickets[idx],
+        status: status || tickets[idx].status,
+        adminNotes: adminNotes !== undefined ? adminNotes : tickets[idx].adminNotes,
+        resolvedBy: requesterId,
+        updatedAt: new Date().toISOString()
+      };
+
+      await writeFile(TICKETS_PATH, JSON.stringify(tickets, null, 2), 'utf8');
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, ticket: tickets[idx] }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to update ticket' }));
+    }
+    return;
+  }
+
   // --- 6. GET /api/reports/export ---
   if (req.url.startsWith('/api/reports/export') && req.method === 'GET') {
     const urlObj = new URL(req.url, `http://localhost:${PORT}`);
@@ -360,7 +1321,7 @@ createServer(async (req, res) => {
     const requesterId = urlObj.searchParams.get('requesterId');
 
     try {
-      const requester = USERS[requesterId];
+      const requester = await findEmployeeByUsername(requesterId);
       if (!requester || requester.role !== 'admin') {
         res.writeHead(401, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, message: 'Only admins can export reports' }));

@@ -17,6 +17,11 @@ Thumbs.db
 .env.local
 .env.*.local
 
+# Employee / payroll data (sensitive - never commit, provision on the server directly)
+data/employees.json
+data/payslips.json
+data/tickets.json
+
 # Temporary/backup files
 *.tmp
 *.bak
