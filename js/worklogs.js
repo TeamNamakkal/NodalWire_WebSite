@@ -405,6 +405,9 @@
           <label class="wh-label" for="whPassword">Password</label>
           <input class="wh-input" id="whPassword" type="password" required placeholder="Password" value="" autocomplete="off">
         </div>
+        <div style="text-align: right; margin-bottom: 8px;">
+          <a href="#" id="whForgotPasswordLink" style="color: #7a9bbf; font-size: 12px; text-decoration: underline;">Forgot password?</a>
+        </div>
         <div class="wh-footer">
           <button type="button" class="wh-btn-secondary" id="whLoginCloseBtn">Close</button>
           <button type="submit" class="wh-btn-primary">Login</button>
@@ -414,6 +417,10 @@
 
     document.getElementById('whCloseBtn').addEventListener('click', closeModal);
     document.getElementById('whLoginCloseBtn').addEventListener('click', closeModal);
+    document.getElementById('whForgotPasswordLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      renderForgotPassword(container);
+    });
     document.getElementById('whLoginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const usernameInput = document.getElementById('whUsername').value.trim();
@@ -438,6 +445,56 @@
           alertBox.innerText = data.message || 'Verification failed.';
           alertBox.style.display = 'block';
         }
+      } catch (err) {
+        alertBox.innerText = 'Network error. Please try again.';
+        alertBox.style.display = 'block';
+      }
+    });
+  }
+
+  // --- 1b. FORGOT PASSWORD SCREEN ---
+  function renderForgotPassword(container) {
+    container.innerHTML = `
+      <div class="wh-header">
+        <div>
+          <h2>Reset Password</h2>
+          <p>Enter your username and we'll email you a reset link if an email is on file.</p>
+        </div>
+        <button class="wh-btn-secondary wh-btn-mini" id="whCloseBtn">Close</button>
+      </div>
+      <div class="wh-alert" id="whForgotAlert"></div>
+      <form id="whForgotForm">
+        <div class="wh-form-group">
+          <label class="wh-label" for="whForgotUsername">Username</label>
+          <input class="wh-input" id="whForgotUsername" type="text" required placeholder="Username" autocomplete="off">
+        </div>
+        <div class="wh-footer">
+          <button type="button" class="wh-btn-secondary" id="whForgotBackBtn">Back to Login</button>
+          <button type="submit" class="wh-btn-primary">Send Reset Link</button>
+        </div>
+      </form>
+    `;
+
+    document.getElementById('whCloseBtn').addEventListener('click', closeModal);
+    document.getElementById('whForgotBackBtn').addEventListener('click', () => renderLogin(container));
+    document.getElementById('whForgotForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('whForgotUsername').value.trim();
+      const alertBox = document.getElementById('whForgotAlert');
+      alertBox.style.display = 'none';
+
+      try {
+        const response = await fetch('/api/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username })
+        });
+        const data = await response.json();
+        alertBox.style.color = '#7a9bbf';
+        alertBox.style.background = 'rgba(29, 120, 196, 0.08)';
+        alertBox.style.borderColor = 'rgba(29, 120, 196, 0.25)';
+        alertBox.innerText = data.message || 'If that account exists, a reset link has been sent.';
+        alertBox.style.display = 'block';
       } catch (err) {
         alertBox.innerText = 'Network error. Please try again.';
         alertBox.style.display = 'block';
