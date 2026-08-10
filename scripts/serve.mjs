@@ -290,6 +290,29 @@ createServer(async (req, res) => {
     return;
   }
 
+  // --- 1a-iii. GET /api/employees/me (any authenticated employee, self only) ---
+  if (req.url.startsWith('/api/employees/me') && req.method === 'GET') {
+    const urlObj = new URL(req.url, `http://localhost:${PORT}`);
+    const requesterId = urlObj.searchParams.get('requesterId');
+    try {
+      const requester = await findEmployeeByUsername(requesterId);
+      if (!requester) {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
+        return;
+      }
+      const SELF_VIEW_FIELDS = [...PUBLIC_EMPLOYEE_FIELDS, 'username', 'email', 'role'];
+      const out = {};
+      for (const field of SELF_VIEW_FIELDS) out[field] = requester[field];
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, employee: out }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to load profile' }));
+    }
+    return;
+  }
+
   // --- 1b. GET /api/employees/public (no auth) ---
   if (req.url.startsWith('/api/employees/public') && req.method === 'GET') {
     try {

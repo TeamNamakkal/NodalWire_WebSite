@@ -93,6 +93,7 @@
 
   if (window.NWPortal) {
     window.NWPortal.register('Manage Employees', openModal, { adminOnly: true });
+    window.NWPortal.register('My Profile', openMyProfile);
   }
 
   function openModal() {
@@ -102,8 +103,72 @@
     renderListView();
   }
 
+  function openMyProfile() {
+    const user = getCurrentUser();
+    if (!user) return;
+    overlay.classList.add('open');
+    renderMyProfile();
+  }
+
   function closeModal() {
     overlay.classList.remove('open');
+  }
+
+  async function renderMyProfile() {
+    const user = getCurrentUser();
+    const card = document.getElementById('empCard');
+    card.innerHTML = `
+      <div class="emp-header">
+        <div>
+          <h2>My Profile</h2>
+          <p>Your details on file. To request a change, use Employee Requests.</p>
+        </div>
+        <button class="emp-btn-secondary emp-btn-mini" id="empCloseBtn">Close</button>
+      </div>
+      <div id="empProfileBody">Loading...</div>
+    `;
+    document.getElementById('empCloseBtn').addEventListener('click', closeModal);
+
+    try {
+      const res = await fetch(`/api/employees/me?requesterId=${user.id}`);
+      const data = await res.json();
+      const body = document.getElementById('empProfileBody');
+      if (!data.success) {
+        body.innerHTML = `<p style="color:#dc2626;">${escapeHtml(data.message || 'Failed to load profile.')}</p>`;
+        return;
+      }
+      const e = data.employee;
+      const rows = [
+        ['Employee ID', e.id],
+        ['Full Name', e.fullName],
+        ['Title', e.title],
+        ['Department', e.department],
+        ['Company', e.company],
+        ['Reporting Manager', e.reportingManager],
+        ['Work Location', e.workLocation],
+        ['Joined Date', e.joinedDate],
+        ['Status', e.status],
+        ['Username', e.username],
+        ['Email', e.email],
+        ['Role', e.role]
+      ];
+      body.innerHTML = `
+        <div class="emp-table-container">
+          <table class="emp-table">
+            <tbody>
+              ${rows.map(([label, val]) => `
+                <tr>
+                  <th style="width: 200px;">${escapeHtml(label)}</th>
+                  <td>${val ? escapeHtml(String(val)) : '<span style="color:#94a3b8;">Not set</span>'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    } catch (err) {
+      document.getElementById('empProfileBody').innerHTML = `<p style="color:#dc2626;">Network error loading profile.</p>`;
+    }
   }
 
   async function renderListView() {
