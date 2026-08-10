@@ -52,6 +52,51 @@ async function getMailTransporter() {
   return cachedTransporter;
 }
 
+function isTimesheetApprover(employee) {
+  return !!employee && (employee.role === 'admin' || employee.isTimeApprover === true);
+}
+
+async function sendTicketEmails(ticket, employee) {
+  const transporter = await getMailTransporter();
+  if (!transporter) return;
+
+  const from = process.env.SMTP_FROM || process.env.SMTP_USER;
+  const employeeEmail = employee.email || employee.personalEmail;
+
+  try {
+    if (employeeEmail) {
+      await transporter.sendMail({
+        from,
+        to: employeeEmail,
+        subject: `NodalWire — Request Received: ${ticket.typeLabel}`,
+        text: `Hi ${employee.fullName},\n\nWe've received your request:\n\nType: ${ticket.typeLabel}\nDetails: ${ticket.message}\nStatus: Pending\n\nAn admin will review it and follow up.\n\n— NodalWire`,
+        html: `<p>Hi ${employee.fullName},</p><p>We've received your request:</p><p><strong>Type:</strong> ${ticket.typeLabel}<br><strong>Details:</strong> ${ticket.message}<br><strong>Status:</strong> Pending</p><p>An admin will review it and follow up.</p>`
+      });
+    }
+  } catch (err) {
+    // Non-fatal — ticket is already saved even if the acknowledgement email fails.
+  }
+
+  try {
+    const employees = await loadEmployees();
+    const approverEmails = employees
+      .filter(isTimesheetApprover)
+      .map(e => e.email || e.personalEmail)
+      .filter(Boolean);
+    if (approverEmails.length) {
+      await transporter.sendMail({
+        from,
+        to: approverEmails.join(','),
+        subject: `NodalWire — New Employee Request: ${ticket.typeLabel}`,
+        text: `${employee.fullName} (${employee.username}) submitted a new request.\n\nType: ${ticket.typeLabel}\nDetails: ${ticket.message}\n\nReview it under Employee Requests.`,
+        html: `<p><strong>${employee.fullName}</strong> (${employee.username}) submitted a new request.</p><p><strong>Type:</strong> ${ticket.typeLabel}<br><strong>Details:</strong> ${ticket.message}</p><p>Review it under Employee Requests.</p>`
+      });
+    }
+  } catch (err) {
+    // Non-fatal
+  }
+}
+
 const MIME = {
   '.html': 'text/html',
   '.css': 'text/css',
@@ -311,10 +356,6 @@ createServer(async (req, res) => {
       res.end(JSON.stringify({ success: false, message: 'Failed to load profile' }));
     }
     return;
-  }
-
-  function isTimesheetApprover(employee) {
-    return !!employee && (employee.role === 'admin' || employee.isTimeApprover === true);
   }
 
   // --- 1a-iv. GET /api/employees/projects (approver only) ---
@@ -1250,7 +1291,7 @@ createServer(async (req, res) => {
       const tickets = JSON.parse(await readFile(TICKETS_PATH, 'utf8') || '[]');
       let results = tickets;
 
-      if (requester.role !== 'admin') {
+      if (!isTimesheetApprover(requester)) {
         results = results.filter(t => t.employeeId === requester.id);
       } else if (employeeId) {
         results = results.filter(t => t.employeeId === employeeId);
@@ -1268,11 +1309,21 @@ createServer(async (req, res) => {
   // --- 5l. POST /api/tickets (any authenticated employee) ---
   if (req.url === '/api/tickets' && req.method === 'POST') {
     try {
-      const { requesterId, message } = await getRequestBody(req);
+      const { requesterId, type, message } = await getRequestBody(req);
       const requester = await findEmployeeByUsername(requesterId);
       if (!requester) {
         res.writeHead(401, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
+        return;
+      }
+      const TICKET_TYPES = {
+        password_reset: 'Password Reset',
+        personal_data_update: 'Personal Data Update',
+        time_booking_update: 'Time Booking Update'
+      };
+      if (!type || !TICKET_TYPES[type]) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'A valid request type is required' }));
         return;
       }
       if (!message || !message.trim()) {
@@ -1287,6 +1338,8 @@ createServer(async (req, res) => {
         id: 'tk_' + Date.now().toString() + Math.random().toString(36).substring(2, 7),
         employeeId: requester.id,
         employeeName: requester.fullName,
+        type,
+        typeLabel: TICKET_TYPES[type],
         message: message.trim(),
         status: 'pending',
         adminNotes: '',
@@ -1297,6 +1350,8 @@ createServer(async (req, res) => {
 
       tickets.push(newTicket);
       await writeFile(TICKETS_PATH, JSON.stringify(tickets, null, 2), 'utf8');
+
+      await sendTicketEmails(newTicket, requester);
 
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: true, ticket: newTicket }));
@@ -1312,9 +1367,9 @@ createServer(async (req, res) => {
     try {
       const { requesterId, id, status, adminNotes } = await getRequestBody(req);
       const requester = await findEmployeeByUsername(requesterId);
-      if (!requester || requester.role !== 'admin') {
+      if (!isTimesheetApprover(requester)) {
         res.writeHead(401, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, message: 'Only admins can update tickets' }));
+        res.end(JSON.stringify({ success: false, message: 'Only admins or approvers can update tickets' }));
         return;
       }
 

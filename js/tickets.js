@@ -51,8 +51,14 @@
     return JSON.parse(localStorage.getItem('wh_user') || 'null');
   }
 
+  const TICKET_TYPES = [
+    { value: 'password_reset', label: 'Password Reset' },
+    { value: 'personal_data_update', label: 'Personal Data Update' },
+    { value: 'time_booking_update', label: 'Time Booking Update' }
+  ];
+
   if (window.NWPortal) {
-    window.NWPortal.register(user => user && user.role === 'admin' ? 'Employee Requests' : 'My Requests', renderInto);
+    window.NWPortal.register(user => window.NWAuth.isApprover(user) ? 'Employee Requests' : 'My Requests', renderInto);
   }
 
   function renderInto(container) {
@@ -66,7 +72,7 @@
     const user = getCurrentUser();
     const card = document.getElementById('tkCard');
     if (!user || !card) return;
-    if (user.role === 'admin') {
+    if (window.NWAuth.isApprover(user)) {
       renderAdminView(card);
     } else {
       renderEmployeeView(card);
@@ -84,6 +90,13 @@
       </div>
       <div class="tk-alert" id="tkAlert"></div>
       <form id="tkSubmitForm" style="margin-bottom: 28px;">
+        <div class="tk-form-group">
+          <label class="tk-label" for="tkType">Request Type</label>
+          <select class="tk-select" id="tkType" required>
+            <option value="">Select a request type...</option>
+            ${TICKET_TYPES.map(t => `<option value="${t.value}">${t.label}</option>`).join('')}
+          </select>
+        </div>
         <div class="tk-form-group">
           <label class="tk-label" for="tkMessage">Describe what needs to change</label>
           <textarea class="tk-textarea" id="tkMessage" placeholder="e.g. My work location changed to Austin, TX — please update my profile." required></textarea>
@@ -108,13 +121,20 @@
     const alertBox = document.getElementById('tkAlert');
     alertBox.style.display = 'none';
     const user = getCurrentUser();
+    const type = document.getElementById('tkType').value;
     const message = document.getElementById('tkMessage').value.trim();
+
+    if (!type) {
+      alertBox.innerText = 'Please select a request type.';
+      alertBox.style.display = 'block';
+      return;
+    }
 
     try {
       const res = await fetch('/api/tickets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ requesterId: user.id, message })
+        body: JSON.stringify({ requesterId: user.id, type, message })
       });
       const data = await res.json();
       if (data.success) {
@@ -158,6 +178,7 @@
           <div class="tk-item-meta">${isAdmin ? `<strong>${escapeHtml(t.employeeName)}</strong> (${escapeHtml(t.employeeId)}) &nbsp;|&nbsp; ` : ''}${formatDateTime(t.createdAt)}</div>
           <span class="tk-badge tk-badge-${t.status}">${statusLabel(t.status)}</span>
         </div>
+        <div style="font-size: 12px; font-weight: 700; color: #1D78C4; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">${escapeHtml(t.typeLabel || '')}</div>
         <div class="tk-item-msg">${escapeHtml(t.message)}</div>
         ${t.adminNotes ? `<div class="tk-item-notes">Admin note: ${escapeHtml(t.adminNotes)}</div>` : ''}
         ${isAdmin ? `
