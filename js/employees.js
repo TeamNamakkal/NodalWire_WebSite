@@ -220,7 +220,7 @@
       <div class="emp-header">
         <div>
           <h2>${isEdit ? 'Edit Employee' : 'Add Employee'}</h2>
-          <p>${isEdit ? 'Update this employee\\'s record.' : 'Create a new employee record.'}</p>
+          <p>${isEdit ? "Update this employee's record." : 'Create a new employee record.'}</p>
         </div>
         <button class="emp-btn-secondary emp-btn-mini" id="empFormBackBtn">Back</button>
       </div>

@@ -361,7 +361,7 @@
       <div class="tb-header">
         <div>
           <h2>${isEdit ? 'Edit Booking' : 'New Time Booking'}</h2>
-          <p>${isEdit ? 'Modify this booking\\'s details.' : 'Book time against a client project.'}</p>
+          <p>${isEdit ? "Modify this booking's details." : 'Book time against a client project.'}</p>
         </div>
         <button class="tb-btn-secondary tb-btn-mini" id="tbFormBackBtn">Back</button>
       </div>
