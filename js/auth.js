@@ -1,22 +1,60 @@
 (function () {
-  // --- CSS Injections ---
+  // --- Portal registration API (other modules call window.NWPortal.register) ---
+  window.NWPortal = window.NWPortal || { items: [] };
+  window.NWPortal.register = function (label, onClick, opts) {
+    window.NWPortal.items.push({ label, onClick, adminOnly: !!(opts && opts.adminOnly) });
+    if (window.NWPortal._render) window.NWPortal._render();
+  };
+
+  // --- CSS Injections (light theme for all employee-facing UI) ---
   const css = `
-    .wh-btn {
-      cursor: pointer;
-    }
+    .wh-btn { cursor: pointer; }
     .wh-nav-actions {
       display: flex;
       align-items: center;
       gap: 20px;
     }
+    .wh-portal-wrap {
+      position: relative;
+    }
+    .wh-portal-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      background: #ffffff;
+      border: 1px solid rgba(15, 23, 42, 0.1);
+      border-radius: 12px;
+      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+      min-width: 220px;
+      overflow: hidden;
+      z-index: 10000;
+    }
+    .wh-portal-menu.open { display: block; }
+    .wh-portal-item {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      padding: 12px 18px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: #1e293b;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+    }
+    .wh-portal-item:last-child { border-bottom: none; }
+    .wh-portal-item:hover { background: rgba(29, 120, 196, 0.08); }
+    .wh-portal-item.wh-portal-logout { color: #dc2626; font-weight: 600; }
 
     .wh-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(4, 9, 17, 0.82);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       z-index: 10001;
       align-items: center;
       justify-content: center;
@@ -29,16 +67,16 @@
     }
 
     .wh-card {
-      background: rgba(7, 16, 31, 0.95);
-      border: 1px solid rgba(29, 120, 196, 0.22);
+      background: #ffffff;
+      border: 1px solid rgba(15, 23, 42, 0.08);
       border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
       width: 92%;
       max-width: 480px;
       max-height: 85vh;
       overflow-y: auto;
       padding: 32px;
-      color: #eef4ff;
+      color: #1e293b;
       font-family: 'Inter', sans-serif;
       transform: scale(0.92) translateY(10px);
       transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -48,21 +86,21 @@
     }
 
     .wh-card::-webkit-scrollbar { width: 6px; }
-    .wh-card::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); }
-    .wh-card::-webkit-scrollbar-thumb { background: rgba(29, 120, 196, 0.3); border-radius: 3px; }
-    .wh-card::-webkit-scrollbar-thumb:hover { background: rgba(29, 120, 196, 0.5); }
+    .wh-card::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.03); }
+    .wh-card::-webkit-scrollbar-thumb { background: rgba(29, 120, 196, 0.25); border-radius: 3px; }
+    .wh-card::-webkit-scrollbar-thumb:hover { background: rgba(29, 120, 196, 0.4); }
 
     .wh-card h2, .wh-card h3 {
       font-family: 'Lato', sans-serif;
       font-weight: 700;
-      color: #eef4ff;
+      color: #0f172a;
       letter-spacing: -0.02em;
     }
     .wh-card h2 { font-size: 24px; margin-bottom: 8px; }
     .wh-card h3 { font-size: 18px; margin-bottom: 16px; }
     .wh-card p {
       font-size: 14px;
-      color: #7a9bbf;
+      color: #64748b;
       line-height: 1.6;
     }
 
@@ -81,19 +119,19 @@
       letter-spacing: 0.1em;
     }
     .wh-input {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: #f8fafc;
+      border: 1px solid rgba(15, 23, 42, 0.12);
       border-radius: 8px;
       padding: 10px 14px;
       font-family: 'Inter', sans-serif;
       font-size: 14px;
-      color: #eef4ff;
+      color: #0f172a;
       outline: none;
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
     .wh-input:focus {
       border-color: #1D78C4;
-      box-shadow: 0 0 0 3px rgba(29, 120, 196, 0.2);
+      box-shadow: 0 0 0 3px rgba(29, 120, 196, 0.15);
     }
 
     .wh-btn-primary {
@@ -111,12 +149,12 @@
     }
     .wh-btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(29, 120, 196, 0.4);
+      box-shadow: 0 6px 20px rgba(29, 120, 196, 0.35);
     }
     .wh-btn-secondary {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #eef4ff;
+      background: rgba(15, 23, 42, 0.05);
+      border: 1px solid rgba(15, 23, 42, 0.12);
+      color: #1e293b;
       font-family: 'Lato', sans-serif;
       font-weight: 700;
       font-size: 14px;
@@ -126,7 +164,7 @@
       transition: background 0.2s ease, transform 0.15s ease;
     }
     .wh-btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(15, 23, 42, 0.08);
       transform: translateY(-1px);
     }
     .wh-btn-mini {
@@ -139,7 +177,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
       padding-bottom: 16px;
       margin-bottom: 24px;
     }
@@ -147,16 +185,16 @@
       display: flex;
       justify-content: flex-end;
       gap: 12px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid rgba(15, 23, 42, 0.08);
       padding-top: 16px;
       margin-top: 24px;
     }
     .wh-alert {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.25);
+      background: rgba(220, 38, 38, 0.08);
+      border: 1px solid rgba(220, 38, 38, 0.2);
       border-radius: 8px;
       padding: 12px;
-      color: #fca5a5;
+      color: #b91c1c;
       font-size: 13px;
       margin-bottom: 16px;
       display: none;
@@ -168,6 +206,10 @@
         align-items: flex-start;
         gap: 12px;
       }
+      .wh-portal-menu {
+        right: auto;
+        left: 0;
+      }
     }
   `;
 
@@ -175,22 +217,29 @@
   styleEl.innerHTML = css;
   document.head.appendChild(styleEl);
 
-  // --- Nav button ---
+  // --- Nav button + dropdown wrapper ---
+  const wrap = document.createElement('div');
+  wrap.className = 'wh-portal-wrap';
+
   const btn = document.createElement('a');
   btn.href = '#';
   btn.className = 'nav-cta wh-btn';
   btn.textContent = 'Employee Login';
+  wrap.appendChild(btn);
+
+  const menu = document.createElement('div');
+  menu.className = 'wh-portal-menu';
+  wrap.appendChild(menu);
 
   const navCta = document.querySelector('.nav-cta');
-  let navActions;
   if (navCta && navCta.parentNode) {
-    navActions = document.createElement('div');
+    const navActions = document.createElement('div');
     navActions.className = 'wh-nav-actions';
     navCta.parentNode.insertBefore(navActions, navCta);
-    navActions.appendChild(btn);
+    navActions.appendChild(wrap);
     navActions.appendChild(navCta);
   } else {
-    document.body.appendChild(btn);
+    document.body.appendChild(wrap);
   }
 
   // --- Modal ---
@@ -205,6 +254,10 @@
     if (e.target === overlay) closeModal();
   });
 
+  document.addEventListener('click', (e) => {
+    if (!wrap.contains(e.target)) menu.classList.remove('open');
+  });
+
   function openModal() {
     overlay.classList.add('open');
     renderLogin(document.getElementById('whCard'));
@@ -214,19 +267,48 @@
     overlay.classList.remove('open');
   }
 
+  function renderMenu() {
+    if (!currentUser) {
+      menu.innerHTML = '';
+      menu.classList.remove('open');
+      return;
+    }
+    const visibleItems = window.NWPortal.items.filter(item => !item.adminOnly || currentUser.role === 'admin');
+    menu.innerHTML = visibleItems.map((item, idx) => {
+      const label = typeof item.label === 'function' ? item.label(currentUser) : item.label;
+      return `<button type="button" class="wh-portal-item" data-idx="${idx}">${label}</button>`;
+    }).join('')
+      + `<button type="button" class="wh-portal-item wh-portal-logout" id="whPortalLogout">Log Out</button>`;
+
+    visibleItems.forEach((item, idx) => {
+      const el = menu.querySelector(`[data-idx="${idx}"]`);
+      if (el) el.addEventListener('click', () => {
+        menu.classList.remove('open');
+        item.onClick();
+      });
+    });
+    const logoutBtn = document.getElementById('whPortalLogout');
+    if (logoutBtn) logoutBtn.addEventListener('click', () => {
+      menu.classList.remove('open');
+      if (confirm('Log out?')) {
+        localStorage.removeItem('wh_user');
+        refreshButtonState();
+      }
+    });
+  }
+  window.NWPortal._render = renderMenu;
+
   function refreshButtonState() {
     currentUser = JSON.parse(localStorage.getItem('wh_user') || 'null');
-    btn.textContent = currentUser ? `Log Out (${currentUser.name.split(' ')[0]})` : 'Employee Login';
+    btn.textContent = currentUser ? `${currentUser.name.split(' ')[0]}'s Portal` : 'Employee Login';
+    renderMenu();
   }
   refreshButtonState();
 
   btn.addEventListener('click', (e) => {
     e.preventDefault();
     if (currentUser) {
-      if (confirm('Log out?')) {
-        localStorage.removeItem('wh_user');
-        refreshButtonState();
-      }
+      menu.classList.toggle('open');
     } else {
       openModal();
     }
@@ -253,7 +335,7 @@
           <input class="wh-input" id="whPassword" type="password" required placeholder="Password" value="" autocomplete="off">
         </div>
         <div style="text-align: right; margin-bottom: 8px;">
-          <a href="#" id="whForgotPasswordLink" style="color: #7a9bbf; font-size: 12px; text-decoration: underline;">Forgot password?</a>
+          <a href="#" id="whForgotPasswordLink" style="color: #64748b; font-size: 12px; text-decoration: underline;">Forgot password?</a>
         </div>
         <div class="wh-footer">
           <button type="button" class="wh-btn-secondary" id="whLoginCloseBtn">Close</button>
@@ -338,7 +420,7 @@
           body: JSON.stringify({ username })
         });
         const data = await response.json();
-        alertBox.style.color = '#7a9bbf';
+        alertBox.style.color = '#1e40af';
         alertBox.style.background = 'rgba(29, 120, 196, 0.08)';
         alertBox.style.borderColor = 'rgba(29, 120, 196, 0.25)';
         alertBox.innerText = data.message || 'If that account exists, a reset link has been sent.';

@@ -1,13 +1,12 @@
 (function () {
   const css = `
-    .tk-btn { cursor: pointer; }
     .tk-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(4, 9, 17, 0.82);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       z-index: 10001;
       align-items: center;
       justify-content: center;
@@ -16,73 +15,60 @@
     }
     .tk-overlay.open { display: flex; opacity: 1; }
     .tk-card {
-      background: rgba(7, 16, 31, 0.95);
-      border: 1px solid rgba(29, 120, 196, 0.22);
+      background: #ffffff;
+      border: 1px solid rgba(15, 23, 42, 0.08);
       border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
       width: 92%;
       max-width: 800px;
       max-height: 85vh;
       overflow-y: auto;
       padding: 32px;
-      color: #eef4ff;
+      color: #1e293b;
       font-family: 'Inter', sans-serif;
       transform: scale(0.92) translateY(10px);
       transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .tk-overlay.open .tk-card { transform: scale(1) translateY(0); }
     .tk-card::-webkit-scrollbar { width: 6px; }
-    .tk-card::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); }
-    .tk-card::-webkit-scrollbar-thumb { background: rgba(29, 120, 196, 0.3); border-radius: 3px; }
-    .tk-card::-webkit-scrollbar-thumb:hover { background: rgba(29, 120, 196, 0.5); }
-    .tk-card h2, .tk-card h3 { font-family: 'Lato', sans-serif; font-weight: 700; color: #eef4ff; letter-spacing: -0.02em; }
+    .tk-card::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.03); }
+    .tk-card::-webkit-scrollbar-thumb { background: rgba(29, 120, 196, 0.25); border-radius: 3px; }
+    .tk-card::-webkit-scrollbar-thumb:hover { background: rgba(29, 120, 196, 0.4); }
+    .tk-card h2, .tk-card h3 { font-family: 'Lato', sans-serif; font-weight: 700; color: #0f172a; letter-spacing: -0.02em; }
     .tk-card h2 { font-size: 24px; margin-bottom: 8px; }
     .tk-card h3 { font-size: 16px; margin-bottom: 12px; }
-    .tk-card p { font-size: 14px; color: #7a9bbf; line-height: 1.6; }
+    .tk-card p { font-size: 14px; color: #64748b; line-height: 1.6; }
     .tk-form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
     .tk-label { font-family: 'Lato', sans-serif; font-size: 11px; font-weight: 700; color: #1D78C4; text-transform: uppercase; letter-spacing: 0.1em; }
-    .tk-textarea, .tk-select { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px; padding: 10px 14px; font-family: 'Inter', sans-serif; font-size: 14px; color: #eef4ff; outline: none; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
-    .tk-textarea:focus, .tk-select:focus { border-color: #1D78C4; box-shadow: 0 0 0 3px rgba(29, 120, 196, 0.2); }
+    .tk-textarea, .tk-select { background: #f8fafc; border: 1px solid rgba(15, 23, 42, 0.12); border-radius: 8px; padding: 10px 14px; font-family: 'Inter', sans-serif; font-size: 14px; color: #0f172a; outline: none; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+    .tk-textarea:focus, .tk-select:focus { border-color: #1D78C4; box-shadow: 0 0 0 3px rgba(29, 120, 196, 0.15); }
     .tk-textarea { resize: vertical; min-height: 90px; }
-    .tk-select option { background: #07101f; color: #eef4ff; }
+    .tk-select option { background: #ffffff; color: #0f172a; }
     .tk-btn-primary { background: linear-gradient(135deg, #1D78C4 0%, #1562a8 100%); color: #fff; font-family: 'Lato', sans-serif; font-weight: 700; font-size: 14px; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 16px rgba(29, 120, 196, 0.25); transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease; }
-    .tk-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(29, 120, 196, 0.4); }
-    .tk-btn-secondary { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #eef4ff; font-family: 'Lato', sans-serif; font-weight: 700; font-size: 14px; padding: 10px 20px; border-radius: 8px; cursor: pointer; transition: background 0.2s ease, transform 0.15s ease; }
-    .tk-btn-secondary:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-1px); }
+    .tk-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(29, 120, 196, 0.35); }
+    .tk-btn-secondary { background: rgba(15, 23, 42, 0.05); border: 1px solid rgba(15, 23, 42, 0.12); color: #1e293b; font-family: 'Lato', sans-serif; font-weight: 700; font-size: 14px; padding: 10px 20px; border-radius: 8px; cursor: pointer; transition: background 0.2s ease, transform 0.15s ease; }
+    .tk-btn-secondary:hover { background: rgba(15, 23, 42, 0.08); transform: translateY(-1px); }
     .tk-btn-mini { padding: 6px 12px; font-size: 13px; border-radius: 6px; }
-    .tk-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 16px; margin-bottom: 24px; }
-    .tk-footer { display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 16px; margin-top: 24px; }
-    .tk-alert { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 8px; padding: 12px; color: #fca5a5; font-size: 13px; margin-bottom: 16px; display: none; }
+    .tk-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(15, 23, 42, 0.08); padding-bottom: 16px; margin-bottom: 24px; }
+    .tk-footer { display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid rgba(15, 23, 42, 0.08); padding-top: 16px; margin-top: 24px; }
+    .tk-alert { background: rgba(220, 38, 38, 0.08); border: 1px solid rgba(220, 38, 38, 0.2); border-radius: 8px; padding: 12px; color: #b91c1c; font-size: 13px; margin-bottom: 16px; display: none; }
     .tk-list { display: flex; flex-direction: column; gap: 12px; }
-    .tk-item { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px; padding: 14px 16px; }
+    .tk-item { background: #ffffff; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 10px; padding: 14px 16px; }
     .tk-item-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .tk-item-meta { font-size: 11px; color: #7a9bbf; }
+    .tk-item-meta { font-size: 11px; color: #64748b; }
     .tk-badge { font-family: 'Lato', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; padding: 3px 9px; border-radius: 20px; }
-    .tk-badge-pending { background: rgba(234, 179, 8, 0.15); color: #eab308; border: 1px solid rgba(234, 179, 8, 0.35); }
-    .tk-badge-in_review { background: rgba(29, 120, 196, 0.15); color: #4ea8de; border: 1px solid rgba(29, 120, 196, 0.35); }
-    .tk-badge-resolved { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.35); }
-    .tk-badge-rejected { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35); }
-    .tk-item-msg { font-size: 14px; color: #eef4ff; white-space: pre-wrap; margin-bottom: 8px; }
-    .tk-item-notes { font-size: 13px; color: #7a9bbf; background: rgba(255, 255, 255, 0.02); border-left: 2px solid #1D78C4; padding: 8px 12px; margin-top: 8px; }
+    .tk-badge-pending { background: rgba(202, 138, 4, 0.12); color: #a16207; border: 1px solid rgba(202, 138, 4, 0.3); }
+    .tk-badge-in_review { background: rgba(29, 120, 196, 0.12); color: #1D78C4; border: 1px solid rgba(29, 120, 196, 0.3); }
+    .tk-badge-resolved { background: rgba(22, 163, 74, 0.12); color: #16a34a; border: 1px solid rgba(22, 163, 74, 0.3); }
+    .tk-badge-rejected { background: rgba(220, 38, 38, 0.12); color: #dc2626; border: 1px solid rgba(220, 38, 38, 0.3); }
+    .tk-item-msg { font-size: 14px; color: #1e293b; white-space: pre-wrap; margin-bottom: 8px; }
+    .tk-item-notes { font-size: 13px; color: #64748b; background: rgba(15, 23, 42, 0.02); border-left: 2px solid #1D78C4; padding: 8px 12px; margin-top: 8px; }
     .tk-item-actions { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
   `;
 
   const styleEl = document.createElement('style');
   styleEl.innerHTML = css;
   document.head.appendChild(styleEl);
-
-  const btn = document.createElement('a');
-  btn.href = '#';
-  btn.className = 'nav-cta tk-btn';
-  btn.textContent = 'My Requests';
-  btn.style.display = 'none';
-
-  const navActions = document.querySelector('.wh-nav-actions');
-  if (navActions) {
-    navActions.appendChild(btn);
-  } else {
-    document.body.appendChild(btn);
-  }
 
   const overlay = document.createElement('div');
   overlay.className = 'tk-overlay';
@@ -95,22 +81,13 @@
     if (e.target === overlay) closeModal();
   });
 
-  btn.addEventListener('click', (e) => {
-    e.preventDefault();
-    openModal();
-  });
-
   function getCurrentUser() {
     return JSON.parse(localStorage.getItem('wh_user') || 'null');
   }
 
-  function refreshButtonVisibility() {
-    const user = getCurrentUser();
-    btn.style.display = user ? '' : 'none';
-    btn.textContent = user && user.role === 'admin' ? 'Employee Requests' : 'My Requests';
+  if (window.NWPortal) {
+    window.NWPortal.register(user => user && user.role === 'admin' ? 'Employee Requests' : 'My Requests', openModal);
   }
-  refreshButtonVisibility();
-  setInterval(refreshButtonVisibility, 1000);
 
   function openModal() {
     const user = getCurrentUser();
