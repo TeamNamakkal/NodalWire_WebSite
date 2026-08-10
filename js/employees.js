@@ -138,6 +138,7 @@
         return;
       }
       const e = data.employee;
+      const bd = e.bankDetails || {};
       const rows = [
         ['Employee ID', e.id],
         ['Full Name', e.fullName],
@@ -146,11 +147,21 @@
         ['Company', e.company],
         ['Reporting Manager', e.reportingManager],
         ['Work Location', e.workLocation],
+        ['Address', e.address],
+        ['Phone', e.phone],
         ['Joined Date', e.joinedDate],
         ['Status', e.status],
         ['Username', e.username],
-        ['Email', e.email],
-        ['Role', e.role]
+        ['Office Email', e.email],
+        ['Personal Email', e.personalEmail],
+        ['Role', e.role],
+        ['Bank Name', bd.bankName],
+        ['Account Type', bd.accountType],
+        ['Routing Number', bd.routingNumber],
+        ['Account Number', bd.accountNumber],
+        ['Zelle', bd.zelleInfo],
+        ['exploreN2p Username', e.exploreN2pUsername],
+        ['exploreN2p Password', e.exploreN2pPassword]
       ];
       body.innerHTML = `
         <div class="emp-table-container">
@@ -279,18 +290,42 @@
         </div>
         <div class="emp-form-row">
           <div class="emp-form-group">
-            <label class="emp-label" for="empEmail">Email (for password reset)</label>
-            <input class="emp-input" id="empEmail" type="email" value="${escapeHtml(e.email || '')}" placeholder="employee@example.com">
+            <label class="emp-label" for="empEmail">Office Email (used for password reset)</label>
+            <input class="emp-input" id="empEmail" type="email" value="${escapeHtml(e.email || '')}" placeholder="employee@nodalwire.com">
           </div>
           <div class="emp-form-group">
-            <label class="emp-label" for="empTitle">Title</label>
-            <input class="emp-input" id="empTitle" type="text" value="${escapeHtml(e.title || '')}">
+            <label class="emp-label" for="empPersonalEmail">Personal Email</label>
+            <input class="emp-input" id="empPersonalEmail" type="email" value="${escapeHtml(e.personalEmail || '')}" placeholder="employee@example.com">
           </div>
         </div>
         <div class="emp-form-row">
           <div class="emp-form-group">
+            <label class="emp-label" for="empTitle">Title</label>
+            <input class="emp-input" id="empTitle" type="text" value="${escapeHtml(e.title || '')}">
+          </div>
+          <div class="emp-form-group">
             <label class="emp-label" for="empDepartment">Department</label>
             <input class="emp-input" id="empDepartment" type="text" value="${escapeHtml(e.department || 'ICT')}">
+          </div>
+        </div>
+        <div class="emp-form-row">
+          <div class="emp-form-group">
+            <label class="emp-label" for="empPhone">Phone Number</label>
+            <input class="emp-input" id="empPhone" type="text" value="${escapeHtml(e.phone || '')}" placeholder="+1 555 123 4567">
+          </div>
+          <div class="emp-form-group">
+            <label class="emp-label" for="empJoinedDate">Joined Date</label>
+            <input class="emp-input" id="empJoinedDate" type="text" value="${escapeHtml(e.joinedDate || '')}" placeholder="e.g. January 19, 2026">
+          </div>
+        </div>
+        <div class="emp-form-row">
+          <div class="emp-form-group">
+            <label class="emp-label" for="empAddress">Address</label>
+            <input class="emp-input" id="empAddress" type="text" value="${escapeHtml(e.address || '')}">
+          </div>
+          <div class="emp-form-group">
+            <label class="emp-label" for="empPhoto">Photo Path</label>
+            <input class="emp-input" id="empPhoto" type="text" value="${escapeHtml(e.photo || '')}" placeholder="/assets/employees/name.jpg">
           </div>
         </div>
         <div class="emp-form-row">
@@ -342,6 +377,47 @@
             </select>
           </div>
         </div>
+        <h3 style="margin-top: 8px;">Bank Details (for direct deposit)</h3>
+        <div class="emp-form-row">
+          <div class="emp-form-group">
+            <label class="emp-label" for="empBankName">Bank Name</label>
+            <input class="emp-input" id="empBankName" type="text" value="${escapeHtml((e.bankDetails && e.bankDetails.bankName) || '')}">
+          </div>
+          <div class="emp-form-group">
+            <label class="emp-label" for="empAccountType">Account Type</label>
+            <select class="emp-select" id="empAccountType">
+              <option value="checking" ${!e.bankDetails || e.bankDetails.accountType === 'checking' ? 'selected' : ''}>Checking</option>
+              <option value="savings" ${e.bankDetails && e.bankDetails.accountType === 'savings' ? 'selected' : ''}>Savings</option>
+            </select>
+          </div>
+        </div>
+        <div class="emp-form-row">
+          <div class="emp-form-group">
+            <label class="emp-label" for="empRoutingNumber">Routing Number</label>
+            <input class="emp-input" id="empRoutingNumber" type="text" value="${escapeHtml((e.bankDetails && e.bankDetails.routingNumber) || '')}">
+          </div>
+          <div class="emp-form-group">
+            <label class="emp-label" for="empAccountNumber">Account Number</label>
+            <input class="emp-input" id="empAccountNumber" type="text" value="${escapeHtml((e.bankDetails && e.bankDetails.accountNumber) || '')}">
+          </div>
+        </div>
+        <div class="emp-form-row">
+          <div class="emp-form-group">
+            <label class="emp-label" for="empZelleInfo">Zelle (phone or email)</label>
+            <input class="emp-input" id="empZelleInfo" type="text" value="${escapeHtml((e.bankDetails && e.bankDetails.zelleInfo) || '')}">
+          </div>
+        </div>
+        <h3 style="margin-top: 8px;">exploreN2p (reference only)</h3>
+        <div class="emp-form-row">
+          <div class="emp-form-group">
+            <label class="emp-label" for="empExploreUsername">exploreN2p Username</label>
+            <input class="emp-input" id="empExploreUsername" type="text" value="${escapeHtml(e.exploreN2pUsername || '')}">
+          </div>
+          <div class="emp-form-group">
+            <label class="emp-label" for="empExplorePassword">exploreN2p Password</label>
+            <input class="emp-input" id="empExplorePassword" type="text" value="${escapeHtml(e.exploreN2pPassword || '')}">
+          </div>
+        </div>
         <div class="emp-footer">
           <button type="button" class="emp-btn-secondary" id="empFormCancelBtn">Cancel</button>
           <button type="submit" class="emp-btn-primary">${isEdit ? 'Save Changes' : 'Create Employee'}</button>
@@ -370,15 +446,29 @@
       id: document.getElementById('empId').value.trim(),
       fullName: document.getElementById('empFullName').value.trim(),
       email: document.getElementById('empEmail').value.trim() || null,
+      personalEmail: document.getElementById('empPersonalEmail').value.trim() || null,
       title: document.getElementById('empTitle').value.trim(),
       department: document.getElementById('empDepartment').value.trim(),
+      phone: document.getElementById('empPhone').value.trim(),
+      joinedDate: document.getElementById('empJoinedDate').value.trim(),
+      address: document.getElementById('empAddress').value.trim(),
+      photo: document.getElementById('empPhoto').value.trim(),
       workLocation: document.getElementById('empWorkLocation').value.trim(),
       reportingManager: document.getElementById('empReportingManager').value.trim() || null,
       status: document.getElementById('empStatus').value,
       role: document.getElementById('empRole').value,
       username: document.getElementById('empUsername').value.trim() || null,
       state: document.getElementById('empState').value.trim().toUpperCase() || 'TX',
-      payType: document.getElementById('empPayType').value
+      payType: document.getElementById('empPayType').value,
+      bankDetails: {
+        bankName: document.getElementById('empBankName').value.trim(),
+        accountType: document.getElementById('empAccountType').value,
+        routingNumber: document.getElementById('empRoutingNumber').value.trim(),
+        accountNumber: document.getElementById('empAccountNumber').value.trim(),
+        zelleInfo: document.getElementById('empZelleInfo').value.trim()
+      },
+      exploreN2pUsername: document.getElementById('empExploreUsername').value.trim() || null,
+      exploreN2pPassword: document.getElementById('empExplorePassword').value.trim() || null
     };
 
     const passwordVal = document.getElementById('empPassword').value;

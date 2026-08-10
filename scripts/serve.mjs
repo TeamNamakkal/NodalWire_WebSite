@@ -301,7 +301,7 @@ createServer(async (req, res) => {
         res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
         return;
       }
-      const SELF_VIEW_FIELDS = [...PUBLIC_EMPLOYEE_FIELDS, 'username', 'email', 'role'];
+      const SELF_VIEW_FIELDS = [...PUBLIC_EMPLOYEE_FIELDS, 'username', 'email', 'role', 'phone', 'address', 'personalEmail', 'bankDetails', 'exploreN2pUsername', 'exploreN2pPassword'];
       const out = {};
       for (const field of SELF_VIEW_FIELDS) out[field] = requester[field];
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -391,6 +391,12 @@ createServer(async (req, res) => {
         w4OtherIncome: 0,
         w4Deductions: 0,
         w4ExtraWithholding: 0,
+        phone: '',
+        address: '',
+        personalEmail: null,
+        bankDetails: { bankName: '', accountType: 'checking', routingNumber: '', accountNumber: '', zelleInfo: '' },
+        exploreN2pUsername: null,
+        exploreN2pPassword: null,
         ...fields,
         createdAt: now,
         updatedAt: now
