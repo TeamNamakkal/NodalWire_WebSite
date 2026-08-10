@@ -856,6 +856,13 @@ async function searchEmployee(fullName, employeeId) {
   });
 }
 
+function formatJoinedDate(value) {
+  if (!value) return '';
+  const d = new Date(value);
+  if (isNaN(d.getTime())) return value;
+  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+
 function displayResult(employee, searchName, searchId) {
   const container = document.getElementById('resultsContainer');
   container.innerHTML = '';
@@ -889,7 +896,7 @@ function displayResult(employee, searchName, searchId) {
                 <div class="result-meta-item"><span class="result-meta-label">Department:</span> ${employee.department}</div>
                 <div class="result-meta-item"><span class="result-meta-label">Company:</span> ${employee.company}</div>
                 ${employee.reportingManager ? `<div class="result-meta-item"><span class="result-meta-label">Reporting Manager:</span> ${employee.reportingManager}</div>` : ''}
-                <div class="result-meta-item" style="padding-top: 8px; border-top: 1px solid rgba(29,120,196,0.15);"><span class="result-meta-label">Joined Date:</span> ${employee.joinedDate}</div>
+                <div class="result-meta-item" style="padding-top: 8px; border-top: 1px solid rgba(29,120,196,0.15);"><span class="result-meta-label">Joined Date:</span> ${formatJoinedDate(employee.joinedDate)}</div>
                 ${employee.scope ? `<div class="result-meta-item"><span class="result-meta-label">Scope of Work:</span> ${employee.scope}</div>` : ''}
                 <div class="result-meta-item"><span class="result-meta-label">Work Location:</span> ${employee.workLocation}</div>
               </div>

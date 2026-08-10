@@ -93,41 +93,77 @@
         body.innerHTML = `<p style="color:#dc2626;">${escapeHtml(data.message || 'Failed to load profile.')}</p>`;
         return;
       }
-      const e = data.employee;
-      const bd = e.bankDetails || {};
-      const rows = [
-        ['Employee ID', e.id],
-        ['Full Name', e.fullName],
-        ['Title', e.title],
-        ['Department', e.department],
-        ['Company', e.company],
-        ['Reporting Manager', e.reportingManager],
-        ['Work Location', e.workLocation],
-        ['Address', e.address],
-        ['Phone', e.phone],
-        ['Joined Date', e.joinedDate],
-        ['Status', e.status],
-        ['Username', e.username],
-        ['Office Email', e.email],
-        ['Personal Email', e.personalEmail],
-        ['Role', e.role],
-        ['Project Name', e.projectName],
-        ['Project Code', e.projectCode],
-        ['Bank Name', bd.bankName],
-        ['Account Type', bd.accountType],
-        ['Routing Number', bd.routingNumber],
-        ['Account Number', bd.accountNumber],
-        ['Zelle', bd.zelleInfo],
-        ['exploreN2p Username', e.exploreN2pUsername],
-        ['exploreN2p Password', e.exploreN2pPassword]
-      ];
-      body.innerHTML = `
+      renderProfileSections(body, data.employee);
+    } catch (err) {
+      document.getElementById('empProfileBody').innerHTML = `<p style="color:#dc2626;">Network error loading profile.</p>`;
+    }
+  }
+
+  function renderProfileSections(body, e) {
+    const bd = e.bankDetails || {};
+
+    const groups = [
+      {
+        title: 'Personal Info',
+        rows: [
+          ['Full Name', e.fullName],
+          ['Date of Birth', formatDateDisplay(e.dateOfBirth)],
+          ['Address', e.address],
+          ['Phone', e.phone],
+          ['Personal Email', e.personalEmail]
+        ]
+      },
+      {
+        title: 'Employment',
+        rows: [
+          ['Employee ID', e.id],
+          ['Title', e.title],
+          ['Department', e.department],
+          ['Company', e.company],
+          ['Reporting Manager', e.reportingManager],
+          ['Work Location', e.workLocation],
+          ['Joined Date', formatDateDisplay(e.joinedDate)],
+          ['Status', e.status],
+          ['Role', e.role]
+        ]
+      },
+      {
+        title: 'Account & Project',
+        rows: [
+          ['Username', e.username],
+          ['Office Email', e.email],
+          ['Project Name', e.projectName],
+          ['Project Code', e.projectCode]
+        ]
+      },
+      {
+        title: 'Bank Details (direct deposit)',
+        rows: [
+          ['Bank Name', bd.bankName],
+          ['Account Type', bd.accountType],
+          ['Routing Number', bd.routingNumber],
+          ['Account Number', bd.accountNumber],
+          ['Zelle', bd.zelleInfo]
+        ]
+      },
+      {
+        title: 'exploreN2p (reference)',
+        rows: [
+          ['Username', e.exploreN2pUsername],
+          ['Password', e.exploreN2pPassword]
+        ]
+      }
+    ];
+
+    function sectionHtml(group) {
+      return `
+        <h3 style="margin-top: 20px;">${escapeHtml(group.title)}</h3>
         <div class="emp-table-container">
           <table class="emp-table">
             <tbody>
-              ${rows.map(([label, val]) => `
+              ${group.rows.map(([label, val]) => `
                 <tr>
-                  <th style="width: 200px;">${escapeHtml(label)}</th>
+                  <th style="width: 180px;">${escapeHtml(label)}</th>
                   <td>${val ? escapeHtml(String(val)) : '<span style="color:#94a3b8;">Not set</span>'}</td>
                 </tr>
               `).join('')}
@@ -135,9 +171,43 @@
           </table>
         </div>
       `;
-    } catch (err) {
-      document.getElementById('empProfileBody').innerHTML = `<p style="color:#dc2626;">Network error loading profile.</p>`;
     }
+
+    body.innerHTML = `
+      <div style="display: flex; gap: 32px; flex-wrap: wrap-reverse; align-items: flex-start;">
+        <div style="flex: 1; min-width: 280px;">
+          ${groups.map(sectionHtml).join('')}
+        </div>
+        <div style="width: 200px; flex-shrink: 0; text-align: center;">
+          <img id="empProfilePhoto" src="${e.photo || '/assets/employees/placeholder.png'}" alt="${escapeHtml(e.fullName)}"
+            style="width: 200px; height: 200px; object-fit: cover; border-radius: 12px; border: 1px solid rgba(15,23,42,0.1); background: #f1f5f9;"
+            onerror="this.style.display='none'; document.getElementById('empProfilePhotoFallback').style.display='flex';">
+          <div id="empProfilePhotoFallback" style="display:none; width: 200px; height: 200px; border-radius: 12px; background: #f1f5f9; border: 1px solid rgba(15,23,42,0.1); align-items: center; justify-content: center; font-family: 'Lato', sans-serif; font-weight: 700; font-size: 40px; color: #94a3b8;">
+            ${escapeHtml((e.fullName || '?').split(' ').map(n => n[0]).join('').toUpperCase())}
+          </div>
+          <div style="margin-top: 12px;">
+            <input type="file" id="empPhotoFile" accept="image/jpeg,image/png,image/webp" style="font-size: 12px; max-width: 200px;">
+            <button type="button" class="emp-btn-secondary emp-btn-mini" id="empPhotoUploadBtn" style="margin-top: 8px;">Change Photo</button>
+            <div id="empPhotoUploadStatus" style="font-size: 12px; color: #64748b; margin-top: 6px;"></div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('empPhotoUploadBtn').addEventListener('click', () => {
+      uploadPhoto(e.id, (newPath) => {
+        document.getElementById('empProfilePhoto').src = newPath;
+        document.getElementById('empProfilePhoto').style.display = '';
+        document.getElementById('empProfilePhotoFallback').style.display = 'none';
+      });
+    });
+  }
+
+  function formatDateDisplay(isoOrFreeText) {
+    if (!isoOrFreeText) return '';
+    const d = new Date(isoOrFreeText);
+    if (isNaN(d.getTime())) return isoOrFreeText;
+    return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   }
 
   function renderProjectsInto(container) {
@@ -352,18 +422,39 @@
           </div>
           <div class="emp-form-group">
             <label class="emp-label" for="empJoinedDate">Joined Date</label>
-            <input class="emp-input" id="empJoinedDate" type="text" value="${escapeHtml(e.joinedDate || '')}" placeholder="e.g. January 19, 2026">
+            <input class="emp-input" id="empJoinedDate" type="date" value="${toDateInputValue(e.joinedDate)}">
           </div>
         </div>
         <div class="emp-form-row">
           <div class="emp-form-group">
+            <label class="emp-label" for="empDateOfBirth">Date of Birth</label>
+            <input class="emp-input" id="empDateOfBirth" type="date" value="${toDateInputValue(e.dateOfBirth)}">
+          </div>
+          <div class="emp-form-group">
             <label class="emp-label" for="empAddress">Address</label>
             <input class="emp-input" id="empAddress" type="text" value="${escapeHtml(e.address || '')}">
           </div>
+        </div>
+        <div class="emp-form-row">
           <div class="emp-form-group">
             <label class="emp-label" for="empPhoto">Photo Path</label>
             <input class="emp-input" id="empPhoto" type="text" value="${escapeHtml(e.photo || '')}" placeholder="/assets/employees/name.jpg">
           </div>
+          ${isEdit ? `
+          <div class="emp-form-group">
+            <label class="emp-label">Upload Photo</label>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <input type="file" id="empPhotoFile" accept="image/jpeg,image/png,image/webp" style="font-size: 13px;">
+              <button type="button" class="emp-btn-secondary emp-btn-mini" id="empPhotoUploadBtn">Upload</button>
+            </div>
+            <span id="empPhotoUploadStatus" style="font-size: 12px; color: #64748b;"></span>
+          </div>
+          ` : `
+          <div class="emp-form-group">
+            <label class="emp-label">Upload Photo</label>
+            <p style="font-size: 12px; margin: 0;">Save the employee first, then upload a photo from the edit screen.</p>
+          </div>
+          `}
         </div>
         <div class="emp-form-row">
           <div class="emp-form-group">
@@ -486,10 +577,65 @@
     document.getElementById('empFormCancelBtn').addEventListener('click', goBack);
     document.getElementById('empForm').addEventListener('submit', handleFormSubmit);
 
+    if (isEdit) {
+      document.getElementById('empPhotoUploadBtn').addEventListener('click', () => uploadPhoto(e.id));
+    }
+
     function goBack() {
       editingEmployee = null;
       renderListView();
     }
+  }
+
+  function uploadPhoto(employeeId, onDone) {
+    const fileInput = document.getElementById('empPhotoFile');
+    const statusEl = document.getElementById('empPhotoUploadStatus');
+    const file = fileInput.files[0];
+    if (!file) {
+      statusEl.textContent = 'Choose a file first.';
+      statusEl.style.color = '#dc2626';
+      return;
+    }
+    const user = getCurrentUser();
+    statusEl.textContent = 'Uploading...';
+    statusEl.style.color = '#64748b';
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try {
+        const res = await fetch('/api/employees/photo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ requesterId: user.id, employeeId, imageData: reader.result })
+        });
+        const data = await res.json();
+        if (data.success) {
+          statusEl.textContent = 'Uploaded!';
+          statusEl.style.color = '#16a34a';
+          const photoField = document.getElementById('empPhoto');
+          if (photoField) photoField.value = data.photo;
+          if (onDone) onDone(data.photo);
+        } else {
+          statusEl.textContent = data.message || 'Upload failed.';
+          statusEl.style.color = '#dc2626';
+        }
+      } catch (err) {
+        statusEl.textContent = 'Network error during upload.';
+        statusEl.style.color = '#dc2626';
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function toDateInputValue(anyDateStr) {
+    if (!anyDateStr) return '';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(anyDateStr)) return anyDateStr;
+    const parsed = new Date(anyDateStr);
+    if (isNaN(parsed.getTime())) return '';
+    const yyyy = parsed.getFullYear();
+    const mm = String(parsed.getMonth() + 1).padStart(2, '0');
+    const dd = String(parsed.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
   }
 
   async function handleFormSubmit(e) {
@@ -507,7 +653,8 @@
       title: document.getElementById('empTitle').value.trim(),
       department: document.getElementById('empDepartment').value.trim(),
       phone: document.getElementById('empPhone').value.trim(),
-      joinedDate: document.getElementById('empJoinedDate').value.trim(),
+      joinedDate: document.getElementById('empJoinedDate').value,
+      dateOfBirth: document.getElementById('empDateOfBirth').value,
       address: document.getElementById('empAddress').value.trim(),
       photo: document.getElementById('empPhoto').value.trim(),
       workLocation: document.getElementById('empWorkLocation').value.trim(),

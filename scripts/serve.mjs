@@ -1,6 +1,6 @@
 import { createServer } from 'http';
 import { readFile, writeFile } from 'fs/promises';
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readFileSync, mkdirSync } from 'fs';
 import { extname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { randomBytes } from 'crypto';
@@ -301,7 +301,7 @@ createServer(async (req, res) => {
         res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
         return;
       }
-      const SELF_VIEW_FIELDS = [...PUBLIC_EMPLOYEE_FIELDS, 'username', 'email', 'role', 'phone', 'address', 'personalEmail', 'bankDetails', 'exploreN2pUsername', 'exploreN2pPassword', 'projectName', 'projectCode', 'isTimeApprover'];
+      const SELF_VIEW_FIELDS = [...PUBLIC_EMPLOYEE_FIELDS, 'username', 'email', 'role', 'phone', 'address', 'personalEmail', 'bankDetails', 'exploreN2pUsername', 'exploreN2pPassword', 'projectName', 'projectCode', 'isTimeApprover', 'dateOfBirth'];
       const out = {};
       for (const field of SELF_VIEW_FIELDS) out[field] = requester[field];
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -363,6 +363,64 @@ createServer(async (req, res) => {
     } catch (err) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: false, message: 'Failed to update project assignment' }));
+    }
+    return;
+  }
+
+  // --- 1a-vi. POST /api/employees/photo (self or admin) ---
+  if (req.url === '/api/employees/photo' && req.method === 'POST') {
+    try {
+      const { requesterId, employeeId, imageData } = await getRequestBody(req);
+      const requester = await findEmployeeByUsername(requesterId);
+      if (!requester) {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
+        return;
+      }
+
+      const targetId = employeeId || requester.id;
+      if (targetId !== requester.id && requester.role !== 'admin') {
+        res.writeHead(403, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Only admin can change another employee’s photo' }));
+        return;
+      }
+
+      const match = /^data:(image\/(jpeg|png|webp));base64,(.+)$/.exec(imageData || '');
+      if (!match) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Unsupported image format. Use JPEG, PNG, or WEBP.' }));
+        return;
+      }
+      const ext = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' }[match[1]];
+      const buffer = Buffer.from(match[3], 'base64');
+      if (buffer.length > 3 * 1024 * 1024) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Image must be 3MB or smaller.' }));
+        return;
+      }
+
+      const employees = await loadEmployees();
+      const idx = employees.findIndex(e => e.id === targetId);
+      if (idx === -1) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Employee not found' }));
+        return;
+      }
+
+      const assetsDir = join(__dirname, 'assets/employees');
+      if (!existsSync(assetsDir)) mkdirSync(assetsDir, { recursive: true });
+      const fileName = `${targetId}-${Date.now()}.${ext}`;
+      await writeFile(join(assetsDir, fileName), buffer);
+
+      const photoPath = `/assets/employees/${fileName}`;
+      employees[idx] = { ...employees[idx], photo: photoPath, updatedAt: new Date().toISOString() };
+      await saveEmployees(employees);
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, photo: photoPath }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to upload photo' }));
     }
     return;
   }
@@ -454,6 +512,7 @@ createServer(async (req, res) => {
         projectName: '',
         projectCode: '',
         isTimeApprover: false,
+        dateOfBirth: '',
         ...fields,
         createdAt: now,
         updatedAt: now
