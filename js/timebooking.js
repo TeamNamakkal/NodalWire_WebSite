@@ -1,39 +1,14 @@
 (function () {
   const css = `
-    .tb-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.55);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: 10001;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .tb-overlay.open { display: flex; opacity: 1; }
     .tb-card {
       background: #ffffff;
       border: 1px solid rgba(15, 23, 42, 0.08);
       border-radius: 16px;
-      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
-      width: 92%;
-      max-width: 900px;
-      max-height: 85vh;
-      overflow-y: auto;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
       padding: 32px;
       color: #1e293b;
       font-family: 'Inter', sans-serif;
-      transform: scale(0.92) translateY(10px);
-      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .tb-overlay.open .tb-card { transform: scale(1) translateY(0); }
-    .tb-card::-webkit-scrollbar { width: 6px; }
-    .tb-card::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.03); }
-    .tb-card::-webkit-scrollbar-thumb { background: rgba(29, 120, 196, 0.25); border-radius: 3px; }
-    .tb-card::-webkit-scrollbar-thumb:hover { background: rgba(29, 120, 196, 0.4); }
     .tb-card h2, .tb-card h3 { font-family: 'Lato', sans-serif; font-weight: 700; color: #0f172a; letter-spacing: -0.02em; }
     .tb-card h2 { font-size: 24px; margin-bottom: 8px; }
     .tb-card h3 { font-size: 18px; margin-bottom: 16px; }
@@ -71,45 +46,29 @@
   styleEl.innerHTML = css;
   document.head.appendChild(styleEl);
 
-  const overlay = document.createElement('div');
-  overlay.className = 'tb-overlay';
-  overlay.innerHTML = `<div class="tb-card" id="tbCard"></div>`;
-  document.body.appendChild(overlay);
-
   let currentBookings = [];
   let editingBooking = null;
   let adminSelectedEmployee = '';
-
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) closeModal();
-  });
 
   function getCurrentUser() {
     return JSON.parse(localStorage.getItem('wh_user') || 'null');
   }
 
   if (window.NWPortal) {
-    window.NWPortal.register('Time Booking', openModal);
+    window.NWPortal.register('Time Booking', renderInto);
   }
 
-  function openModal() {
+  function renderInto(container) {
     const user = getCurrentUser();
     if (!user) return;
-    overlay.classList.add('open');
+    container.innerHTML = `<div class="tb-card" id="tbCard"></div>`;
     renderScreen();
-  }
-
-  function closeModal() {
-    overlay.classList.remove('open');
   }
 
   function renderScreen() {
     const user = getCurrentUser();
     const card = document.getElementById('tbCard');
-    if (!user) {
-      closeModal();
-      return;
-    }
+    if (!user || !card) return;
     if (user.role === 'admin') {
       renderAdminView(card);
     } else {
@@ -126,7 +85,6 @@
           <h2>Time Booking</h2>
           <p>Book your time against client projects.</p>
         </div>
-        <button class="tb-btn-secondary tb-btn-mini" id="tbCloseBtn">Close</button>
       </div>
       <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
         <button class="tb-btn-primary tb-btn-mini" id="tbAddBtn">New Booking</button>
@@ -149,7 +107,6 @@
       </div>
     `;
 
-    document.getElementById('tbCloseBtn').addEventListener('click', closeModal);
     document.getElementById('tbAddBtn').addEventListener('click', () => renderForm());
 
     await loadAndDisplayUserBookings();
@@ -213,7 +170,6 @@
           <h2>Time Booking — Admin</h2>
           <p>Review time bookings across all employees.</p>
         </div>
-        <button class="tb-btn-secondary tb-btn-mini" id="tbCloseBtn">Close</button>
       </div>
       <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; align-items: flex-end;">
         <div class="tb-form-group" style="margin-bottom: 0; flex: 1; min-width: 150px;">
@@ -244,7 +200,6 @@
       </div>
     `;
 
-    document.getElementById('tbCloseBtn').addEventListener('click', closeModal);
     document.getElementById('tbAddBtn').addEventListener('click', () => renderForm());
 
     const filterSelect = document.getElementById('tbFilterEmployee');

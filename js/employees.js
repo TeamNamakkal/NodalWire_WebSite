@@ -1,44 +1,14 @@
 (function () {
   const css = `
-    .emp-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.55);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: 10002;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .emp-overlay.open {
-      display: flex;
-      opacity: 1;
-    }
     .emp-card {
       background: #ffffff;
       border: 1px solid rgba(15, 23, 42, 0.08);
       border-radius: 16px;
-      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
-      width: 92%;
-      max-width: 900px;
-      max-height: 85vh;
-      overflow-y: auto;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
       padding: 32px;
       color: #1e293b;
       font-family: 'Inter', sans-serif;
-      transform: scale(0.92) translateY(10px);
-      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .emp-overlay.open .emp-card {
-      transform: scale(1) translateY(0);
-    }
-    .emp-card::-webkit-scrollbar { width: 6px; }
-    .emp-card::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.03); }
-    .emp-card::-webkit-scrollbar-thumb { background: rgba(29, 120, 196, 0.25); border-radius: 3px; }
-    .emp-card::-webkit-scrollbar-thumb:hover { background: rgba(29, 120, 196, 0.4); }
     .emp-card h2, .emp-card h3 { font-family: 'Lato', sans-serif; font-weight: 700; color: #0f172a; letter-spacing: -0.02em; }
     .emp-card h2 { font-size: 24px; margin-bottom: 8px; }
     .emp-card h3 { font-size: 18px; margin-bottom: 16px; }
@@ -75,43 +45,30 @@
   styleEl.innerHTML = css;
   document.head.appendChild(styleEl);
 
-  const overlay = document.createElement('div');
-  overlay.className = 'emp-overlay';
-  overlay.innerHTML = `<div class="emp-card" id="empCard"></div>`;
-  document.body.appendChild(overlay);
-
   let currentEmployees = [];
   let editingEmployee = null;
-
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) closeModal();
-  });
 
   function getCurrentUser() {
     return JSON.parse(localStorage.getItem('wh_user') || 'null');
   }
 
   if (window.NWPortal) {
-    window.NWPortal.register('Manage Employees', openModal, { adminOnly: true });
-    window.NWPortal.register('My Profile', openMyProfile);
+    window.NWPortal.register('Manage Employees', renderManageInto, { adminOnly: true });
+    window.NWPortal.register('My Profile', renderProfileInto);
   }
 
-  function openModal() {
+  function renderManageInto(container) {
     const user = getCurrentUser();
     if (!user || user.role !== 'admin') return;
-    overlay.classList.add('open');
+    container.innerHTML = `<div class="emp-card" id="empCard"></div>`;
     renderListView();
   }
 
-  function openMyProfile() {
+  function renderProfileInto(container) {
     const user = getCurrentUser();
     if (!user) return;
-    overlay.classList.add('open');
+    container.innerHTML = `<div class="emp-card" id="empCard"></div>`;
     renderMyProfile();
-  }
-
-  function closeModal() {
-    overlay.classList.remove('open');
   }
 
   async function renderMyProfile() {
@@ -123,11 +80,9 @@
           <h2>My Profile</h2>
           <p>Your details on file. To request a change, use Employee Requests.</p>
         </div>
-        <button class="emp-btn-secondary emp-btn-mini" id="empCloseBtn">Close</button>
       </div>
       <div id="empProfileBody">Loading...</div>
     `;
-    document.getElementById('empCloseBtn').addEventListener('click', closeModal);
 
     try {
       const res = await fetch(`/api/employees/me?requesterId=${user.id}`);
@@ -190,7 +145,6 @@
           <h2>Manage Employees</h2>
           <p>Create, update, and manage employee records.</p>
         </div>
-        <button class="emp-btn-secondary emp-btn-mini" id="empCloseBtn">Close</button>
       </div>
       <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
         <button class="emp-btn-primary emp-btn-mini" id="empAddBtn">Add Employee</button>
@@ -215,7 +169,6 @@
       </div>
     `;
 
-    document.getElementById('empCloseBtn').addEventListener('click', closeModal);
     document.getElementById('empAddBtn').addEventListener('click', () => renderFormView());
 
     await loadEmployees();

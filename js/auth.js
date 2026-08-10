@@ -1,12 +1,23 @@
 (function () {
   // --- Portal registration API (other modules call window.NWPortal.register) ---
+  // register(label, renderFn, opts) — renderFn(container) renders that section's
+  // content into the given container element. Consumed by portal.js on portal.html.
   window.NWPortal = window.NWPortal || { items: [] };
-  window.NWPortal.register = function (label, onClick, opts) {
-    window.NWPortal.items.push({ label, onClick, adminOnly: !!(opts && opts.adminOnly) });
+  window.NWPortal.register = function (label, renderFn, opts) {
+    window.NWPortal.items.push({ label, onClick: renderFn, adminOnly: !!(opts && opts.adminOnly) });
     if (window.NWPortal._render) window.NWPortal._render();
   };
 
-  // --- CSS Injections (light theme for all employee-facing UI) ---
+  window.NWAuth = {
+    getCurrentUser: function () {
+      return JSON.parse(localStorage.getItem('wh_user') || 'null');
+    },
+    logout: function () {
+      localStorage.removeItem('wh_user');
+    }
+  };
+
+  // --- CSS Injections (shared login/forgot-password modal, light theme) ---
   const css = `
     .wh-btn { cursor: pointer; }
     .wh-nav-actions {
@@ -14,39 +25,6 @@
       align-items: center;
       gap: 20px;
     }
-    .wh-portal-wrap {
-      position: relative;
-    }
-    .wh-portal-menu {
-      display: none;
-      position: absolute;
-      top: calc(100% + 10px);
-      right: 0;
-      background: #ffffff;
-      border: 1px solid rgba(15, 23, 42, 0.1);
-      border-radius: 12px;
-      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
-      min-width: 220px;
-      overflow: hidden;
-      z-index: 10000;
-    }
-    .wh-portal-menu.open { display: block; }
-    .wh-portal-item {
-      display: block;
-      width: 100%;
-      text-align: left;
-      background: none;
-      border: none;
-      padding: 12px 18px;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      color: #1e293b;
-      cursor: pointer;
-      border-bottom: 1px solid rgba(15, 23, 42, 0.06);
-    }
-    .wh-portal-item:last-child { border-bottom: none; }
-    .wh-portal-item:hover { background: rgba(29, 120, 196, 0.08); }
-    .wh-portal-item.wh-portal-logout { color: #dc2626; font-weight: 600; }
 
     .wh-overlay {
       display: none;
@@ -206,10 +184,6 @@
         align-items: flex-start;
         gap: 12px;
       }
-      .wh-portal-menu {
-        right: auto;
-        left: 0;
-      }
     }
   `;
 
@@ -217,29 +191,25 @@
   styleEl.innerHTML = css;
   document.head.appendChild(styleEl);
 
-  // --- Nav button + dropdown wrapper ---
-  const wrap = document.createElement('div');
-  wrap.className = 'wh-portal-wrap';
+  // Skip building the marketing-nav login button on portal.html — the portal
+  // page has its own header/logout UI (see portal.js).
+  if (document.body.dataset.page === 'portal') return;
 
+  // --- Nav button ---
   const btn = document.createElement('a');
   btn.href = '#';
   btn.className = 'nav-cta wh-btn';
   btn.textContent = 'Employee Login';
-  wrap.appendChild(btn);
-
-  const menu = document.createElement('div');
-  menu.className = 'wh-portal-menu';
-  wrap.appendChild(menu);
 
   const navCta = document.querySelector('.nav-cta');
   if (navCta && navCta.parentNode) {
     const navActions = document.createElement('div');
     navActions.className = 'wh-nav-actions';
     navCta.parentNode.insertBefore(navActions, navCta);
-    navActions.appendChild(wrap);
+    navActions.appendChild(btn);
     navActions.appendChild(navCta);
   } else {
-    document.body.appendChild(wrap);
+    document.body.appendChild(btn);
   }
 
   // --- Modal ---
@@ -248,14 +218,8 @@
   overlay.innerHTML = `<div class="wh-card" id="whCard"></div>`;
   document.body.appendChild(overlay);
 
-  let currentUser = JSON.parse(localStorage.getItem('wh_user') || 'null');
-
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) closeModal();
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!wrap.contains(e.target)) menu.classList.remove('open');
   });
 
   function openModal() {
@@ -267,48 +231,17 @@
     overlay.classList.remove('open');
   }
 
-  function renderMenu() {
-    if (!currentUser) {
-      menu.innerHTML = '';
-      menu.classList.remove('open');
-      return;
-    }
-    const visibleItems = window.NWPortal.items.filter(item => !item.adminOnly || currentUser.role === 'admin');
-    menu.innerHTML = visibleItems.map((item, idx) => {
-      const label = typeof item.label === 'function' ? item.label(currentUser) : item.label;
-      return `<button type="button" class="wh-portal-item" data-idx="${idx}">${label}</button>`;
-    }).join('')
-      + `<button type="button" class="wh-portal-item wh-portal-logout" id="whPortalLogout">Log Out</button>`;
-
-    visibleItems.forEach((item, idx) => {
-      const el = menu.querySelector(`[data-idx="${idx}"]`);
-      if (el) el.addEventListener('click', () => {
-        menu.classList.remove('open');
-        item.onClick();
-      });
-    });
-    const logoutBtn = document.getElementById('whPortalLogout');
-    if (logoutBtn) logoutBtn.addEventListener('click', () => {
-      menu.classList.remove('open');
-      if (confirm('Log out?')) {
-        localStorage.removeItem('wh_user');
-        refreshButtonState();
-      }
-    });
-  }
-  window.NWPortal._render = renderMenu;
-
   function refreshButtonState() {
-    currentUser = JSON.parse(localStorage.getItem('wh_user') || 'null');
-    btn.textContent = currentUser ? `${currentUser.name.split(' ')[0]}'s Portal` : 'Employee Login';
-    renderMenu();
+    const user = window.NWAuth.getCurrentUser();
+    btn.textContent = user ? 'Employee Portal' : 'Employee Login';
   }
   refreshButtonState();
 
   btn.addEventListener('click', (e) => {
     e.preventDefault();
-    if (currentUser) {
-      menu.classList.toggle('open');
+    const user = window.NWAuth.getCurrentUser();
+    if (user) {
+      window.location.href = '/portal.html';
     } else {
       openModal();
     }
@@ -367,10 +300,8 @@
         const data = await response.json();
 
         if (data.success) {
-          currentUser = data.user;
-          localStorage.setItem('wh_user', JSON.stringify(currentUser));
-          refreshButtonState();
-          closeModal();
+          localStorage.setItem('wh_user', JSON.stringify(data.user));
+          window.location.href = '/portal.html';
         } else {
           alertBox.innerText = data.message || 'Verification failed.';
           alertBox.style.display = 'block';

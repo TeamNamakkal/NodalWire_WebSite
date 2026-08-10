@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Portal — NodalWire</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Inter:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: #f1f5f9;
+    font-family: 'Inter', sans-serif;
+    color: #0f172a;
+  }
+  #portalHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 28px;
+    background: #0f172a;
+    color: #fff;
+  }
+  #portalBrand {
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    color: #fff;
+  }
+  #portalUserBox {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 14px;
+  }
+  #portalUserName {
+    color: #cbd5e1;
+  }
+  #portalLogoutBtn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  #portalLogoutBtn:hover { background: rgba(255, 255, 255, 0.18); }
+
+  #portalBody {
+    display: flex;
+    min-height: calc(100vh - 60px);
+  }
+  #portalSidebar {
+    width: 240px;
+    flex-shrink: 0;
+    background: #ffffff;
+    border-right: 1px solid rgba(15, 23, 42, 0.08);
+    padding: 20px 0;
+  }
+  .portal-nav-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    border-left: 3px solid transparent;
+    padding: 12px 24px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #475569;
+    cursor: pointer;
+  }
+  .portal-nav-item:hover { background: rgba(29, 120, 196, 0.06); color: #0f172a; }
+  .portal-nav-item.active {
+    border-left-color: #1D78C4;
+    background: rgba(29, 120, 196, 0.08);
+    color: #1D78C4;
+    font-weight: 700;
+  }
+
+  #portalMain {
+    flex: 1;
+    padding: 32px;
+    max-width: 1100px;
+  }
+
+  @media (max-width: 768px) {
+    #portalBody { flex-direction: column; }
+    #portalSidebar {
+      width: 100%;
+      display: flex;
+      overflow-x: auto;
+      padding: 8px;
+      border-right: none;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    }
+    .portal-nav-item {
+      border-left: none;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+    }
+    .portal-nav-item.active {
+      border-left-color: transparent;
+      border-bottom-color: #1D78C4;
+    }
+    #portalMain { padding: 20px; }
+  }
+</style>
+</head>
+<body data-page="portal">
+  <header id="portalHeader">
+    <a href="/index.html" id="portalBrand">NODALWIRE</a>
+    <div id="portalUserBox">
+      <span id="portalUserName"></span>
+      <button id="portalLogoutBtn">Log Out</button>
+    </div>
+  </header>
+  <div id="portalBody">
+    <nav id="portalSidebar"></nav>
+    <main id="portalMain"></main>
+  </div>
+
+  <script src="js/auth.js" defer></script>
+  <script src="js/portal.js" defer></script>
+  <script src="js/employees.js" defer></script>
+  <script src="js/timebooking.js" defer></script>
+  <script src="js/payroll.js" defer></script>
+  <script src="js/tickets.js" defer></script>
+</body>
+</html>

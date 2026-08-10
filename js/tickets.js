@@ -1,39 +1,14 @@
 (function () {
   const css = `
-    .tk-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.55);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: 10001;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .tk-overlay.open { display: flex; opacity: 1; }
     .tk-card {
       background: #ffffff;
       border: 1px solid rgba(15, 23, 42, 0.08);
       border-radius: 16px;
-      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
-      width: 92%;
-      max-width: 800px;
-      max-height: 85vh;
-      overflow-y: auto;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
       padding: 32px;
       color: #1e293b;
       font-family: 'Inter', sans-serif;
-      transform: scale(0.92) translateY(10px);
-      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .tk-overlay.open .tk-card { transform: scale(1) translateY(0); }
-    .tk-card::-webkit-scrollbar { width: 6px; }
-    .tk-card::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.03); }
-    .tk-card::-webkit-scrollbar-thumb { background: rgba(29, 120, 196, 0.25); border-radius: 3px; }
-    .tk-card::-webkit-scrollbar-thumb:hover { background: rgba(29, 120, 196, 0.4); }
     .tk-card h2, .tk-card h3 { font-family: 'Lato', sans-serif; font-weight: 700; color: #0f172a; letter-spacing: -0.02em; }
     .tk-card h2 { font-size: 24px; margin-bottom: 8px; }
     .tk-card h3 { font-size: 16px; margin-bottom: 12px; }
@@ -70,43 +45,27 @@
   styleEl.innerHTML = css;
   document.head.appendChild(styleEl);
 
-  const overlay = document.createElement('div');
-  overlay.className = 'tk-overlay';
-  overlay.innerHTML = `<div class="tk-card" id="tkCard"></div>`;
-  document.body.appendChild(overlay);
-
   let currentTickets = [];
-
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) closeModal();
-  });
 
   function getCurrentUser() {
     return JSON.parse(localStorage.getItem('wh_user') || 'null');
   }
 
   if (window.NWPortal) {
-    window.NWPortal.register(user => user && user.role === 'admin' ? 'Employee Requests' : 'My Requests', openModal);
+    window.NWPortal.register(user => user && user.role === 'admin' ? 'Employee Requests' : 'My Requests', renderInto);
   }
 
-  function openModal() {
+  function renderInto(container) {
     const user = getCurrentUser();
     if (!user) return;
-    overlay.classList.add('open');
+    container.innerHTML = `<div class="tk-card" id="tkCard"></div>`;
     renderScreen();
-  }
-
-  function closeModal() {
-    overlay.classList.remove('open');
   }
 
   function renderScreen() {
     const user = getCurrentUser();
     const card = document.getElementById('tkCard');
-    if (!user) {
-      closeModal();
-      return;
-    }
+    if (!user || !card) return;
     if (user.role === 'admin') {
       renderAdminView(card);
     } else {
@@ -122,7 +81,6 @@
           <h2>My Requests</h2>
           <p>Need something in your employee record updated? Submit a request here — an admin will review it and make the change.</p>
         </div>
-        <button class="tk-btn-secondary tk-btn-mini" id="tkCloseBtn">Close</button>
       </div>
       <div class="tk-alert" id="tkAlert"></div>
       <form id="tkSubmitForm" style="margin-bottom: 28px;">
@@ -140,7 +98,6 @@
       </div>
     `;
 
-    document.getElementById('tkCloseBtn').addEventListener('click', closeModal);
     document.getElementById('tkSubmitForm').addEventListener('submit', handleSubmit);
 
     await loadOwnTickets();
@@ -226,14 +183,11 @@
           <h2>Employee Requests</h2>
           <p>Review and action employee change requests. Update the employee record via Manage Employees once resolved.</p>
         </div>
-        <button class="tk-btn-secondary tk-btn-mini" id="tkCloseBtn">Close</button>
       </div>
       <div class="tk-list" id="tkListContainer">
         <p>Loading requests...</p>
       </div>
     `;
-
-    document.getElementById('tkCloseBtn').addEventListener('click', closeModal);
 
     const user = getCurrentUser();
     const container2 = document.getElementById('tkListContainer');

@@ -1,39 +1,14 @@
 (function () {
   const css = `
-    .pr-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.55);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: 10001;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .pr-overlay.open { display: flex; opacity: 1; }
     .pr-card {
       background: #ffffff;
       border: 1px solid rgba(15, 23, 42, 0.08);
       border-radius: 16px;
-      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
-      width: 92%;
-      max-width: 900px;
-      max-height: 85vh;
-      overflow-y: auto;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
       padding: 32px;
       color: #1e293b;
       font-family: 'Inter', sans-serif;
-      transform: scale(0.92) translateY(10px);
-      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .pr-overlay.open .pr-card { transform: scale(1) translateY(0); }
-    .pr-card::-webkit-scrollbar { width: 6px; }
-    .pr-card::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.03); }
-    .pr-card::-webkit-scrollbar-thumb { background: rgba(29, 120, 196, 0.25); border-radius: 3px; }
-    .pr-card::-webkit-scrollbar-thumb:hover { background: rgba(29, 120, 196, 0.4); }
     .pr-card h2, .pr-card h3 { font-family: 'Lato', sans-serif; font-weight: 700; color: #0f172a; letter-spacing: -0.02em; }
     .pr-card h2 { font-size: 24px; margin-bottom: 8px; }
     .pr-card h3 { font-size: 18px; margin-bottom: 16px; }
@@ -70,44 +45,28 @@
   styleEl.innerHTML = css;
   document.head.appendChild(styleEl);
 
-  const overlay = document.createElement('div');
-  overlay.className = 'pr-overlay';
-  overlay.innerHTML = `<div class="pr-card" id="prCard"></div>`;
-  document.body.appendChild(overlay);
-
   let currentPayslips = [];
   let currentPreview = null;
-
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) closeModal();
-  });
 
   function getCurrentUser() {
     return JSON.parse(localStorage.getItem('wh_user') || 'null');
   }
 
   if (window.NWPortal) {
-    window.NWPortal.register('Payroll', openModal);
+    window.NWPortal.register('Payroll', renderInto);
   }
 
-  function openModal() {
+  function renderInto(container) {
     const user = getCurrentUser();
     if (!user) return;
-    overlay.classList.add('open');
+    container.innerHTML = `<div class="pr-card" id="prCard"></div>`;
     renderScreen();
-  }
-
-  function closeModal() {
-    overlay.classList.remove('open');
   }
 
   function renderScreen() {
     const user = getCurrentUser();
     const card = document.getElementById('prCard');
-    if (!user) {
-      closeModal();
-      return;
-    }
+    if (!user || !card) return;
     if (user.role === 'admin') {
       renderAdminView(card);
     } else {
@@ -124,7 +83,6 @@
           <h2>My Payslips</h2>
           <p>View and print your pay history.</p>
         </div>
-        <button class="pr-btn-secondary pr-btn-mini" id="prCloseBtn">Close</button>
       </div>
       <div class="pr-table-container">
         <table class="pr-table">
@@ -142,8 +100,6 @@
         </table>
       </div>
     `;
-
-    document.getElementById('prCloseBtn').addEventListener('click', closeModal);
 
     try {
       const res = await fetch(`/api/payslips?requesterId=${user.id}`);
@@ -185,7 +141,6 @@
           <h2>Payroll — Admin</h2>
           <p>Calculate withholding and generate payslips for employees.</p>
         </div>
-        <button class="pr-btn-secondary pr-btn-mini" id="prCloseBtn">Close</button>
       </div>
       <div class="pr-alert" id="prAlert"></div>
       <form id="prCalcForm">
@@ -235,7 +190,6 @@
       </div>
     `;
 
-    document.getElementById('prCloseBtn').addEventListener('click', closeModal);
     document.getElementById('prCalcForm').addEventListener('submit', handleCalculate);
 
     await populateEmployeeSelect();
