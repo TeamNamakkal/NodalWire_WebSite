@@ -2,7 +2,6 @@
   const css = `
     .emp-btn {
       cursor: pointer;
-      display: none;
     }
     .emp-overlay {
       display: none;
@@ -83,6 +82,7 @@
   btn.href = '#';
   btn.className = 'nav-cta emp-btn';
   btn.textContent = 'Manage Employees';
+  btn.style.display = 'none';
 
   const navActions = document.querySelector('.wh-nav-actions');
   if (navActions) {
