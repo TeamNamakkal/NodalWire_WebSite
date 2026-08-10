@@ -17,7 +17,11 @@
   let activeIdx = 0;
 
   function visibleItems() {
-    return window.NWPortal.items.filter(item => !item.adminOnly || user.role === 'admin');
+    return window.NWPortal.items.filter(item => {
+      if (item.adminOnly && user.role !== 'admin') return false;
+      if (item.approverOnly && !window.NWAuth.isApprover(user)) return false;
+      return true;
+    });
   }
 
   function renderSidebar() {

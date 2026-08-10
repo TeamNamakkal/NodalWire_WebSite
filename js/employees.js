@@ -55,6 +55,7 @@
   if (window.NWPortal) {
     window.NWPortal.register('Manage Employees', renderManageInto, { adminOnly: true });
     window.NWPortal.register('My Profile', renderProfileInto);
+    window.NWPortal.register('Project Assignments', renderProjectsInto, { approverOnly: true });
   }
 
   function renderManageInto(container) {
@@ -110,6 +111,8 @@
         ['Office Email', e.email],
         ['Personal Email', e.personalEmail],
         ['Role', e.role],
+        ['Project Name', e.projectName],
+        ['Project Code', e.projectCode],
         ['Bank Name', bd.bankName],
         ['Account Type', bd.accountType],
         ['Routing Number', bd.routingNumber],
@@ -136,6 +139,87 @@
       document.getElementById('empProfileBody').innerHTML = `<p style="color:#dc2626;">Network error loading profile.</p>`;
     }
   }
+
+  function renderProjectsInto(container) {
+    const user = getCurrentUser();
+    if (!user) return;
+    container.innerHTML = `<div class="emp-card" id="empCard"></div>`;
+    renderProjectsList();
+  }
+
+  async function renderProjectsList() {
+    const user = getCurrentUser();
+    const card = document.getElementById('empCard');
+    card.innerHTML = `
+      <div class="emp-header">
+        <div>
+          <h2>Project Assignments</h2>
+          <p>Assign each employee's project name and code, used on their weekly timesheet.</p>
+        </div>
+      </div>
+      <div class="emp-table-container">
+        <table class="emp-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Project Name</th>
+              <th>Project Code</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="empProjectsTableBody">
+            <tr><td colspan="5" style="text-align: center; color: #7a9bbf; padding: 24px;">Loading employees...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    `;
+
+    try {
+      const res = await fetch(`/api/employees/projects?requesterId=${user.id}`);
+      const data = await res.json();
+      const tbody = document.getElementById('empProjectsTableBody');
+      if (!data.success) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #ef4444; padding: 24px;">${escapeHtml(data.message || 'Failed to load.')}</td></tr>`;
+        return;
+      }
+      const employees = data.employees || [];
+      if (employees.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #7a9bbf; padding: 24px;">No employees found.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = employees.map(emp => `
+        <tr>
+          <td>${escapeHtml(emp.id)}</td>
+          <td><strong>${escapeHtml(emp.fullName)}</strong></td>
+          <td><input class="emp-input" id="proj_${emp.id}_name" type="text" value="${escapeHtml(emp.projectName || '')}" style="min-width: 160px;"></td>
+          <td><input class="emp-input" id="proj_${emp.id}_code" type="text" value="${escapeHtml(emp.projectCode || '')}" style="min-width: 120px;"></td>
+          <td><button class="emp-btn-secondary emp-btn-mini" onclick="window.empSaveProject('${emp.id}')">Save</button></td>
+        </tr>
+      `).join('');
+    } catch (err) {
+      document.getElementById('empProjectsTableBody').innerHTML = `<tr><td colspan="5" style="text-align: center; color: #ef4444; padding: 24px;">Network error.</td></tr>`;
+    }
+  }
+
+  window.empSaveProject = async function (id) {
+    const user = getCurrentUser();
+    const projectName = document.getElementById(`proj_${id}_name`).value.trim();
+    const projectCode = document.getElementById(`proj_${id}_code`).value.trim();
+    try {
+      const res = await fetch('/api/employees/project', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ requesterId: user.id, id, projectName, projectCode })
+      });
+      const data = await res.json();
+      if (!data.success) {
+        alert(data.message || 'Failed to save.');
+      }
+    } catch (err) {
+      alert('Network error. Failed to save.');
+    }
+  };
 
   async function renderListView() {
     const card = document.getElementById('empCard');
@@ -330,6 +414,26 @@
             </select>
           </div>
         </div>
+        <h3 style="margin-top: 8px;">Timesheet</h3>
+        <div class="emp-form-row">
+          <div class="emp-form-group">
+            <label class="emp-label" for="empProjectName">Project Name</label>
+            <input class="emp-input" id="empProjectName" type="text" value="${escapeHtml(e.projectName || '')}">
+          </div>
+          <div class="emp-form-group">
+            <label class="emp-label" for="empProjectCode">Project Code</label>
+            <input class="emp-input" id="empProjectCode" type="text" value="${escapeHtml(e.projectCode || '')}">
+          </div>
+        </div>
+        <div class="emp-form-row">
+          <div class="emp-form-group">
+            <label class="emp-label" for="empIsTimeApprover">Timesheet Approver</label>
+            <select class="emp-select" id="empIsTimeApprover">
+              <option value="false" ${!e.isTimeApprover ? 'selected' : ''}>No</option>
+              <option value="true" ${e.isTimeApprover ? 'selected' : ''}>Yes — can approve everyone's timesheets</option>
+            </select>
+          </div>
+        </div>
         <h3 style="margin-top: 8px;">Bank Details (for direct deposit)</h3>
         <div class="emp-form-row">
           <div class="emp-form-group">
@@ -413,6 +517,9 @@
       username: document.getElementById('empUsername').value.trim() || null,
       state: document.getElementById('empState').value.trim().toUpperCase() || 'TX',
       payType: document.getElementById('empPayType').value,
+      projectName: document.getElementById('empProjectName').value.trim(),
+      projectCode: document.getElementById('empProjectCode').value.trim(),
+      isTimeApprover: document.getElementById('empIsTimeApprover').value === 'true',
       bankDetails: {
         bankName: document.getElementById('empBankName').value.trim(),
         accountType: document.getElementById('empAccountType').value,

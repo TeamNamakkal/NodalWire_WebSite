@@ -4,7 +4,12 @@
   // content into the given container element. Consumed by portal.js on portal.html.
   window.NWPortal = window.NWPortal || { items: [] };
   window.NWPortal.register = function (label, renderFn, opts) {
-    window.NWPortal.items.push({ label, onClick: renderFn, adminOnly: !!(opts && opts.adminOnly) });
+    window.NWPortal.items.push({
+      label,
+      onClick: renderFn,
+      adminOnly: !!(opts && opts.adminOnly),
+      approverOnly: !!(opts && opts.approverOnly)
+    });
     if (window.NWPortal._render) window.NWPortal._render();
   };
 
@@ -14,6 +19,9 @@
     },
     logout: function () {
       localStorage.removeItem('wh_user');
+    },
+    isApprover: function (user) {
+      return !!user && (user.role === 'admin' || user.isTimeApprover === true);
     }
   };
 

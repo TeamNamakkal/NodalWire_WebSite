@@ -32,7 +32,7 @@ loadEnvFile();
 const PORT = process.env.PORT || 3000;
 const DB_PATH = join(__dirname, 'data/worklogs.json');
 const EMPLOYEES_PATH = join(__dirname, 'data/employees.json');
-const TIMEBOOKINGS_PATH = join(__dirname, 'data/timebookings.json');
+const TIMESHEETS_PATH = join(__dirname, 'data/timesheets.json');
 const PAYSLIPS_PATH = join(__dirname, 'data/payslips.json');
 const TICKETS_PATH = join(__dirname, 'data/tickets.json');
 
@@ -192,7 +192,7 @@ createServer(async (req, res) => {
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({
           success: true,
-          user: { id: username, name: user.fullName, role: user.role }
+          user: { id: username, name: user.fullName, role: user.role, isTimeApprover: !!user.isTimeApprover }
         }));
       } else {
         res.writeHead(401, { 'Content-Type': 'application/json' });
@@ -301,7 +301,7 @@ createServer(async (req, res) => {
         res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
         return;
       }
-      const SELF_VIEW_FIELDS = [...PUBLIC_EMPLOYEE_FIELDS, 'username', 'email', 'role', 'phone', 'address', 'personalEmail', 'bankDetails', 'exploreN2pUsername', 'exploreN2pPassword'];
+      const SELF_VIEW_FIELDS = [...PUBLIC_EMPLOYEE_FIELDS, 'username', 'email', 'role', 'phone', 'address', 'personalEmail', 'bankDetails', 'exploreN2pUsername', 'exploreN2pPassword', 'projectName', 'projectCode', 'isTimeApprover'];
       const out = {};
       for (const field of SELF_VIEW_FIELDS) out[field] = requester[field];
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -309,6 +309,60 @@ createServer(async (req, res) => {
     } catch (err) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: false, message: 'Failed to load profile' }));
+    }
+    return;
+  }
+
+  function isTimesheetApprover(employee) {
+    return !!employee && (employee.role === 'admin' || employee.isTimeApprover === true);
+  }
+
+  // --- 1a-iv. GET /api/employees/projects (approver only) ---
+  if (req.url.startsWith('/api/employees/projects') && req.method === 'GET') {
+    const urlObj = new URL(req.url, `http://localhost:${PORT}`);
+    const requesterId = urlObj.searchParams.get('requesterId');
+    try {
+      const requester = await findEmployeeByUsername(requesterId);
+      if (!isTimesheetApprover(requester)) {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
+        return;
+      }
+      const employees = await loadEmployees();
+      const out = employees.map(e => ({ id: e.id, username: e.username, fullName: e.fullName, projectName: e.projectName || '', projectCode: e.projectCode || '' }));
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, employees: out }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to load project assignments' }));
+    }
+    return;
+  }
+
+  // --- 1a-v. PUT /api/employees/project (approver only, project fields only) ---
+  if (req.url === '/api/employees/project' && req.method === 'PUT') {
+    try {
+      const { requesterId, id, projectName, projectCode } = await getRequestBody(req);
+      const requester = await findEmployeeByUsername(requesterId);
+      if (!isTimesheetApprover(requester)) {
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
+        return;
+      }
+      const employees = await loadEmployees();
+      const idx = employees.findIndex(e => e.id === id);
+      if (idx === -1) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Employee not found' }));
+        return;
+      }
+      employees[idx] = { ...employees[idx], projectName: projectName || '', projectCode: projectCode || '', updatedAt: new Date().toISOString() };
+      await saveEmployees(employees);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, employee: { id: employees[idx].id, fullName: employees[idx].fullName, projectName: employees[idx].projectName, projectCode: employees[idx].projectCode } }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, message: 'Failed to update project assignment' }));
     }
     return;
   }
@@ -397,6 +451,9 @@ createServer(async (req, res) => {
         bankDetails: { bankName: '', accountType: 'checking', routingNumber: '', accountNumber: '', zelleInfo: '' },
         exploreN2pUsername: null,
         exploreN2pPassword: null,
+        projectName: '',
+        projectCode: '',
+        isTimeApprover: false,
         ...fields,
         createdAt: now,
         updatedAt: now
@@ -734,12 +791,12 @@ createServer(async (req, res) => {
     return;
   }
 
-  // --- 5b. GET /api/timebookings ---
-  if (req.url.startsWith('/api/timebookings') && req.method === 'GET') {
+  // --- 5d. GET /api/timesheets ---
+  if (req.url.startsWith('/api/timesheets') && req.method === 'GET') {
     const urlObj = new URL(req.url, `http://localhost:${PORT}`);
-    const employeeId = urlObj.searchParams.get('employeeId');
     const requesterId = urlObj.searchParams.get('requesterId');
-    const dateStr = urlObj.searchParams.get('date');
+    const weekStart = urlObj.searchParams.get('weekStart');
+    const employeeIdFilter = urlObj.searchParams.get('employeeId');
 
     try {
       const requester = await findEmployeeByUsername(requesterId);
@@ -749,22 +806,19 @@ createServer(async (req, res) => {
         return;
       }
 
-      const dbData = JSON.parse(await readFile(TIMEBOOKINGS_PATH, 'utf8') || '[]');
-      let bookings = dbData;
+      const dbData = JSON.parse(await readFile(TIMESHEETS_PATH, 'utf8') || '[]');
+      let sheets = dbData;
 
-      if (requester.role !== 'admin') {
-        bookings = bookings.filter(b => b.employeeId === requesterId);
-      } else {
-        if (employeeId) {
-          bookings = bookings.filter(b => b.employeeId === employeeId);
-        }
-        if (dateStr) {
-          bookings = bookings.filter(b => b.bookingDate === dateStr);
-        }
+      if (weekStart) sheets = sheets.filter(s => s.weekStart === weekStart);
+
+      if (!isTimesheetApprover(requester)) {
+        sheets = sheets.filter(s => s.employeeId === requesterId);
+      } else if (employeeIdFilter) {
+        sheets = sheets.filter(s => s.employeeId === employeeIdFilter);
       }
 
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true, bookings }));
+      res.end(JSON.stringify({ success: true, timesheets: sheets }));
     } catch (err) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: false, message: 'Database read failed' }));
@@ -772,10 +826,11 @@ createServer(async (req, res) => {
     return;
   }
 
-  // --- 5c. POST /api/timebookings ---
-  if (req.url === '/api/timebookings' && req.method === 'POST') {
+  // --- 5e. POST /api/timesheets (upsert own, or anyone's if approver) ---
+  if (req.url === '/api/timesheets' && req.method === 'POST') {
     try {
-      const { requesterId, clientName, projectName, taskDescription, bookingDate, startTime, endTime, billable, notes } = await getRequestBody(req);
+      const body = await getRequestBody(req);
+      const { requesterId, weekStart, weekEnd, hours, activity } = body;
       const requester = await findEmployeeByUsername(requesterId);
       if (!requester) {
         res.writeHead(401, { 'Content-Type': 'application/json' });
@@ -783,226 +838,124 @@ createServer(async (req, res) => {
         return;
       }
 
-      if (!bookingDate || !projectName || !startTime || !endTime) {
+      const targetId = body.employeeId || requesterId;
+      const approver = isTimesheetApprover(requester);
+      if (targetId !== requesterId && !approver) {
+        res.writeHead(403, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: "Only Julius or admin can edit another employee's timesheet" }));
+        return;
+      }
+
+      const targetEmployee = await findEmployeeByUsername(targetId);
+      if (!targetEmployee) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Employee not found' }));
+        return;
+      }
+
+      if (!weekStart || !weekEnd || !hours) {
         res.writeHead(400, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, message: 'Missing required fields' }));
         return;
       }
 
-      const toMinutes = (timeStr) => {
-        const [h, m] = timeStr.split(':').map(Number);
-        return h * 60 + m;
-      };
-
-      const startM = toMinutes(startTime);
-      const endM = toMinutes(endTime);
-
-      if (endM <= startM) {
+      const todayStr = new Date().toISOString().split('T')[0];
+      if (weekStart > todayStr) {
         res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, message: 'End Time must be greater than Start Time' }));
+        res.end(JSON.stringify({ success: false, message: 'Cannot submit a future week.' }));
         return;
       }
 
-      const dbData = JSON.parse(await readFile(TIMEBOOKINGS_PATH, 'utf8') || '[]');
+      const dbData = JSON.parse(await readFile(TIMESHEETS_PATH, 'utf8') || '[]');
+      const idx = dbData.findIndex(s => s.employeeId === targetId && s.weekStart === weekStart);
 
-      const isOverlap = dbData.some(b => {
-        if (b.employeeId === requesterId && b.bookingDate === bookingDate) {
-          const bStart = toMinutes(b.startTime);
-          const bEnd = toMinutes(b.endTime);
-          return startM < bEnd && bStart < endM;
-        }
-        return false;
+      if (idx !== -1 && dbData[idx].status === 'approved' && !approver) {
+        res.writeHead(403, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'This timesheet is approved and locked.' }));
+        return;
+      }
+
+      const now = new Date().toISOString();
+      const isTargetApprover = isTimesheetApprover(targetEmployee);
+      const status = isTargetApprover ? 'approved' : 'pending';
+
+      const dayHours = {};
+      ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].forEach(d => {
+        dayHours[d] = Math.max(0, parseFloat(hours[d]) || 0);
       });
 
-      if (isOverlap) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, message: 'A booking already exists in this time range for this date.' }));
-        return;
-      }
-
-      const totalHours = parseFloat(((endM - startM) / 60).toFixed(2));
-      const newBooking = {
-        id: 'tb_' + Date.now().toString() + Math.random().toString(36).substring(2, 7),
-        employeeId: requesterId,
-        employeeName: requester.fullName,
-        clientName: clientName || '',
-        projectName,
-        taskDescription: taskDescription || '',
-        bookingDate,
-        startTime,
-        endTime,
-        totalHours,
-        billable: billable !== undefined ? !!billable : true,
-        status: 'booked',
-        notes: notes || '',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+      const record = {
+        id: idx !== -1 ? dbData[idx].id : 'ts_' + Date.now().toString() + Math.random().toString(36).substring(2, 7),
+        employeeId: targetId,
+        employeeName: targetEmployee.fullName,
+        projectName: targetEmployee.projectName || '',
+        projectCode: targetEmployee.projectCode || '',
+        weekStart,
+        weekEnd,
+        hours: dayHours,
+        activity: activity || '',
+        status,
+        submittedAt: now,
+        approvedAt: status === 'approved' ? now : (idx !== -1 ? dbData[idx].approvedAt : null),
+        approvedBy: status === 'approved' ? requesterId : (idx !== -1 ? dbData[idx].approvedBy : null),
+        createdAt: idx !== -1 ? dbData[idx].createdAt : now,
+        updatedAt: now
       };
 
-      dbData.push(newBooking);
-      await writeFile(TIMEBOOKINGS_PATH, JSON.stringify(dbData, null, 2), 'utf8');
+      if (idx !== -1) {
+        dbData[idx] = record;
+      } else {
+        dbData.push(record);
+      }
+      await writeFile(TIMESHEETS_PATH, JSON.stringify(dbData, null, 2), 'utf8');
 
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true, booking: newBooking }));
+      res.end(JSON.stringify({ success: true, timesheet: record }));
     } catch (err) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: false, message: 'Failed to save booking' }));
+      res.end(JSON.stringify({ success: false, message: 'Failed to save timesheet' }));
     }
     return;
   }
 
-  // --- 5d. PUT /api/timebookings ---
-  if (req.url === '/api/timebookings' && req.method === 'PUT') {
+  // --- 5f2. PUT /api/timesheets (approve/reject, approver only) ---
+  if (req.url === '/api/timesheets' && req.method === 'PUT') {
     try {
-      const { requesterId, id, clientName, projectName, taskDescription, bookingDate, startTime, endTime, billable, status, notes } = await getRequestBody(req);
+      const { requesterId, id, status } = await getRequestBody(req);
       const requester = await findEmployeeByUsername(requesterId);
-      if (!requester) {
+      if (!isTimesheetApprover(requester)) {
         res.writeHead(401, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
+        res.end(JSON.stringify({ success: false, message: 'Only Julius or admin can approve timesheets' }));
+        return;
+      }
+      if (!['approved', 'rejected'].includes(status)) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Invalid status' }));
         return;
       }
 
-      const dbData = JSON.parse(await readFile(TIMEBOOKINGS_PATH, 'utf8') || '[]');
-      const idx = dbData.findIndex(b => b.id === id);
-
+      const dbData = JSON.parse(await readFile(TIMESHEETS_PATH, 'utf8') || '[]');
+      const idx = dbData.findIndex(s => s.id === id);
       if (idx === -1) {
         res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, message: 'Booking not found' }));
+        res.end(JSON.stringify({ success: false, message: 'Timesheet not found' }));
         return;
       }
-
-      const existing = dbData[idx];
-
-      if (requester.role !== 'admin') {
-        const getTodayString = () => {
-          const d = new Date();
-          const yyyy = d.getFullYear();
-          const mm = String(d.getMonth() + 1).padStart(2, '0');
-          const dd = String(d.getDate()).padStart(2, '0');
-          return `${yyyy}-${mm}-${dd}`;
-        };
-        if (existing.bookingDate !== getTodayString()) {
-          res.writeHead(403, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ success: false, message: 'Users can only edit today\'s bookings' }));
-          return;
-        }
-        if (existing.employeeId !== requesterId) {
-          res.writeHead(403, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ success: false, message: 'Unauthorized to edit this booking' }));
-          return;
-        }
-      }
-
-      const toMinutes = (timeStr) => {
-        const [h, m] = timeStr.split(':').map(Number);
-        return h * 60 + m;
-      };
-
-      const startM = toMinutes(startTime);
-      const endM = toMinutes(endTime);
-
-      if (endM <= startM) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, message: 'End Time must be greater than Start Time' }));
-        return;
-      }
-
-      const isOverlap = dbData.some(b => {
-        if (b.id !== id && b.employeeId === existing.employeeId && b.bookingDate === bookingDate) {
-          const bStart = toMinutes(b.startTime);
-          const bEnd = toMinutes(b.endTime);
-          return startM < bEnd && bStart < endM;
-        }
-        return false;
-      });
-
-      if (isOverlap) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, message: 'A booking already exists in this time range for this date.' }));
-        return;
-      }
-
-      const totalHours = parseFloat(((endM - startM) / 60).toFixed(2));
 
       dbData[idx] = {
-        ...existing,
-        clientName: clientName !== undefined ? clientName : existing.clientName,
-        projectName,
-        taskDescription: taskDescription !== undefined ? taskDescription : existing.taskDescription,
-        bookingDate,
-        startTime,
-        endTime,
-        totalHours,
-        billable: billable !== undefined ? !!billable : existing.billable,
-        status: status || existing.status,
-        notes: notes !== undefined ? notes : existing.notes,
+        ...dbData[idx],
+        status,
+        approvedAt: status === 'approved' ? new Date().toISOString() : null,
+        approvedBy: status === 'approved' ? requesterId : null,
         updatedAt: new Date().toISOString()
       };
-
-      await writeFile(TIMEBOOKINGS_PATH, JSON.stringify(dbData, null, 2), 'utf8');
-
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true, booking: dbData[idx] }));
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: false, message: 'Failed to update booking' }));
-    }
-    return;
-  }
-
-  // --- 5e. DELETE /api/timebookings ---
-  if (req.url.startsWith('/api/timebookings') && req.method === 'DELETE') {
-    const urlObj = new URL(req.url, `http://localhost:${PORT}`);
-    const id = urlObj.searchParams.get('id');
-    const requesterId = urlObj.searchParams.get('requesterId');
-
-    try {
-      const requester = await findEmployeeByUsername(requesterId);
-      if (!requester) {
-        res.writeHead(401, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, message: 'Unauthorized' }));
-        return;
-      }
-
-      const dbData = JSON.parse(await readFile(TIMEBOOKINGS_PATH, 'utf8') || '[]');
-      const idx = dbData.findIndex(b => b.id === id);
-
-      if (idx === -1) {
-        res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, message: 'Booking not found' }));
-        return;
-      }
-
-      const existing = dbData[idx];
-
-      if (requester.role !== 'admin') {
-        const getTodayString = () => {
-          const d = new Date();
-          const yyyy = d.getFullYear();
-          const mm = String(d.getMonth() + 1).padStart(2, '0');
-          const dd = String(d.getDate()).padStart(2, '0');
-          return `${yyyy}-${mm}-${dd}`;
-        };
-        if (existing.bookingDate !== getTodayString()) {
-          res.writeHead(403, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ success: false, message: 'Users can only delete today\'s bookings' }));
-          return;
-        }
-        if (existing.employeeId !== requesterId) {
-          res.writeHead(403, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ success: false, message: 'Unauthorized to delete this booking' }));
-          return;
-        }
-      }
-
-      dbData.splice(idx, 1);
-      await writeFile(TIMEBOOKINGS_PATH, JSON.stringify(dbData, null, 2), 'utf8');
+      await writeFile(TIMESHEETS_PATH, JSON.stringify(dbData, null, 2), 'utf8');
 
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true, message: 'Booking deleted' }));
+      res.end(JSON.stringify({ success: true, timesheet: dbData[idx] }));
     } catch (err) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: false, message: 'Failed to delete booking' }));
+      res.end(JSON.stringify({ success: false, message: 'Failed to update timesheet' }));
     }
     return;
   }
