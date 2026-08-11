@@ -77,6 +77,21 @@ nodalwire-website/
 - `PROJECT_STRUCTURE.md` — This file
 - `README.md` — Project overview and quick start
 - `GIT_COMMANDS.md` — Git workflow reference
+- `LEAD_MANAGEMENT.md` — Lead Management module (routes, storage, activity
+  history, AI provider extension point)
+
+### Internal Portal (Authenticated App — Not Part of the Public Marketing Site)
+`portal.html` is a separate, authenticated single-page app (login-gated,
+`scripts/serve.mjs` backend) distinct from everything described above, which
+covers the public marketing site only. It has its own sidebar-based
+navigation built by `js/portal.js`, with each section as a self-contained
+module in `js/` (`employees.js`, `timebooking.js`, `payroll.js`,
+`tickets.js`, `leads.js`) registering itself via `window.NWPortal.register()`.
+Backend logic for these lives in `scripts/serve.mjs` plus `scripts/lib/`
+(`shared.mjs`, `payroll-tax.mjs`, `leads-db.mjs`, `leads-routes.mjs`,
+`ai-provider.mjs`). Data is flat JSON files under `data/` for most modules;
+Lead Management uses SQLite (`data/leads.db`) — see `LEAD_MANAGEMENT.md`.
+Sensitive data files are gitignored and provisioned by hand on the server.
 
 ### Server Configuration (Root)
 - `robots.txt` — Search engine crawling instructions

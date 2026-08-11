@@ -5,6 +5,16 @@ import { extname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { randomBytes } from 'crypto';
 import { calculatePayslip } from './lib/payroll-tax.mjs';
+import {
+  getMailTransporter,
+  isTimesheetApprover,
+  loadEmployees,
+  saveEmployees,
+  findEmployeeByUsername,
+  findEmployeeById,
+  getRequestBody
+} from './lib/shared.mjs';
+import { handleLeadsRoute } from './lib/leads-routes.mjs';
 
 const __dirname = fileURLToPath(new URL('..', import.meta.url));
 
@@ -31,30 +41,11 @@ loadEnvFile();
 
 const PORT = process.env.PORT || 3000;
 const DB_PATH = join(__dirname, 'data/worklogs.json');
-const EMPLOYEES_PATH = join(__dirname, 'data/employees.json');
 const TIMESHEETS_PATH = join(__dirname, 'data/timesheets.json');
 const PAYSLIPS_PATH = join(__dirname, 'data/payslips.json');
 const TICKETS_PATH = join(__dirname, 'data/tickets.json');
 
 const RESET_TOKEN_TTL_MS = 60 * 60 * 1000; // 1 hour
-
-let cachedTransporter = null;
-async function getMailTransporter() {
-  if (cachedTransporter) return cachedTransporter;
-  if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) return null;
-  const { default: nodemailer } = await import('nodemailer');
-  cachedTransporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT) || 587,
-    secure: Number(process.env.SMTP_PORT) === 465,
-    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
-  });
-  return cachedTransporter;
-}
-
-function isTimesheetApprover(employee) {
-  return !!employee && (employee.role === 'admin' || employee.isTimeApprover === true);
-}
 
 async function sendTicketEmails(ticket, employee) {
   const transporter = await getMailTransporter();
@@ -113,26 +104,6 @@ const MIME = {
   '.woff2': 'font/woff2',
 };
 
-async function loadEmployees() {
-  return JSON.parse(await readFile(EMPLOYEES_PATH, 'utf8') || '[]');
-}
-
-async function saveEmployees(employees) {
-  await writeFile(EMPLOYEES_PATH, JSON.stringify(employees, null, 2), 'utf8');
-}
-
-async function findEmployeeByUsername(username) {
-  if (!username) return null;
-  const employees = await loadEmployees();
-  return employees.find(e => e.username === username) || null;
-}
-
-async function findEmployeeById(id) {
-  if (!id) return null;
-  const employees = await loadEmployees();
-  return employees.find(e => e.id === id) || null;
-}
-
 const PUBLIC_EMPLOYEE_FIELDS = [
   'id', 'fullName', 'title', 'department', 'company',
   'reportingManager', 'joinedDate', 'workLocation', 'status', 'photo'
@@ -142,23 +113,6 @@ function toPublicEmployee(emp) {
   const out = {};
   for (const field of PUBLIC_EMPLOYEE_FIELDS) out[field] = emp[field];
   return out;
-}
-
-// Helper to parse bodies
-function getRequestBody(req) {
-  return new Promise((resolve, reject) => {
-    let body = '';
-    req.on('data', chunk => {
-      body += chunk.toString();
-    });
-    req.on('end', () => {
-      try {
-        resolve(body ? JSON.parse(body) : {});
-      } catch (err) {
-        reject(err);
-      }
-    });
-  });
 }
 
 const GA4_TAG = `  <!-- Google tag (gtag.js) -->
@@ -227,6 +181,12 @@ function renderPayslipHtml(p) {
 }
 
 createServer(async (req, res) => {
+  // --- 0. /api/leads/* (delegated to scripts/lib/leads-routes.mjs) ---
+  if (req.url.startsWith('/api/leads')) {
+    const handled = await handleLeadsRoute(req, res);
+    if (handled) return;
+  }
+
   // --- 1. POST /api/login ---
   if (req.url === '/api/login' && req.method === 'POST') {
     try {

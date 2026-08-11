@@ -22,6 +22,11 @@ data/employees.json
 data/payslips.json
 data/tickets.json
 
+# Lead Management SQLite database (business-development data, never commit)
+data/leads.db
+data/leads.db-wal
+data/leads.db-shm
+
 # Temporary/backup files
 *.tmp
 *.bak
